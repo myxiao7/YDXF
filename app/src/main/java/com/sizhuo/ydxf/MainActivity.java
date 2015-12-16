@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         mDemoSlider = (SliderLayout) findViewById(R.id.main_slider);
+        //轮播图
         url_maps.put("测试01", "http://192.168.1.114:8080/xinwen/img/item01.jpg");
         url_maps.put("测试02", "http://192.168.1.114:8080/xinwen/img/item02.jpg");
         url_maps.put("测试03", "http://192.168.1.114:8080/xinwen/img/item03.jpg");
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Default);
         mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
         mDemoSlider.setCustomAnimation(new DescriptionAnimation());
-        mDemoSlider.startAutoCycle(2000,4000,true);
+        mDemoSlider.startAutoCycle(2500,4000,true);
         mDemoSlider.addOnPageChangeListener(this);
     }
 
