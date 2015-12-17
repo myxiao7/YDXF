@@ -1,7 +1,5 @@
 package com.sizhuo.ydxf;
 
-import android.app.Activity;
-import android.net.wifi.WifiConfiguration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,18 +7,24 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
-import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.sizhuo.ydxf.adapter.MyMainAdapter;
+import com.sizhuo.ydxf.bean.MainBean;
 import com.sizhuo.ydxf.util.StatusBar;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  *
@@ -34,12 +38,30 @@ import java.util.LinkedHashMap;
 public class MainActivity extends AppCompatActivity implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
     private Toolbar toolbar;//Toolbar
     private SliderLayout mDemoSlider;//轮播图
+    private ListView listView;
+    private List<MainBean> list = new ArrayList<>();
     private HashMap<String,String> url_maps = new LinkedHashMap<String, String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
+        MainBean mainBean01 = new MainBean("1","1","1","1");
+        MainBean mainBean02 = new MainBean("2","2","2","2");
+        MainBean mainBean03 = new MainBean("3","3","3","3");
+        MainBean mainBean04 = new MainBean("4","4","4","4");
+        list.add(mainBean01);
+        list.add(mainBean02);
+        list.add(mainBean03);
+        list.add(mainBean04);
+        MyMainAdapter myMainAdapter = new MyMainAdapter(list,this);
+        listView.setAdapter(myMainAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(MainActivity.this,"点击了"+position,Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //初始化
@@ -48,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        listView = (ListView) findViewById(R.id.main_listview);
         mDemoSlider = (SliderLayout) findViewById(R.id.main_slider);
         //轮播图
         url_maps.put("测试01", "http://192.168.1.114:8080/xinwen/img/item01.jpg");
