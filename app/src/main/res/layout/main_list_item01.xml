@@ -6,6 +6,7 @@
     android:layout_margin="10dp"
     app:cardCornerRadius="5dp"
     app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/colorWhite"
     android:descendantFocusability="blocksDescendants"
     >
 
@@ -13,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <RelativeLayout
             android:id="@+id/main_list_item01_re_more"
@@ -59,11 +61,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@drawable/list_setlect_bg"
+            >
 
             <ImageView
                 android:id="@+id/main_list_item01_img"
-                android:layout_width="85dp"
+                android:layout_width="125dp"
                 android:layout_height="85dp"
                 android:background="@mipmap/ic_icon"
                 android:clickable="false"

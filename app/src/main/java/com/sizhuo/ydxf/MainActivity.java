@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -17,7 +18,11 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.sizhuo.ydxf.adapter.MyBottomGridAdapter;
+import com.sizhuo.ydxf.adapter.MyBottomGridAdapter2;
 import com.sizhuo.ydxf.adapter.MyMainAdapter;
+import com.sizhuo.ydxf.bean.GridBean;
+import com.sizhuo.ydxf.bean.GridBean2;
 import com.sizhuo.ydxf.bean.MainBean;
 import com.sizhuo.ydxf.util.StatusBar;
 
@@ -39,13 +44,18 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
     private Toolbar toolbar;//Toolbar
     private SliderLayout mDemoSlider;//轮播图
     private ListView listView;
-    private List<MainBean> list = new ArrayList<>();
+    private List<MainBean> list = new ArrayList<MainBean>();
     private HashMap<String,String> url_maps = new LinkedHashMap<String, String>();
+    private GridView gridView;//便民服务
+    private List<GridBean> gridList = new ArrayList<GridBean>();
+    private GridView gridView2;//便民114
+    private List<GridBean2> gridList2 = new ArrayList<GridBean2>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
+        //前3栏目
         MainBean mainBean01 = new MainBean("1","1","1","1");
         MainBean mainBean02 = new MainBean("2","2","2","2");
         MainBean mainBean03 = new MainBean("3","3","3","3");
@@ -62,6 +72,20 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                 Toast.makeText(MainActivity.this,"点击了"+position,Toast.LENGTH_SHORT).show();
             }
         });
+        //便民服务
+        for (int i = 0; i <4 ; i++) {
+            GridBean gridBean = new GridBean(R.mipmap.ic_icon, "部门"+i);
+            gridList.add(gridBean);
+        }
+        MyBottomGridAdapter myBottomGridAdapter = new MyBottomGridAdapter(gridList,this);
+        gridView.setAdapter(myBottomGridAdapter);
+        //便民114
+        for (int i = 0; i <4 ; i++) {
+            GridBean2 gridBean2 = new GridBean2("烟台市政府"+i);
+            gridList2.add(gridBean2);
+        }
+        MyBottomGridAdapter2 myBottomListAdapter = new MyBottomGridAdapter2(gridList2,this);
+        gridView2.setAdapter(myBottomListAdapter);
     }
 
     //初始化
@@ -97,8 +121,11 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Default);
         mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
         mDemoSlider.setCustomAnimation(new DescriptionAnimation());
-        mDemoSlider.startAutoCycle(2500,4000,true);
+        mDemoSlider.startAutoCycle(2500, 4000, true);
         mDemoSlider.addOnPageChangeListener(this);
+
+        gridView = (GridView) findViewById(R.id.main_bottom_grid);
+        gridView2 = (GridView) findViewById(R.id.main_bottom_grid2);
     }
 
     //toolbar菜单
