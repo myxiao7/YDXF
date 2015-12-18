@@ -1,6 +1,7 @@
 package com.sizhuo.ydxf.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sizhuo.ydxf.Module01;
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.bean.MainBean;
 
@@ -126,6 +128,11 @@ public class MyMainAdapter extends BaseAdapter{
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(context, "posi" + position, Toast.LENGTH_SHORT).show();
+                        switch (position){
+                            case 0:
+                                Intent intent = new Intent(context, Module01.class);
+                                context.startActivity(intent);
+                        }
                     }
                 });
                 break;
