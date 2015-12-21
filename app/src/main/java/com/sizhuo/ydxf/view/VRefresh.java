@@ -14,6 +14,9 @@ import android.widget.ListView;
 
 import com.sizhuo.ydxf.R;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 
 /**
  * 项目名称: YDXF
@@ -238,6 +241,24 @@ public class VRefresh extends SwipeRefreshLayout implements AbsListView.OnScroll
         } else {
             Log.d("VRefresh", "没有滚动到最后一行");
             isLastRow = false;
+        }
+    }
+
+    /**
+     * 自动刷新
+     */
+    public void autoRefresh() {
+        try {
+            Field mCircleView = SwipeRefreshLayout.class.getDeclaredField("mCircleView");
+            mCircleView.setAccessible(true);
+            View progress = (View) mCircleView.get(this);
+            progress.setVisibility(VISIBLE);
+
+            Method setRefreshing = SwipeRefreshLayout.class.getDeclaredMethod("setRefreshing", boolean.class, boolean.class);
+            setRefreshing.setAccessible(true);
+            setRefreshing.invoke(this, true, true);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     public static interface OnLoadListener {
