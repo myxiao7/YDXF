@@ -56,16 +56,16 @@ public class Module01 extends AppCompatActivity{
         listView = (ListView) findViewById(R.id.module01_list);
         myModule01Adapter = new MyModule01Adapter(list, this);
         vRefresh = (VRefresh)findViewById(R.id.module01_vrefresh);
-        vRefresh.setView(this, listView);
-        vRefresh.setMoreData(true);
+        vRefresh.setView(this, listView);//设置嵌套的子view -listview
+        vRefresh.setMoreData(true);//设置是否还有数据可加载(一般根据服务器反回来决定)
         listView.setAdapter(myModule01Adapter);
-        vRefresh.autoRefresh();
+        vRefresh.autoRefresh();//自动刷新一次
         vRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 Message message = handler.obtainMessage();
                 message.what = REFRESH_COMPLETE;
-                handler.sendMessageDelayed(message, 2500);
+                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
             }
         });
         vRefresh.setOnLoadListener(new VRefresh.OnLoadListener() {
@@ -73,7 +73,7 @@ public class Module01 extends AppCompatActivity{
             public void onLoadMore() {
                 Message message = handler.obtainMessage();
                 message.what = LOADMORE_COMPLETE;
-                handler.sendMessageDelayed(message, 2500);
+                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
             }
         });
 
@@ -95,13 +95,13 @@ public class Module01 extends AppCompatActivity{
                 case REFRESH_COMPLETE:
                     list.clear();
                     for (int i = 0; i <10 ; i++) {
-                        Module01Bean module01Bean = new Module01Bean(R.mipmap.ic_icon,"更新的标题"+i,"更新的新闻more"+i,"2015-10-10");
+                        Module01Bean module01Bean = new Module01Bean(R.mipmap.ic_icon,"更新的标题"+i,"更新的新闻"+i,"2015-10-10");
                         list.add(module01Bean);
                     }
                     vRefresh.setMoreData(true);//设置还有数据可以加载
                     myModule01Adapter.notifyDataSetChanged();
                     vRefresh.setLoading(false);//停止刷新
-                    vRefresh.setRefreshing(false);
+                    vRefresh.setRefreshing(false);//让刷新消失
                     break;
             }
         }

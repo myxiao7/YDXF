@@ -50,7 +50,7 @@ public class MyModule01Adapter extends BaseAdapter{
         ViewHolder holder = null;
         if(convertView == null){
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            convertView = inflater.inflate(R.layout.module01_list_item, parent, false);
+            convertView = inflater.inflate(R.layout.module01_list_item02, parent, false);
             holder= new ViewHolder();
             holder.imageView = (ImageView) convertView.findViewById(R.id.module01_list_item_img);
             holder.titleTv = (TextView) convertView.findViewById(R.id.module01_list_item_title_tv);

@@ -9,7 +9,7 @@
     app:cardBackgroundColor="@color/colorWhite"
     android:descendantFocusability="blocksDescendants"
     >
-
+    <!--模块 中部内容-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -25,7 +25,7 @@
             >
 
             <ImageView
-                android:id="@+id/module01_list_item_img"
+                android:id="@+id/module01_list_item01_img"
                 android:layout_width="125dp"
                 android:layout_height="85dp"
                 android:background="@mipmap/ic_icon"
@@ -40,15 +40,15 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/module01_list_item_title_tv"
+                    android:id="@+id/module01_list_item01_title_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="新闻标题"
                     android:textColor="@color/black"
-                    android:textSize="22sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <TextView
-                    android:id="@+id/module01_list_item_des_tv"
+                    android:id="@+id/module01_list_item01_des_tv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="新闻简略信息"
