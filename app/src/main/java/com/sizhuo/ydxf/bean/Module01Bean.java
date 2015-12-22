@@ -1,5 +1,7 @@
 package com.sizhuo.ydxf.bean;
 
+import java.util.List;
+
 /**
  * 项目名称: YDXF
  * 类描述:  栏目一bean
@@ -10,58 +12,51 @@ package com.sizhuo.ydxf.bean;
  */
 public class Module01Bean {
     /**
-     * 缩略图
+     * 轮播图
      */
-    private int Img;
+    private SliderBean sliderBean;
     /**
-     * 标题
+     * 新闻list
      */
-    private String title;
+    private List<NewsBean> newsBeanList;
     /**
-     * 简介
+     * 横向新闻list
      */
-    private String des;
+    private List<NewsHonBean> newsHonBeanList;
+
     /**
-     * 时间
+     *
+     * @param sliderBean 轮播图
+     * @param newsBeanList 新闻list
+     * @param newsHonBeanList 横向新闻list
      */
-    private String date;
-
-    public Module01Bean(int img, String title, String des, String date) {
-        Img = img;
-        this.title = title;
-        this.des = des;
-        this.date = date;
+    public Module01Bean(List<NewsBean> newsBeanList, SliderBean sliderBean, List<NewsHonBean> newsHonBeanList) {
+        this.newsBeanList = newsBeanList;
+        this.sliderBean = sliderBean;
+        this.newsHonBeanList = newsHonBeanList;
     }
 
-    public int getImg() {
-        return Img;
+    public SliderBean getSliderBean() {
+        return sliderBean;
     }
 
-    public void setImg(int img) {
-        Img = img;
+    public void setSliderBean(SliderBean sliderBean) {
+        this.sliderBean = sliderBean;
     }
 
-    public String getTitle() {
-        return title;
+    public List<NewsBean> getNewsBeanList() {
+        return newsBeanList;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setNewsBeanList(List<NewsBean> newsBeanList) {
+        this.newsBeanList = newsBeanList;
     }
 
-    public String getDes() {
-        return des;
+    public List<NewsHonBean> getNewsHonBeanList() {
+        return newsHonBeanList;
     }
 
-    public void setDes(String des) {
-        this.des = des;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
+    public void setNewsHonBeanList(List<NewsHonBean> newsHonBeanList) {
+        this.newsHonBeanList = newsHonBeanList;
     }
 }

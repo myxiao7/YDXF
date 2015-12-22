@@ -6,7 +6,7 @@
     >
     <!--模块 上部分轮播图-->
     <com.daimajia.slider.library.SliderLayout
-        android:id="@+id/main_slider"
+        android:id="@+id/module01_list_item01_slider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/slid_height" />
 </LinearLayout>

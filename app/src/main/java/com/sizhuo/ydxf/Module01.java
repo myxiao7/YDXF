@@ -1,6 +1,5 @@
 package com.sizhuo.ydxf;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,14 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 
-import com.sizhuo.ydxf.adapter.MyMainAdapter;
 import com.sizhuo.ydxf.adapter.MyModule01Adapter;
-import com.sizhuo.ydxf.bean.MainBean;
-import com.sizhuo.ydxf.bean.Module01Bean;
+import com.sizhuo.ydxf.bean.NewsBean;
 import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.VRefresh;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -31,7 +28,7 @@ public class Module01 extends AppCompatActivity{
     private Toolbar toolbar;//标题栏
     private VRefresh vRefresh;
     private ListView listView;
-    private List<Module01Bean> list = new ArrayList<Module01Bean>();
+    private List<NewsBean> list = new LinkedList<NewsBean>();
     private MyModule01Adapter myModule01Adapter;
     private final int REFRESH_COMPLETE = 0X100;//刷新完成
     private final int LOADMORE_COMPLETE = 0X101;//加载完成
@@ -50,16 +47,25 @@ public class Module01 extends AppCompatActivity{
         toolbar.setTitle("大事小情");
         setSupportActionBar(toolbar);
         for (int i = 0; i <10 ; i++) {
-            Module01Bean module01Bean = new Module01Bean(R.mipmap.ic_launcher,"标题"+i,"新闻"+i,"2015-10-10");
-            list.add(module01Bean);
+            NewsBean newsBean = new NewsBean("1","2","3","新闻标题","新闻简介","2015-12-22","1","");
+            list.add(newsBean);
         };
-        listView = (ListView) findViewById(R.id.module01_list);
+        for (int i = 0; i <1 ; i++) {
+            NewsBean newsBean = new NewsBean("1","2","3","新闻标题3图","新闻简介","2015-12-22","2","");
+            list.add(newsBean);
+
+        };
+        for (int i = 0; i <2 ; i++) {
+            NewsBean newsBean = new NewsBean("1","2","3","新闻标题无图","新闻简介","2015-12-22","3","");
+            list.add(newsBean);
+        };
         myModule01Adapter = new MyModule01Adapter(list, this);
+        listView = (ListView) findViewById(R.id.module01_list);
         vRefresh = (VRefresh)findViewById(R.id.module01_vrefresh);
         vRefresh.setView(this, listView);//设置嵌套的子view -listview
         vRefresh.setMoreData(true);//设置是否还有数据可加载(一般根据服务器反回来决定)
         listView.setAdapter(myModule01Adapter);
-        vRefresh.autoRefresh();//自动刷新一次
+//        vRefresh.autoRefresh();//自动刷新一次
         vRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -85,9 +91,9 @@ public class Module01 extends AppCompatActivity{
             switch (msg.what){
                 case LOADMORE_COMPLETE:
                     for (int i = 0; i <2 ; i++) {
-                        Module01Bean module01Bean = new Module01Bean(R.mipmap.ic_launcher,"标题more"+i,"新闻more"+i,"2015-10-10");
-                        list.add(module01Bean);
-                    }
+                        NewsBean newsBean = new NewsBean("1","2","3","新添加的新闻标题","新闻简介","2015-12-22","1","");
+                        list.add(newsBean);
+                    };
                     myModule01Adapter.notifyDataSetChanged();
                     vRefresh.setMoreData(true);//设置还有数据可以加载
                     vRefresh.setLoading(false);//停止加载更多
@@ -95,9 +101,18 @@ public class Module01 extends AppCompatActivity{
                 case REFRESH_COMPLETE:
                     list.clear();
                     for (int i = 0; i <10 ; i++) {
-                        Module01Bean module01Bean = new Module01Bean(R.mipmap.ic_icon,"更新的标题"+i,"更新的新闻"+i,"2015-10-10");
-                        list.add(module01Bean);
-                    }
+                        NewsBean newsBean = new NewsBean("1","2","3","更新后新闻标题","新闻简介","2015-12-22","1","");
+                        list.add(newsBean);
+                    };
+                    for (int i = 0; i <1 ; i++) {
+                        NewsBean newsBean = new NewsBean("1","2","3","更新后新闻标题3图","新闻简介","2015-12-22","2","");
+                        list.add(newsBean);
+
+                    };
+                    for (int i = 0; i <2 ; i++) {
+                        NewsBean newsBean = new NewsBean("1","2","3","更新后新闻标题无图","新闻简介","2015-12-22","3","");
+                        list.add(newsBean);
+                    };
                     vRefresh.setMoreData(true);//设置还有数据可以加载
                     myModule01Adapter.notifyDataSetChanged();
                     vRefresh.setLoading(false);//停止刷新
