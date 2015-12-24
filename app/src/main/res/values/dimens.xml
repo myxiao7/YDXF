@@ -6,4 +6,5 @@
     <dimen name="title_size">22sp</dimen>
     <!--轮播图高度-->
     <dimen name="slid_height">200dp</dimen>
+    <dimen name="slid_height2">-200dp</dimen>
 </resources>

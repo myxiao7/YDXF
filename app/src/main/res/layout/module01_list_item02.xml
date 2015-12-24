@@ -4,62 +4,87 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    app:cardCornerRadius="5dp"
-    app:cardElevation="2dp"
-    app:cardBackgroundColor="@color/colorWhite"
     android:descendantFocusability="blocksDescendants"
-    >
-    <!--模块 中部内容-->
+    app:cardBackgroundColor="@color/colorWhite"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="2dp">
+    <!--模块 第三部分 横向新闻列表-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:background="@drawable/list_setlect_bg"
-            >
+            android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/module01_list_item02_img"
-                android:layout_width="125dp"
-                android:layout_height="85dp"
-                android:background="@mipmap/ic_icon"
-                android:clickable="false"
-                android:focusable="false"
-                />
-
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
 
                 <TextView
                     android:id="@+id/module01_list_item02_title_tv"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="新闻标题"
-                    android:textColor="@color/black"
+                    android:layout_centerVertical="true"
+                    android:text="我是标题"
                     android:textSize="@dimen/title_size" />
 
                 <TextView
-                    android:id="@+id/module01_list_item02_des_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="新闻简略信息"
-                    android:textColor="@color/lighter_gray"
-                    android:textSize="16sp" />
+                    android:id="@+id/module01_list_item02_date_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="我是时间" />
 
-            </LinearLayout>
-
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/module01_list_item02_date_tv"
+                    android:background="@mipmap/ic_colock" />
+            </RelativeLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/module01_list_item02_img01"
+                android:layout_width="0dp"
+                android:layout_height="85dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@mipmap/ic_icon"
+                android:clickable="false"
+                android:focusable="false" />
+
+            <ImageView
+                android:id="@+id/module01_list_item02_img02"
+                android:layout_width="0dp"
+                android:layout_height="85dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@mipmap/ic_icon"
+                android:clickable="false"
+                android:focusable="false" />
+
+            <ImageView
+                android:id="@+id/module01_list_item02_img03"
+                android:layout_width="0dp"
+                android:layout_height="85dp"
+                android:layout_weight="1"
+                android:background="@mipmap/ic_icon"
+                android:clickable="false"
+                android:focusable="false" />
+
+        </LinearLayout>
     </LinearLayout>
-
-
 </android.support.v7.widget.CardView>

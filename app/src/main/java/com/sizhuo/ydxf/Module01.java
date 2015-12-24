@@ -6,13 +6,21 @@ import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ListView;
 
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.sizhuo.ydxf.adapter.MyModule01Adapter;
 import com.sizhuo.ydxf.bean.NewsBean;
 import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.VRefresh;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,6 +40,7 @@ public class Module01 extends AppCompatActivity{
     private MyModule01Adapter myModule01Adapter;
     private final int REFRESH_COMPLETE = 0X100;//刷新完成
     private final int LOADMORE_COMPLETE = 0X101;//加载完成
+    private HashMap<String,String> url_maps = new LinkedHashMap<String, String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,13 +68,44 @@ public class Module01 extends AppCompatActivity{
             NewsBean newsBean = new NewsBean("1","2","3","新闻标题无图","新闻简介","2015-12-22","3","");
             list.add(newsBean);
         };
+        View view = LayoutInflater.from(this).inflate(R.layout.module01_list_header,null);
+        SliderLayout sliderLayout = (SliderLayout) view.findViewById(R.id.module01_list_item01_slider);
+        url_maps.put("测试01", "http://192.168.1.114:8080/xinwen/img/item01.jpg");
+        url_maps.put("测试02", "http://192.168.1.114:8080/xinwen/img/item02.jpg");
+        url_maps.put("测试03", "http://192.168.1.114:8080/xinwen/img/item03.jpg");
+        url_maps.put("测试04", "http://192.168.1.114:8080/xinwen/img/item04.jpg");
+        url_maps.put("小学足球联赛开幕 OMG 1:0 VG", "http://192.168.1.114:8080/xinwen/img/item05.jpg");
+        for(String name : url_maps.keySet()){
+            TextSliderView textSliderView = new TextSliderView(this);
+            // initialize a SliderLayout
+            textSliderView
+                    .description(name)
+                    .image(url_maps.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.Fit)
+            ;
+
+            //add your extra information`
+            textSliderView.bundle(new Bundle());
+            textSliderView.getBundle()
+                    .putString("extra",name);
+
+            sliderLayout.addSlider(textSliderView);
+        }
+        sliderLayout.setPresetTransformer(SliderLayout.Transformer.Default);
+        sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
+        sliderLayout.setCustomAnimation(new DescriptionAnimation());
+        sliderLayout.startAutoCycle(2500, 4000, true);
         myModule01Adapter = new MyModule01Adapter(list, this);
         listView = (ListView) findViewById(R.id.module01_list);
+        listView.addHeaderView(view);
+        listView.setAdapter(myModule01Adapter);
         vRefresh = (VRefresh)findViewById(R.id.module01_vrefresh);
         vRefresh.setView(this, listView);//设置嵌套的子view -listview
         vRefresh.setMoreData(true);//设置是否还有数据可加载(一般根据服务器反回来决定)
         listView.setAdapter(myModule01Adapter);
-//        vRefresh.autoRefresh();//自动刷新一次
+        vRefresh.autoRefresh();//自动刷新一次
+//        vRefresh.setLoading(false);//停止刷新
+//        vRefresh.setRefreshing(false);//让刷新消失
         vRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -94,7 +134,7 @@ public class Module01 extends AppCompatActivity{
                         NewsBean newsBean = new NewsBean("1","2","3","新添加的新闻标题","新闻简介","2015-12-22","1","");
                         list.add(newsBean);
                     };
-                    myModule01Adapter.notifyDataSetChanged();
+                    myModule01Adapter.notifyDataSetChanged(list);
                     vRefresh.setMoreData(true);//设置还有数据可以加载
                     vRefresh.setLoading(false);//停止加载更多
                     break;

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
+    <!--模块 上部分轮播图-->
+    <com.daimajia.slider.library.SliderLayout
+        android:id="@+id/module01_list_item01_slider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/slid_height"
+        />
+</LinearLayout>
