@@ -5,12 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sizhuo.ydxf.R;
-import com.sizhuo.ydxf.bean.GridBean;
-import com.sizhuo.ydxf.bean.GridBean2;
+import com.sizhuo.ydxf.entity.GridBean2;
 
 import java.util.List;
 

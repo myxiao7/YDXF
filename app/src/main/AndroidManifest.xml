@@ -24,6 +24,7 @@
         </activity>
         <activity android:name=".MainActivity"/>
         <activity android:name=".Module01" />
+        <activity android:name=".VideoModule" />
     </application>
 
 </manifest>

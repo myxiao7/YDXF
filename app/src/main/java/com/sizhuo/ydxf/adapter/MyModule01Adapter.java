@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sizhuo.ydxf.R;
-import com.sizhuo.ydxf.bean.imgextra;
-import com.sizhuo.ydxf.bean.NewsData;
+import com.sizhuo.ydxf.entity.imgextra;
+import com.sizhuo.ydxf.entity.NewsData;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
 import java.util.List;

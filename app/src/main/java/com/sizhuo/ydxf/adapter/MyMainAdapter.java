@@ -14,7 +14,8 @@ import android.widget.Toast;
 
 import com.sizhuo.ydxf.Module01;
 import com.sizhuo.ydxf.R;
-import com.sizhuo.ydxf.bean.MainBean;
+import com.sizhuo.ydxf.VideoModule;
+import com.sizhuo.ydxf.entity.MainBean;
 
 import java.util.List;
 
@@ -202,6 +203,8 @@ public class MyMainAdapter extends BaseAdapter{
                     break;
                 case R.id.main_list_item02_menu04_lin:
                     Toast.makeText(context, "电视栏目", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, VideoModule.class);
+                    context.startActivity(intent);
                     break;
             }
         }

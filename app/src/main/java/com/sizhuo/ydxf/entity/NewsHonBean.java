@@ -1,4 +1,4 @@
-package com.sizhuo.ydxf.bean;
+package com.sizhuo.ydxf.entity;
 
 /**
  * 项目名称: YDXF

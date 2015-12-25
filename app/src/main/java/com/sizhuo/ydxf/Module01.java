@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.android.volley.RequestQueue;
@@ -22,10 +23,8 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.sizhuo.ydxf.adapter.MyModule01Adapter;
-import com.sizhuo.ydxf.application.MyApplication;
-import com.sizhuo.ydxf.bean.NewsBean;
-import com.sizhuo.ydxf.bean.NewsData;
-import com.sizhuo.ydxf.bean.SliderData;
+import com.sizhuo.ydxf.entity.NewsData;
+import com.sizhuo.ydxf.entity.SliderData;
 import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.VRefresh;
@@ -46,7 +45,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class Module01 extends AppCompatActivity{
+public class Module01 extends AppCompatActivity implements BaseSliderView.OnSliderClickListener {
     private Toolbar toolbar;//标题栏
     private VRefresh vRefresh;//下拉刷新
     private SliderLayout sliderLayout;//轮播
@@ -93,14 +92,30 @@ public class Module01 extends AppCompatActivity{
                         for (int i = 0; i <sliderDatas.size() ; i++) {
                             url_maps.put(sliderDatas.get(i).getTitle(),sliderDatas.get(i).getImgsrc());
                             Log.d("xinwen",sliderDatas.get(i).getTitle());
+                            TextSliderView textSliderView = new TextSliderView(Module01.this);
+                            // initialize a SliderLayout
+                            textSliderView
+                                    .description(sliderDatas.get(i).getTitle())
+                                    .image(sliderDatas.get(i).getImgsrc())
+                                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                                    .setOnSliderClickListener(Module01.this);
+                            ;
+
+                            //add your extra information`
+                            textSliderView.bundle(new Bundle());
+                            textSliderView.getBundle()
+                                    .putString("extra", sliderDatas.get(i).getUrl());
+
+                            sliderLayout.addSlider(textSliderView);
                         }
-                        for(String name : url_maps.keySet()){
+                        /*for(String name : url_maps.keySet()){
                             TextSliderView textSliderView = new TextSliderView(Module01.this);
                             // initialize a SliderLayout
                             textSliderView
                                     .description(name)
                                     .image(url_maps.get(name))
                                     .setScaleType(BaseSliderView.ScaleType.Fit)
+                                    .setOnSliderClickListener(Module01.this);
                             ;
 
                             //add your extra information`
@@ -109,7 +124,7 @@ public class Module01 extends AppCompatActivity{
                                     .putString("extra",name);
 
                             sliderLayout.addSlider(textSliderView);
-                        }
+                        }*/
                         //获取新闻
                         list = JSON.parseArray(data.getString("news").toString(), NewsData.class);
                        /* Log.d("xinwen", list.size()+"-----111");
@@ -208,5 +223,10 @@ public class Module01 extends AppCompatActivity{
     protected void onStop() {
         super.onStop();
         queue.cancelAll(TAG01);
+    }
+
+    @Override
+    public void onSliderClick(BaseSliderView slider) {
+        Toast.makeText(this, slider.getBundle().get("extra") + "", Toast.LENGTH_SHORT).show();
     }
 }

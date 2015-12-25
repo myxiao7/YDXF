@@ -1,4 +1,4 @@
-package com.sizhuo.ydxf.bean;
+package com.sizhuo.ydxf.entity;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class NewsData {
 /**
      * 多图新闻
      */
-    private List<com.sizhuo.ydxf.bean.imgextra> imgextra;
+    private List<com.sizhuo.ydxf.entity.imgextra> imgextra;
 
     public NewsData() {
     }
@@ -103,11 +103,11 @@ public class NewsData {
         this.ptime = ptime;
     }
 
-    public List<com.sizhuo.ydxf.bean.imgextra> getImgextra() {
+    public List<com.sizhuo.ydxf.entity.imgextra> getImgextra() {
         return imgextra;
     }
 
-    public void setImgextra(List<com.sizhuo.ydxf.bean.imgextra> imgextra) {
+    public void setImgextra(List<com.sizhuo.ydxf.entity.imgextra> imgextra) {
         this.imgextra = imgextra;
     }
 }

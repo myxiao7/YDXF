@@ -21,9 +21,9 @@ import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.sizhuo.ydxf.adapter.MyBottomGridAdapter;
 import com.sizhuo.ydxf.adapter.MyBottomGridAdapter2;
 import com.sizhuo.ydxf.adapter.MyMainAdapter;
-import com.sizhuo.ydxf.bean.GridBean;
-import com.sizhuo.ydxf.bean.GridBean2;
-import com.sizhuo.ydxf.bean.MainBean;
+import com.sizhuo.ydxf.entity.GridBean;
+import com.sizhuo.ydxf.entity.GridBean2;
+import com.sizhuo.ydxf.entity.MainBean;
 import com.sizhuo.ydxf.util.StatusBar;
 
 import java.util.ArrayList;
