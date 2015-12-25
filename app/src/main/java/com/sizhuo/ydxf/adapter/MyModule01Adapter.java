@@ -9,7 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sizhuo.ydxf.R;
-import com.sizhuo.ydxf.bean.NewsBean;
+import com.sizhuo.ydxf.bean.imgextra;
+import com.sizhuo.ydxf.bean.NewsData;
+import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
 import java.util.List;
 
@@ -21,12 +23,12 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class MyModule01Adapter extends BaseAdapter{
-    private List<NewsBean> list;
+public class MyModule01Adapter extends BaseAdapter {
+    private List<NewsData> list;
     private Context context;
     private final int TYPE_ONE = 0, TYPE_TWO = 1, TYPE_THREE = 2, TYPE_COUNT = 3;//子布局类型和个数
 
-    public MyModule01Adapter(List<NewsBean> list, Context context) {
+    public MyModule01Adapter(List<NewsData> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -53,15 +55,15 @@ public class MyModule01Adapter extends BaseAdapter{
         ViewHolder03 holder03 = null;
         int type = getItemViewType(position);
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if(convertView == null){
-            switch (type){
+        if (convertView == null) {
+            switch (type) {
                 case TYPE_ONE:
                     convertView = inflater.inflate(R.layout.module01_list_item01, parent, false);
                     holder01 = new ViewHolder01();
                     holder01.imageView = (ImageView) convertView.findViewById(R.id.module01_list_item01_img);
                     holder01.titleTv = (TextView) convertView.findViewById(R.id.module01_list_item01_title_tv);
                     holder01.desTv = (TextView) convertView.findViewById(R.id.module01_list_item01_des_tv);
-//                    holder02.dateTv = (ImageView) convertView.findViewById(R.id.module01_list_item02_img);
+                    holder01.dateTv = (TextView) convertView.findViewById(R.id.module01_list_item01_date_tv);
                     convertView.setTag(holder01);
                     break;
 
@@ -85,8 +87,8 @@ public class MyModule01Adapter extends BaseAdapter{
                     convertView.setTag(holder03);
                     break;
             }
-        }else{
-            switch (type){
+        } else {
+            switch (type) {
                 case TYPE_ONE:
                     holder01 = (ViewHolder01) convertView.getTag();
                     break;
@@ -99,24 +101,26 @@ public class MyModule01Adapter extends BaseAdapter{
             }
         }
         //设置数据
-        NewsBean newsBean = list.get(position);
-        switch (type){
+        NewsData newsData = list.get(position);
+        switch (type) {
             case TYPE_ONE:
-                holder01.imageView.setBackgroundResource(R.mipmap.ic_icon);
-                holder01.titleTv.setText(newsBean.getTitle());
-                holder01.desTv.setText(newsBean.getDes());
+                ImageLoaderHelper.getIstance().loadImg(newsData.getImgsrc(),holder01.imageView);
+                holder01.titleTv.setText(newsData.getTitle());
+                holder01.desTv.setText(newsData.getDigest());
+                holder01.dateTv.setText(newsData.getPtime());
                 break;
             case TYPE_TWO:
-                holder02.imageView01.setBackgroundResource(R.mipmap.ic_icon);
-                holder02.imageView02.setBackgroundResource(R.mipmap.ic_icon);
-                holder02.imageView03.setBackgroundResource(R.mipmap.ic_icon);
-                holder02.titleTv.setText(newsBean.getTitle());
-                holder02.dateTv.setText(newsBean.getDate());
+                List<imgextra> imgExtrases = newsData.getImgextra();
+                ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(0).getUrl(), holder02.imageView01);
+                ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(1).getUrl(),holder02.imageView02);
+                ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(2).getUrl(),holder02.imageView03);
+                holder02.titleTv.setText(newsData.getTitle());
+                holder02.dateTv.setText(newsData.getPtime());
                 break;
             case TYPE_THREE:
-                holder03.titleTv.setText(newsBean.getTitle());
-                holder03.desTv.setText(newsBean.getDes());
-                holder03.dateTv.setText(newsBean.getDate());
+                holder03.titleTv.setText(newsData.getTitle());
+                holder03.desTv.setText(newsData.getDigest());
+                holder03.dateTv.setText(newsData.getPtime());
                 break;
         }
 
@@ -125,11 +129,11 @@ public class MyModule01Adapter extends BaseAdapter{
 
     @Override
     public int getItemViewType(int position) {
-        if(list.get(position).getType().equals("1")){
+        if (list.get(position).getType().equals("1")) {
             return TYPE_ONE;
-        }else if(list.get(position).getType().equals("2")){
+        } else if (list.get(position).getType().equals("2")) {
             return TYPE_TWO;
-        }else{
+        } else {
             return TYPE_THREE;
         }
     }
@@ -138,26 +142,29 @@ public class MyModule01Adapter extends BaseAdapter{
     public int getViewTypeCount() {
         return TYPE_COUNT;
     }
-    class ViewHolder01{
+
+    class ViewHolder01 {
         ImageView imageView;
         TextView titleTv;
         TextView desTv;
         TextView dateTv;
     }
-    class ViewHolder02{
+
+    class ViewHolder02 {
         TextView titleTv;
         TextView dateTv;
         ImageView imageView01;
         ImageView imageView02;
         ImageView imageView03;
     }
-    class ViewHolder03{
+
+    class ViewHolder03 {
         TextView titleTv;
         TextView desTv;
         TextView dateTv;
     }
 
-    public void notifyDataSetChanged(List<NewsBean> list) {
+    public void notifyDataSetChanged(List<NewsData> list) {
         this.list = list;
         notifyDataSetChanged();
     }

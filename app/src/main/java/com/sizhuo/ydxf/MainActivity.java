@@ -1,7 +1,7 @@
 package com.sizhuo.ydxf;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.*;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -99,8 +99,8 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         //轮播图
         url_maps.put("测试01", "http://192.168.1.114:8080/xinwen/img/item01.jpg");
         url_maps.put("测试02", "http://192.168.1.114:8080/xinwen/img/item02.jpg");
-        url_maps.put("测试03", "http://192.168.1.114:8080/xinwen/img/item03.jpg");
-        url_maps.put("测试04", "http://192.168.1.114:8080/xinwen/img/item04.jpg");
+        url_maps.put("测试03", "http://192.168.1.114:8080/xinwen/img/item0.jpg");
+        url_maps.put("测试04", "http://192.168.1.114:8080/xinwen/img/item0.jpg");
         url_maps.put("小学足球联赛开幕 OMG 1:0 VG", "http://192.168.1.114:8080/xinwen/img/item05.jpg");
         for(String name : url_maps.keySet()){
             TextSliderView textSliderView = new TextSliderView(this);

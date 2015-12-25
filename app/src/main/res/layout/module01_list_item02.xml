@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
     android:descendantFocusability="blocksDescendants"
     app:cardBackgroundColor="@color/colorWhite"
-    app:cardCornerRadius="5dp"
-    app:cardElevation="2dp">
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp">
     <!--模块 第三部分 横向新闻列表-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -62,7 +61,7 @@
                 android:layout_height="85dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@mipmap/ic_icon"
+                android:scaleType="fitXY"
                 android:clickable="false"
                 android:focusable="false" />
 
@@ -72,7 +71,7 @@
                 android:layout_height="85dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@mipmap/ic_icon"
+                android:scaleType="fitXY"
                 android:clickable="false"
                 android:focusable="false" />
 
@@ -81,7 +80,7 @@
                 android:layout_width="0dp"
                 android:layout_height="85dp"
                 android:layout_weight="1"
-                android:background="@mipmap/ic_icon"
+                android:scaleType="fitXY"
                 android:clickable="false"
                 android:focusable="false" />
 

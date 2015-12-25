@@ -88,6 +88,9 @@
                     android:textColor="@color/black"
                     android:textSize="22sp" />
 
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
                 <TextView
                     android:id="@+id/main_list_item01_des_tv"
                     android:layout_width="match_parent"
@@ -95,7 +98,17 @@
                     android:text="新闻简略信息"
                     android:textColor="@color/lighter_gray"
                     android:textSize="16sp" />
-
+                    <TextView
+                        android:id="@+id/main_list_item01_date_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2015-12-24"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="16sp"
+                        android:layout_gravity="bottom|right"
+                        android:background="@color/colorWhite"
+                        />
+                </FrameLayout>
             </LinearLayout>
 
         </LinearLayout>

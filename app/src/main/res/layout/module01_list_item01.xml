@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    app:cardCornerRadius="5dp"
-    app:cardElevation="2dp"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
     app:cardBackgroundColor="@color/colorWhite"
     android:descendantFocusability="blocksDescendants"
     >
@@ -19,7 +18,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:background="@drawable/list_setlect_bg"
             >
@@ -28,9 +26,9 @@
                 android:id="@+id/module01_list_item01_img"
                 android:layout_width="125dp"
                 android:layout_height="85dp"
-                android:background="@mipmap/ic_icon"
                 android:clickable="false"
                 android:focusable="false"
+                android:scaleType="fitXY"
                 />
 
             <LinearLayout
@@ -47,6 +45,9 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/title_size" />
 
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
                 <TextView
                     android:id="@+id/module01_list_item01_des_tv"
                     android:layout_width="match_parent"
@@ -54,6 +55,16 @@
                     android:text="新闻简略信息"
                     android:textColor="@color/lighter_gray"
                     android:textSize="16sp" />
+                    <TextView
+                    android:id="@+id/module01_list_item01_date_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2015-12-24"
+                    android:textColor="@color/lighter_gray"
+                    android:textSize="16sp"
+                    android:layout_gravity="bottom|right"
+                    android:background="@color/colorWhite"/>
+                </FrameLayout>
 
             </LinearLayout>
 
