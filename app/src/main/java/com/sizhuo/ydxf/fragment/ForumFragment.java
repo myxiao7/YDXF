@@ -88,8 +88,8 @@ public class ForumFragment extends Fragment {
 
                 case REFRESH_COMPLETE:
                     list.clear();
-                    for (int i = 'A'; i < 'A'; i--) {
-                        list.add(" "+(char)(i));
+                    for (int i = 0; i < 10; i++) {
+                        list.add("fresh"+i);
                     }
                     myForumRecycleAdapter.notifyDataSetChanged();
                     vRefresh.setMoreData(true);//设置还有数据可以加载

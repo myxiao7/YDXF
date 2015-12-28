@@ -170,7 +170,7 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
         myModule01Adapter = new MyModule01Adapter(list, this);
         listView = (ListView) findViewById(R.id.module01_list);
         listView.addHeaderView(view);
-        listView.setAdapter(myModule01Adapter);
+//        listView.setAdapter(myModule01Adapter);
         vRefresh = (VRefresh)findViewById(R.id.module01_vrefresh);
         vRefresh.setView(this, listView);//设置嵌套的子view -listview
         vRefresh.setMoreData(true);//设置是否还有数据可加载(一般根据服务器反回来决定)
