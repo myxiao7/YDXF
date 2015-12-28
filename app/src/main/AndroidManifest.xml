@@ -6,13 +6,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".application.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".application.MyApplication"
-        >
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".Splash"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
@@ -22,9 +21,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" />
         <activity android:name=".Module01" />
         <activity android:name=".VideoModule" />
+        <activity
+            android:name=".Forum"
+            /> >
     </application>
 
 </manifest>

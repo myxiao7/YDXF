@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sizhuo.ydxf.Forum;
 import com.sizhuo.ydxf.Module01;
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.VideoModule;
@@ -133,6 +134,11 @@ public class MyMainAdapter extends BaseAdapter{
                             case 0:
                                 Intent intent = new Intent(context, Module01.class);
                                 context.startActivity(intent);
+                                break;
+                            case 3:
+                                Intent intent3 = new Intent(context, Forum.class);
+                                context.startActivity(intent3);
+                                break;
                         }
                     }
                 });

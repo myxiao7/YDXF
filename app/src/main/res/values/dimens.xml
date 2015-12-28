@@ -7,4 +7,5 @@
     <!--轮播图高度-->
     <dimen name="slid_height">200dp</dimen>
     <dimen name="slid_height2">-200dp</dimen>
+    <dimen name="fab_margin">32dp</dimen>
 </resources>
