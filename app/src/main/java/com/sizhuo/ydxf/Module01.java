@@ -18,6 +18,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.cjj.MaterialRefreshLayout;
+import com.cjj.MaterialRefreshListener;
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -47,7 +49,7 @@ import java.util.List;
  */
 public class Module01 extends AppCompatActivity implements BaseSliderView.OnSliderClickListener {
     private Toolbar toolbar;//标题栏
-    private VRefresh vRefresh;//下拉刷新
+    private MaterialRefreshLayout materialRefreshLayout;//下拉刷新
     private SliderLayout sliderLayout;//轮播
     private ListView listView;
     private List<NewsData> list = new LinkedList<NewsData>();//数据列表
@@ -171,29 +173,34 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
         listView = (ListView) findViewById(R.id.module01_list);
         listView.addHeaderView(view);
 //        listView.setAdapter(myModule01Adapter);
-        vRefresh = (VRefresh)findViewById(R.id.module01_vrefresh);
-        vRefresh.setView(this, listView);//设置嵌套的子view -listview
-        vRefresh.setMoreData(true);//设置是否还有数据可加载(一般根据服务器反回来决定)
+        materialRefreshLayout = (MaterialRefreshLayout) findViewById(R.id.module01_refresh);
         listView.setAdapter(myModule01Adapter);
-//        vRefresh.autoRefresh();//自动刷新一次
-//        vRefresh.setLoading(false);//停止刷新
-//        vRefresh.setRefreshing(false);//让刷新消失
-        vRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        materialRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
             @Override
-            public void onRefresh() {
+            public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
                 Message message = handler.obtainMessage();
                 message.what = REFRESH_COMPLETE;
                 handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
             }
-        });
-        vRefresh.setOnLoadListener(new VRefresh.OnLoadListener() {
+
             @Override
-            public void onLoadMore() {
+            public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
+                super.onRefreshLoadMore(materialRefreshLayout);
                 Message message = handler.obtainMessage();
                 message.what = LOADMORE_COMPLETE;
                 handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
             }
         });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                materialRefreshLayout
+                        .autoRefreshLoadMore();
+            }
+        }, 1000);
+//        vRefresh.autoRefresh();//自动刷新一次
+//        vRefresh.setLoading(false);//停止刷新
+//        vRefresh.setRefreshing(false);//让刷新消失
 
     }
 
@@ -203,17 +210,13 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
             switch (msg.what){
                 case LOADMORE_COMPLETE:
                     myModule01Adapter.notifyDataSetChanged(list);
-                    vRefresh.setMoreData(true);//设置还有数据可以加载
-                    vRefresh.setLoading(false);//停止加载更多
+                    materialRefreshLayout.finishRefreshLoadMore();
                     break;
                 case REFRESH_COMPLETE:
                     list.clear();
                     sliderLayout.removeAllSliders();
                     loadData();
-                    vRefresh.setMoreData(true);//设置还有数据可以加载
-                    vRefresh.setLoading(false);//停止刷新
-                    vRefresh.setRefreshing(false);//让刷新消失
-                    Log.d("xinwen", list.size() + "!!!!!!!!!!!!!!");
+                    materialRefreshLayout.finishRefresh();
                     break;
             }
         }

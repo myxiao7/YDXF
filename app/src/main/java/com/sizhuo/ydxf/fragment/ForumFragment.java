@@ -7,11 +7,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import com.cjj.MaterialRefreshLayout;
+import com.cjj.MaterialRefreshListener;
 import com.sizhuo.ydxf.R;
+import com.sizhuo.ydxf.adapter.MyForumAdapter;
 import com.sizhuo.ydxf.adapter.MyForumRecycleAdapter;
 import com.sizhuo.ydxf.view.VRefresh;
 
@@ -28,10 +33,13 @@ import java.util.List;
  */
 public class ForumFragment extends Fragment {
     private View mView;
-    private VRefresh vRefresh;
-    private RecyclerView recyclerView;
+    private MaterialRefreshLayout materialRefreshLayout;
+    private ListView listView;
+//    private RecyclerView recyclerView;
+    private View mFootView;
     private List<String> list = new ArrayList<>();
-    private MyForumRecycleAdapter myForumRecycleAdapter;
+//    private MyForumRecycleAdapter myForumRecycleAdapter;
+    private MyForumAdapter myForumAdapter;
     private final int REFRESH_COMPLETE = 0X100;
     private final int LOADMORE_COMPLETE = 0X101;
     @Override
@@ -42,13 +50,30 @@ public class ForumFragment extends Fragment {
         for (int i = 'A'; i < 'z'; i++) {
             list.add(" "+(char)(i));
         }
+        myForumAdapter = new MyForumAdapter(list, getActivity());
+//        myForumRecycleAdapter = new MyForumRecycleAdapter(list, getActivity());
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        listView.setAdapter(myForumAdapter);
+        materialRefreshLayout.setLoadMore(true);
+        materialRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
+            @Override
+            public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
+                Log.d("xinwen", "onRefresh");
+                Message message = handler.obtainMessage();
+                message.what = REFRESH_COMPLETE;
+                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
+            }
 
-        vRefresh.setView(getActivity(), recyclerView);//设置嵌套的子view -listview
-        vRefresh.setMoreData(true);//设置是否还有数据可加载(一般根据服务器反回来决定)
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        myForumRecycleAdapter = new MyForumRecycleAdapter(list, getActivity());
-        recyclerView.setAdapter(myForumRecycleAdapter);
-                vRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
+                super.onRefreshLoadMore(materialRefreshLayout);
+                Log.d("xinwen", "onRefreshLoadMore");
+                Message message = handler.obtainMessage();
+                message.what = LOADMORE_COMPLETE;
+                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
+            }
+        });
+      /*  vRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
                         Message message = handler.obtainMessage();
@@ -63,14 +88,15 @@ public class ForumFragment extends Fragment {
                 message.what = LOADMORE_COMPLETE;
                 handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
             }
-        });
+        });*/
         return mView;
     }
 
     private void initViews(LayoutInflater inflater, ViewGroup container) {
         mView = inflater.inflate(R.layout.fragment_forum,container,false);
-        recyclerView = (RecyclerView) mView.findViewById(R.id.fragment_forum_recycleviewr);
-        vRefresh = (VRefresh)mView.findViewById(R.id.fragment_forum_vrefresh);
+//        listView = (ListView) mView.findViewById(R.id.fragment_forum_listview);
+        listView = (ListView) mView.findViewById(R.id.fragment_forum_listview);
+        materialRefreshLayout = (MaterialRefreshLayout) mView.findViewById(R.id.fragment_forum_refresh);
     }
     Handler handler = new Handler(){
         @Override
@@ -81,9 +107,8 @@ public class ForumFragment extends Fragment {
                     for (int i = 0; i <5 ; i++) {
                         list.add("add"+i);
                     }
-                    myForumRecycleAdapter.notifyDataSetChanged();
-                    vRefresh.setMoreData(true);//设置还有数据可以加载
-                    vRefresh.setLoading(false);//停止加载更多
+                    myForumAdapter.notifyDataSetChanged();
+                    materialRefreshLayout.finishRefreshLoadMore();
                     break;
 
                 case REFRESH_COMPLETE:
@@ -91,10 +116,8 @@ public class ForumFragment extends Fragment {
                     for (int i = 0; i < 10; i++) {
                         list.add("fresh"+i);
                     }
-                    myForumRecycleAdapter.notifyDataSetChanged();
-                    vRefresh.setMoreData(true);//设置还有数据可以加载
-                    vRefresh.setLoading(false);//停止刷新
-                    vRefresh.setRefreshing(false);//让刷新消失
+                    myForumAdapter.notifyDataSetChanged();
+                    materialRefreshLayout.finishRefresh();
                     break;
             }
         }

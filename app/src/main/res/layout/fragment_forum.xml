@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.sizhuo.ydxf.view.VRefresh
-        android:id="@+id/fragment_forum_vrefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_forum_recycleviewr"
+    android:orientation="vertical"
+    >
+<com.cjj.MaterialRefreshLayout
+    android:id="@+id/fragment_forum_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="45dp"
+    app:overlay="true"
+    app:wave_show="false"
+    >
+    <ListView
+        android:id="@+id/fragment_forum_listview"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:background="@color/lighter_gray"
         >
-    </android.support.v7.widget.RecyclerView>
-    </com.sizhuo.ydxf.view.VRefresh>
+    </ListView>
+</com.cjj.MaterialRefreshLayout>
 </LinearLayout>

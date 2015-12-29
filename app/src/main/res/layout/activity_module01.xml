@@ -14,10 +14,16 @@
         app:navigationIcon="?attr/homeAsUpIndicator"
         >
     </android.support.v7.widget.Toolbar>
-    <com.sizhuo.ydxf.view.VRefresh
-        android:id="@+id/module01_vrefresh"
+    <com.cjj.MaterialRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/module01_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:overlay="true"
+        app:wave_show="false"
+        app:isLoadMore="true"
+        >
         <ListView
             android:id="@+id/module01_list"
             android:layout_width="match_parent"
@@ -26,5 +32,5 @@
             android:dividerHeight="1dp"
             >
         </ListView>
-    </com.sizhuo.ydxf.view.VRefresh>
+    </com.cjj.MaterialRefreshLayout>
 </LinearLayout>

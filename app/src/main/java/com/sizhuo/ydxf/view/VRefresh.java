@@ -109,12 +109,14 @@ public class VRefresh extends SwipeRefreshLayout implements AbsListView.OnScroll
         initWithContext(context);
     }
     private void initWithContext(Context context) {
-        if (mListView != null)
+        if (mListView != null){
             mListView.addFooterView(mFooterView, null, false);//设置footview不可点击
+        }
 //        if (recyclerView!=null){
 //            Log.d("VRefresh","快去自定义recyclerView 加footview吧");
 //            return;
 //        }
+
         mFooterView.setVisibility(View.GONE);//默认先隐藏
     }
     @Override
