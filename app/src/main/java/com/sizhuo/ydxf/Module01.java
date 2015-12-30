@@ -18,8 +18,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.cjj.MaterialRefreshLayout;
-import com.cjj.MaterialRefreshListener;
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -30,6 +28,9 @@ import com.sizhuo.ydxf.entity.SliderData;
 import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.VRefresh;
+import com.sizhuo.ydxf.view.zrclistview.SimpleFooter;
+import com.sizhuo.ydxf.view.zrclistview.SimpleHeader;
+import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,9 +50,8 @@ import java.util.List;
  */
 public class Module01 extends AppCompatActivity implements BaseSliderView.OnSliderClickListener {
     private Toolbar toolbar;//标题栏
-    private MaterialRefreshLayout materialRefreshLayout;//下拉刷新
     private SliderLayout sliderLayout;//轮播
-    private ListView listView;
+    private ZrcListView listView;
     private List<NewsData> list = new LinkedList<NewsData>();//数据列表
     private HashMap<String,String> url_maps = new LinkedHashMap<String, String>();//幻灯片数据
     private MyModule01Adapter myModule01Adapter;
@@ -135,6 +135,7 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
                         time02 = System.currentTimeMillis();
                         Log.d("xinwen",time02-time+"s");
                         myModule01Adapter.notifyDataSetChanged(list);
+                        listView.setRefreshSuccess("更新完成"); // 通知加载成功
                     }else{
 
                     }
@@ -169,35 +170,43 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
         sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
         sliderLayout.setCustomAnimation(new DescriptionAnimation());
         sliderLayout.startAutoCycle(2500, 4000, true);
+        listView = (ZrcListView) findViewById(R.id.module01_list);
+        // 设置下拉刷新的样式（可选，但如果没有Header则无法下拉刷新）
+        SimpleHeader header = new SimpleHeader(this);
+        header.setTextColor(0xff0066aa);
+        header.setCircleColor(0xff33bbee);
+        listView.setHeadable(header);
+
+        // 设置加载更多的样式（可选）
+        SimpleFooter footer = new SimpleFooter(this);
+        footer.setCircleColor(0xff33bbee);
+        listView.setFootable(footer);
+
+        // 设置列表项出现动画（可选）
+        listView.setItemAnimForTopIn(R.anim.topitem_in);
+        listView.setItemAnimForBottomIn(R.anim.bottomitem_in);
+        listView.setFootable(footer);
         myModule01Adapter = new MyModule01Adapter(list, this);
-        listView = (ListView) findViewById(R.id.module01_list);
         listView.addHeaderView(view);
 //        listView.setAdapter(myModule01Adapter);
-        materialRefreshLayout = (MaterialRefreshLayout) findViewById(R.id.module01_refresh);
         listView.setAdapter(myModule01Adapter);
-        materialRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
+        listView.setOnRefreshStartListener(new ZrcListView.OnStartListener() {
             @Override
-            public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
+            public void onStart() {
                 Message message = handler.obtainMessage();
                 message.what = REFRESH_COMPLETE;
                 handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
             }
-
+        });
+        // 加载更多事件回调（可选）
+        listView.setOnLoadMoreStartListener(new ZrcListView.OnStartListener() {
             @Override
-            public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
-                super.onRefreshLoadMore(materialRefreshLayout);
+            public void onStart() {
                 Message message = handler.obtainMessage();
                 message.what = LOADMORE_COMPLETE;
                 handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
             }
         });
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                materialRefreshLayout
-                        .autoRefreshLoadMore();
-            }
-        }, 1000);
 //        vRefresh.autoRefresh();//自动刷新一次
 //        vRefresh.setLoading(false);//停止刷新
 //        vRefresh.setRefreshing(false);//让刷新消失
@@ -210,13 +219,14 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
             switch (msg.what){
                 case LOADMORE_COMPLETE:
                     myModule01Adapter.notifyDataSetChanged(list);
-                    materialRefreshLayout.finishRefreshLoadMore();
+                    listView.setLoadMoreSuccess();
+                    listView.stopLoadMore();
                     break;
                 case REFRESH_COMPLETE:
                     list.clear();
                     sliderLayout.removeAllSliders();
                     loadData();
-                    materialRefreshLayout.finishRefresh();
+                    listView.startLoadMore(); // 开启LoadingMore功能
                     break;
             }
         }

@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.sizhuo.ydxf.Forum;
 import com.sizhuo.ydxf.Module01;
 import com.sizhuo.ydxf.R;
-import com.sizhuo.ydxf.TestRecycler;
 import com.sizhuo.ydxf.VideoModule;
 import com.sizhuo.ydxf.entity.MainBean;
 
@@ -137,8 +136,7 @@ public class MyMainAdapter extends BaseAdapter{
                                 context.startActivity(intent);
                                 break;
                             case 1:
-                                Intent intent2 = new Intent(context, TestRecycler.class);
-                                context.startActivity(intent2);
+
                                 break;
                             case 3:
                                 Intent intent3 = new Intent(context, Forum.class);

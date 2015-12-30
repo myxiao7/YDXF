@@ -24,10 +24,10 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".Module01" />
         <activity android:name=".VideoModule" />
-        <activity android:name=".TestRecycler" />
-        <activity
-            android:name=".Forum"
-            /> >
+        <activity android:name=".Forum"/>
+        <activity android:name=".PhotoWatch"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            />
     </application>
 
 </manifest>

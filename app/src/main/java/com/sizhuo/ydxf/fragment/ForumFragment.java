@@ -4,21 +4,32 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.adapter.MyForumAdapter;
-import com.sizhuo.ydxf.adapter.MyForumRecycleAdapter;
-import com.sizhuo.ydxf.view.VRefresh;
+import com.sizhuo.ydxf.application.MyApplication;
+import com.sizhuo.ydxf.entity.ForumData;
+import com.sizhuo.ydxf.util.Const;
+import com.sizhuo.ydxf.view.zrclistview.SimpleFooter;
+import com.sizhuo.ydxf.view.zrclistview.SimpleHeader;
+import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,91 +44,128 @@ import java.util.List;
  */
 public class ForumFragment extends Fragment {
     private View mView;
-    private MaterialRefreshLayout materialRefreshLayout;
-    private ListView listView;
-//    private RecyclerView recyclerView;
-    private View mFootView;
-    private List<String> list = new ArrayList<>();
-//    private MyForumRecycleAdapter myForumRecycleAdapter;
+    private ZrcListView listView;
+    private List<ForumData> list = new ArrayList<>();
     private MyForumAdapter myForumAdapter;
-    private final int REFRESH_COMPLETE = 0X100;
-    private final int LOADMORE_COMPLETE = 0X101;
+    private final int REFRESH_COMPLETE = 0X100;//下拉刷新
+    private final int LOADMORE_COMPLETE = 0X101;//上拉加载更多
+    private RequestQueue queue;
+    private JsonObjectRequest jsonObjectRequest;
+    private final String TAG01 = "jsonObjectRequest";//请求数据TAG
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(mView == null){
             initViews(inflater, container);
         }
-        for (int i = 'A'; i < 'z'; i++) {
-            list.add(" "+(char)(i));
-        }
+        queue = Volley.newRequestQueue(getActivity());
+        loadData();
         myForumAdapter = new MyForumAdapter(list, getActivity());
-//        myForumRecycleAdapter = new MyForumRecycleAdapter(list, getActivity());
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         listView.setAdapter(myForumAdapter);
-        materialRefreshLayout.setLoadMore(true);
-        materialRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
+        listView.setOnRefreshStartListener(new ZrcListView.OnStartListener() {
             @Override
-            public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
-                Log.d("xinwen", "onRefresh");
+            public void onStart() {
                 Message message = handler.obtainMessage();
                 message.what = REFRESH_COMPLETE;
-                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
-            }
-
-            @Override
-            public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
-                super.onRefreshLoadMore(materialRefreshLayout);
-                Log.d("xinwen", "onRefreshLoadMore");
-                Message message = handler.obtainMessage();
-                message.what = LOADMORE_COMPLETE;
-                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
+                handler.sendMessageDelayed(message, 500);//2.5秒后通知停止刷新
             }
         });
-      /*  vRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        Message message = handler.obtainMessage();
-                        message.what = REFRESH_COMPLETE;
-                        handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
-                    }
-                });
-        vRefresh.setOnLoadListener(new VRefresh.OnLoadListener() {
+        // 加载更多事件回调（可选）
+        listView.setOnLoadMoreStartListener(new ZrcListView.OnStartListener() {
             @Override
-            public void onLoadMore() {
+            public void onStart() {
                 Message message = handler.obtainMessage();
                 message.what = LOADMORE_COMPLETE;
-                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
+                handler.sendMessageDelayed(message, 500);//2.5秒后通知停止刷新
             }
-        });*/
+        });
+        myForumAdapter = new MyForumAdapter(list, getActivity());
+        listView.setAdapter(myForumAdapter);
+        listView.startLoadMore(); // 开启LoadingMore功能
+//
         return mView;
+    }
+
+    /**
+     * 获取数据
+     */
+    private void loadData() {
+        jsonObjectRequest =  new JsonObjectRequest(Const.MFORUM, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Log.d("xinwen", jsonObject.toString());
+                try {
+                    //获取服务器code
+                    int code = jsonObject.getInt("code");
+                    if(code == 200){
+                        jsonObject.getString("data");
+                        list = JSON.parseArray(jsonObject.getString("data"),ForumData.class);
+                        Log.d("xinwen",list.get(3).getImgextra().size()+"222222222");
+                        myForumAdapter.notifyDataSetChanged(list);
+                        listView.setRefreshSuccess("更新完成"); // 通知加载成功
+                    }else{
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Log.d("xinwen", volleyError.getMessage());
+            }
+        });
+        jsonObjectRequest.setTag(TAG01);
+        queue.add(jsonObjectRequest);
     }
 
     private void initViews(LayoutInflater inflater, ViewGroup container) {
         mView = inflater.inflate(R.layout.fragment_forum,container,false);
-//        listView = (ListView) mView.findViewById(R.id.fragment_forum_listview);
-        listView = (ListView) mView.findViewById(R.id.fragment_forum_listview);
-        materialRefreshLayout = (MaterialRefreshLayout) mView.findViewById(R.id.fragment_forum_refresh);
+        listView = (ZrcListView) mView.findViewById(R.id.fragment_forum_listview);
+        initListView();
+
     }
+
+    /**
+     * 初始化listview的刷新样式
+     */
+    private void initListView() {
+        // 设置下拉刷新的样式（可选，但如果没有Header则无法下拉刷新）
+        SimpleHeader header = new SimpleHeader(getActivity());
+        header.setTextColor(0xff0066aa);
+        header.setCircleColor(0xff33bbee);
+        listView.setHeadable(header);
+
+        // 设置加载更多的样式（可选）
+        SimpleFooter footer = new SimpleFooter(getActivity());
+        footer.setCircleColor(0xff33bbee);
+        listView.setFootable(footer);
+
+        // 设置列表项出现动画（可选）
+        listView.setItemAnimForTopIn(R.anim.topitem_in);
+        listView.setItemAnimForBottomIn(R.anim.bottomitem_in);
+        listView.setFootable(footer);
+    }
+
     Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
                 case LOADMORE_COMPLETE:
-                    for (int i = 0; i <5 ; i++) {
-                        list.add("add"+i);
-                    }
+
                     myForumAdapter.notifyDataSetChanged();
-                    materialRefreshLayout.finishRefreshLoadMore();
+                    listView.setLoadMoreSuccess();
+
+
                     break;
 
                 case REFRESH_COMPLETE:
                     list.clear();
-                    for (int i = 0; i < 10; i++) {
-                        list.add("fresh"+i);
-                    }
-                    myForumAdapter.notifyDataSetChanged();
-                    materialRefreshLayout.finishRefresh();
+                    loadData();
                     break;
             }
         }

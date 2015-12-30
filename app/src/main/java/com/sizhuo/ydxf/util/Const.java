@@ -17,4 +17,9 @@ public class Const {
      * Module01
      */
     public static final String M01 = "infos.html";
+    /**
+     * forum
+     */
+    public static final String MFORUM = URL+"forum.html";
+
 }

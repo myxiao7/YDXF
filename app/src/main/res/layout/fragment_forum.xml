@@ -6,19 +6,12 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     >
-<com.cjj.MaterialRefreshLayout
-    android:id="@+id/fragment_forum_refresh"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="45dp"
-    app:overlay="true"
-    app:wave_show="false"
-    >
-    <ListView
+    <com.sizhuo.ydxf.view.zrclistview.ZrcListView
         android:id="@+id/fragment_forum_listview"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         >
-    </ListView>
-</com.cjj.MaterialRefreshLayout>
+    </com.sizhuo.ydxf.view.zrclistview.ZrcListView>
 </LinearLayout>

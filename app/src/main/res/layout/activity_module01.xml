@@ -1,36 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/module01_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/holo_red_light"
         android:fitsSystemWindows="true"
-        app:titleTextAppearance="@style/CustomTextAppearance"
         app:navigationIcon="?attr/homeAsUpIndicator"
-        >
-    </android.support.v7.widget.Toolbar>
-    <com.cjj.MaterialRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/module01_refresh"
+        app:titleTextAppearance="@style/CustomTextAppearance"></android.support.v7.widget.Toolbar>
+
+    <com.sizhuo.ydxf.view.zrclistview.ZrcListView
+        android:id="@+id/module01_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:overlay="true"
-        app:wave_show="false"
-        app:isLoadMore="true"
-        >
-        <ListView
-            android:id="@+id/module01_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/lighter_gray"
-            android:dividerHeight="1dp"
-            >
-        </ListView>
-    </com.cjj.MaterialRefreshLayout>
+        android:divider="@color/lighter_gray"
+        android:dividerHeight="1dp"></com.sizhuo.ydxf.view.zrclistview.ZrcListView>
 </LinearLayout>

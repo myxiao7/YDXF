@@ -3,6 +3,8 @@ package com.sizhuo.ydxf.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -14,7 +16,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class MyFragPagerAdapter extends FragmentPagerAdapter {
+public class MyFragPagerAdapter extends FragmentStatePagerAdapter {
     private List<Fragment> fragments;
     private String[] titles = {"看帖","热点","精品","其他"};
 
@@ -41,4 +43,5 @@ public class MyFragPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return titles[position];
     }
+
 }
