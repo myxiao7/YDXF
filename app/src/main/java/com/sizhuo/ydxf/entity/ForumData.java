@@ -1,5 +1,6 @@
 package com.sizhuo.ydxf.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class ForumData {
+public class ForumData implements Serializable{
     /**
      * 头像
      */

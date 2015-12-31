@@ -17,8 +17,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.cjj.MaterialRefreshLayout;
-import com.cjj.MaterialRefreshListener;
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.adapter.MyForumAdapter;
 import com.sizhuo.ydxf.application.MyApplication;

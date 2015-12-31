@@ -1,5 +1,7 @@
 package com.sizhuo.ydxf.entity;
 
+import java.io.Serializable;
+
 /**
  * 项目名称: YDXF
  * 类描述:  三图
@@ -8,7 +10,7 @@ package com.sizhuo.ydxf.entity;
  *
  * @version 1.0
  */
-public class imgextra {
+public class imgextra implements Serializable{
     /**
      * 图片地址
      */

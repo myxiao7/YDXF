@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sizhuo.ydxf.PhotoWatch;
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.entity.ForumData;
 import com.sizhuo.ydxf.entity.imgextra;
@@ -25,7 +26,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class MyForumAdapter extends BaseAdapter implements View.OnClickListener {
+public class MyForumAdapter extends BaseAdapter{
     private List<ForumData> list;
     private Context context;
     private final int TYPE_ONE = 0, TYPE_TWO = 1, TYPE_THREE = 2, TYPE_COUNT = 3;
@@ -51,12 +52,12 @@ public class MyForumAdapter extends BaseAdapter implements View.OnClickListener 
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder01 holder01 = null;
         ViewHolder02 holder02 = null;
         ViewHolder03 holder03 = null;
         int type = getItemViewType(position);
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         if(convertView == null){
             switch (type){
                 case TYPE_ONE:
@@ -129,7 +130,7 @@ public class MyForumAdapter extends BaseAdapter implements View.OnClickListener 
                 holder01.titleTv.setText(forumData.getTitle());
                 holder01.desTv.setText(forumData.getDes());
                 ImageLoaderHelper.getIstance().loadImg(forumData.getImgUrl(), holder01.img);
-                holder01.iconImg.setOnClickListener(this);
+                holder01.img.setOnClickListener(new WatchPhoto(position,0));
                 break;
 
             case TYPE_TWO:
@@ -144,9 +145,9 @@ public class MyForumAdapter extends BaseAdapter implements View.OnClickListener 
                 ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(0).getUrl(), holder02.img01);
                 ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(1).getUrl(), holder02.img02);
                 ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(2).getUrl(), holder02.img03);
-                holder02.img01.setOnClickListener(this);
-                holder02.img02.setOnClickListener(this);
-                holder02.img03.setOnClickListener(this);
+                holder02.img01.setOnClickListener(new WatchPhoto(position,0));
+                holder02.img02.setOnClickListener(new WatchPhoto(position,1));
+                holder02.img03.setOnClickListener(new WatchPhoto(position,2));
                 break;
 
             case TYPE_THREE:
@@ -186,23 +187,6 @@ public class MyForumAdapter extends BaseAdapter implements View.OnClickListener 
         notifyDataSetChanged();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.frag_forum_item01_img:
-                break;
-
-            case R.id.frag_forum_item02_img01:
-                break;
-
-            case R.id.frag_forum_item02_img02:
-                break;
-
-            case R.id.frag_forum_item02_img03:
-                break;
-
-        }
-    }
 
     //单图
     class ViewHolder01{
@@ -237,5 +221,44 @@ public class MyForumAdapter extends BaseAdapter implements View.OnClickListener 
         TextView replyTv;//回复
         TextView titleTv;//标题
         TextView desTv;//描述
+    }
+
+    class WatchPhoto implements View.OnClickListener{
+        int position;
+        int index;
+
+        public WatchPhoto(int position, int index) {
+            this.position = position;
+            this.index = index;
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.frag_forum_item01_img:
+                    startPhotoWatch();
+                    break;
+
+                case R.id.frag_forum_item02_img01:
+                    startPhotoWatch();
+                    break;
+
+                case R.id.frag_forum_item02_img02:
+                    startPhotoWatch();
+                    break;
+
+                case R.id.frag_forum_item02_img03:
+                    startPhotoWatch();
+                    break;
+
+            }
+        }
+
+        private void startPhotoWatch() {
+            Intent intent = new Intent(context, PhotoWatch.class);
+            intent.putExtra("data",list.get(position));
+            intent.putExtra("index",index);
+            context.startActivity(intent);
+        }
     }
 }

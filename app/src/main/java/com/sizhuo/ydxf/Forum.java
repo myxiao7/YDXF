@@ -1,5 +1,6 @@
 package com.sizhuo.ydxf;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -7,6 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.sizhuo.ydxf.adapter.MyFragPagerAdapter;
 import com.sizhuo.ydxf.fragment.ForumFragment;
@@ -56,6 +61,31 @@ public class Forum extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.forum_tablayout);
         viewPager = (ViewPager) findViewById(R.id.forum_viewpager);
         fab = (FloatingActionButton) findViewById(R.id.fab);
+    }
+
+    //toolbar菜单
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    //toolbar菜单点击事件
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.main_menu_serch:
+                Toast.makeText(Forum.this, "搜索", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.main_menu_person:
+                Toast.makeText(Forum.this,"发帖",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Forum.this, Publish.class);
+                this.startActivity(intent);
+                break;
+        }
+        return true;
     }
 
 }

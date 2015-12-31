@@ -25,6 +25,9 @@
         <activity android:name=".Module01" />
         <activity android:name=".VideoModule" />
         <activity android:name=".Forum"/>
+        <activity android:name=".Publish"
+            android:windowSoftInputMode="stateAlwaysVisible"
+            />
         <activity android:name=".PhotoWatch"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             />
