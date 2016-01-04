@@ -113,7 +113,7 @@ public class ForumFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Log.d("xinwen", volleyError.getMessage());
+//                Log.d("xinwen", volleyError.getMessage());
             }
         });
         jsonObjectRequest.setTag(TAG01);
