@@ -31,7 +31,7 @@ import java.util.List;
 public class MyMainAdapter extends BaseAdapter{
     private List<MainBean> list;
     private Context context;
-    private final int TYPE_ONE = 0, TYPE_TWO = 1, TYPE_COUNT = 2;//子布局类型和个数
+    private final int TYPE_ONE = 0, TYPE_TWO = 1, TYPE_THREE = 2, TYPE_COUNT = 3;//子布局类型和个数
 
     public MyMainAdapter(List<MainBean> list, Context context) {
         this.list = list;
@@ -40,7 +40,7 @@ public class MyMainAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return list.size()+1;
+        return list.size()+2;
     }
 
     @Override
@@ -57,6 +57,7 @@ public class MyMainAdapter extends BaseAdapter{
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder01 viewHolder01= null;
         ViewHolder02 viewHolder02 = null;
+        ViewHolder03 viewHolder03 = null;
         int type = getItemViewType(position);
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         if(convertView == null){
@@ -84,6 +85,13 @@ public class MyMainAdapter extends BaseAdapter{
                     convertView.setTag(viewHolder02);
                     break;
 
+                case TYPE_THREE:
+                    viewHolder03 = new ViewHolder03();
+                    convertView = layoutInflater.inflate(R.layout.main_list_item03, parent, false);
+                    viewHolder03.img = (ImageView) convertView.findViewById(R.id.main_list_item03_img);
+                    convertView.setTag(viewHolder03);
+                    break;
+
             }
         }else{
             switch (type){
@@ -92,6 +100,9 @@ public class MyMainAdapter extends BaseAdapter{
                     break;
                 case TYPE_TWO:
                     viewHolder02 = (ViewHolder02) convertView.getTag();
+                    break;
+                case TYPE_THREE:
+                    viewHolder03 = (ViewHolder03) convertView.getTag();
                     break;
 
             }
@@ -147,12 +158,13 @@ public class MyMainAdapter extends BaseAdapter{
                 });
                 break;
             case TYPE_TWO:
-                if(position==2){
                     viewHolder02.menu01.setOnClickListener(new MyOnClickListener());
                     viewHolder02.menu02.setOnClickListener(new MyOnClickListener());
                     viewHolder02.menu03.setOnClickListener(new MyOnClickListener());
                     viewHolder02.menu04.setOnClickListener(new MyOnClickListener());
-                }
+                break;
+            case TYPE_THREE:
+                viewHolder03.img.setOnClickListener(new MyOnClickListener());
                 break;
         }
         return convertView;
@@ -167,6 +179,8 @@ public class MyMainAdapter extends BaseAdapter{
         //在第三项显示需要的布局2，其他项显示布局1
         if(position == 2){
             return TYPE_TWO;
+        }else if(position == 5){
+            return TYPE_THREE;
         }else{
             return TYPE_ONE;
         }
@@ -197,6 +211,10 @@ public class MyMainAdapter extends BaseAdapter{
         public LinearLayout menu03;
         public LinearLayout menu04;
     }
+    public class ViewHolder03 {
+        public ImageView img;//菜单
+    }
+
     class MyOnClickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
@@ -214,6 +232,8 @@ public class MyMainAdapter extends BaseAdapter{
                     Toast.makeText(context, "电视栏目", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context, VideoModule.class);
                     context.startActivity(intent);
+                case R.id.main_list_item03_img:
+                    Toast.makeText(context, "红色地图", Toast.LENGTH_SHORT).show();
                     break;
             }
         }

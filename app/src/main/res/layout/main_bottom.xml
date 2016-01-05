@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:text="公共服务"
+        android:textColor="@color/black"
+        android:textSize="22sp" />
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     app:cardCornerRadius="5dp"
@@ -12,14 +28,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
         android:orientation="vertical">
-
         <RelativeLayout
             android:id="@+id/main_bottom_re_more"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:layout_margin="10dp"
+            >
 
             <ImageView
                 android:id="@+id/main_bottom_icon"
@@ -58,7 +74,7 @@
             android:id="@+id/main_bottom_grid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="15dp"
             android:numColumns="4"
             android:gravity="center"
@@ -72,7 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:layout_marginTop="10dp"
+            android:layout_margin="10dp"
             >
 
             <ImageView
@@ -108,15 +124,18 @@
                 android:textSize="16sp" />
 
         </RelativeLayout>
-        <GridView
+        <com.sizhuo.ydxf.view.NoScollerGridView
             android:id="@+id/main_bottom_grid2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
             android:numColumns="3"
             android:gravity="center"
-            ></GridView>
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            ></com.sizhuo.ydxf.view.NoScollerGridView>
 </LinearLayout>
 
 </android.support.v7.widget.CardView>
+</LinearLayout>

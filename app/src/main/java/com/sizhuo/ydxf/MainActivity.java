@@ -2,23 +2,19 @@ package com.sizhuo.ydxf;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.*;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
-import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
-import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.sizhuo.ydxf.adapter.MyBottomGridAdapter;
 import com.sizhuo.ydxf.adapter.MyBottomGridAdapter2;
 import com.sizhuo.ydxf.adapter.MyMainAdapter;
@@ -26,6 +22,10 @@ import com.sizhuo.ydxf.entity.GridBean;
 import com.sizhuo.ydxf.entity.GridBean2;
 import com.sizhuo.ydxf.entity.MainBean;
 import com.sizhuo.ydxf.util.StatusBar;
+import com.sizhuo.ydxf.view.NoScollerGridView;
+import com.sizhuo.ydxf.view.zrclistview.SimpleFooter;
+import com.sizhuo.ydxf.view.zrclistview.SimpleHeader;
+import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,15 +41,18 @@ import java.util.List;
  *@version 1.0
  *
  */
-public class MainActivity extends AppCompatActivity implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
+public class MainActivity extends AppCompatActivity{
     private Toolbar toolbar;//Toolbar
-    private SliderLayout mDemoSlider;//轮播图
-    private ListView listView;
+    private SliderLayout mSlider;//轮播图
+    private ZrcListView listView;
+    private View headView, footView;
+    private final int REFRESH_COMPLETE = 0X100;//刷新完成
+    private final int LOADMORE_COMPLETE = 0X101;//加载完成
     private List<MainBean> list = new ArrayList<MainBean>();
     private HashMap<String,String> url_maps = new LinkedHashMap<String, String>();
     private GridView gridView;//便民服务
     private List<GridBean> gridList = new ArrayList<GridBean>();
-    private GridView gridView2;//便民114
+    private NoScollerGridView gridView2;//便民114
     private List<GridBean2> gridList2 = new ArrayList<GridBean2>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +69,12 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         list.add(mainBean03);
         list.add(mainBean04);
         MyMainAdapter myMainAdapter = new MyMainAdapter(list,this);
+        listView.addHeaderView(headView);
+        listView.addFooterView(footView);
         listView.setAdapter(myMainAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new ZrcListView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this,"点击了"+position,Toast.LENGTH_SHORT).show();
+            public void onItemClick(ZrcListView parent, View view, int position, long id) {
             }
         });
         //便民服务
@@ -95,45 +99,34 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        listView = (ListView) findViewById(R.id.main_listview);
-        mDemoSlider = (SliderLayout) findViewById(R.id.main_slider);
-        //轮播图
-        url_maps.put("测试01", "http://192.168.1.114:8080/xinwen/img/item01.jpg");
-        url_maps.put("测试02", "http://192.168.1.114:8080/xinwen/img/item02.jpg");
-        url_maps.put("测试03", "http://192.168.1.114:8080/xinwen/img/item0.jpg");
-        url_maps.put("测试04", "http://192.168.1.114:8080/xinwen/img/item0.jpg");
-        url_maps.put("小学足球联赛开幕 OMG 1:0 VG", "http://192.168.1.114:8080/xinwen/img/item05.jpg");
-        for(String name : url_maps.keySet()){
-            TextSliderView textSliderView = new TextSliderView(this);
-            // initialize a SliderLayout
-            textSliderView
-                    .description(name)
-                    .image(url_maps.get(name))
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener(this);
+        listView = (ZrcListView) findViewById(R.id.main_list);
+        LayoutInflater inflater = getLayoutInflater();
+        headView = inflater.inflate(R.layout.main_list_header,null);
+        mSlider = (SliderLayout) headView.findViewById(R.id.main_list_header_slider);
+        footView = inflater.inflate(R.layout.main_bottom,null);
+        gridView = (GridView) footView.findViewById(R.id.main_bottom_grid);
+        gridView2 = (NoScollerGridView) footView.findViewById(R.id.main_bottom_grid2);
+        // 设置下拉刷新的样式（可选，但如果没有Header则无法下拉刷新）
+        SimpleHeader header = new SimpleHeader(this);
+        header.setTextColor(0xff0066aa);
+        header.setCircleColor(0xff33bbee);
+        listView.setHeadable(header);
+        listView.setOnRefreshStartListener(new ZrcListView.OnStartListener() {
+            @Override
+            public void onStart() {
+                Message message = handler.obtainMessage();
+                message.what = REFRESH_COMPLETE;
+                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
+            }
+        });
 
-            //add your extra information
-            textSliderView.bundle(new Bundle());
-            textSliderView.getBundle()
-                    .putString("extra",name);
-
-            mDemoSlider.addSlider(textSliderView);
-        }
-        mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Default);
-        mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
-        mDemoSlider.setCustomAnimation(new DescriptionAnimation());
-        mDemoSlider.startAutoCycle(2500, 4000, true);
-        mDemoSlider.addOnPageChangeListener(this);
-
-        gridView = (GridView) findViewById(R.id.main_bottom_grid);
-        gridView2 = (GridView) findViewById(R.id.main_bottom_grid2);
     }
 
     //toolbar菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu,menu);
+        inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -154,29 +147,25 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         return true;
     }
 
-    @Override
-    public void onSliderClick(BaseSliderView slider) {
-        Toast.makeText(this,slider.getBundle().get("extra") + "",Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        Log.d("Slider Demo", "Page Changed: " + position);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
 
     @Override
     protected void onStop() {
-        mDemoSlider.stopAutoCycle();
+        mSlider.stopAutoCycle();
         super.onStop();
     }
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case LOADMORE_COMPLETE:
+                    listView.setLoadMoreSuccess();
+                    listView.stopLoadMore();
+                    break;
+                case REFRESH_COMPLETE:
+                    listView.setRefreshSuccess("更新完成"); // 通知加载成功
+                    break;
+            }
+        }
+    };
+
 }
