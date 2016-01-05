@@ -11,6 +11,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.util.UILImageLoader;
 
+
 import cn.finalteam.galleryfinal.CoreConfig;
 import cn.finalteam.galleryfinal.FunctionConfig;
 import cn.finalteam.galleryfinal.GalleryFinal;
@@ -55,6 +56,7 @@ public class MyApplication extends Application{
                 .setFunctionConfig(functionConfig)
         .build();
         GalleryFinal.init(coreConfig);
+
     }
 
     public RequestQueue getHttpRequestQueue(){

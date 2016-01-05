@@ -19,6 +19,10 @@ public class imgextra implements Serializable{
     public imgextra() {
     }
 
+    public imgextra(String url) {
+        this.url = url;
+    }
+
     public String getUrl() {
         return url;
     }

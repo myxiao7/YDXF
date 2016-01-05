@@ -13,6 +13,7 @@ public class Const {
      * URL
      */
     public static final String URL = "http://192.168.1.114:8080/xinwen/";
+//    public static final String URL = "http://112.54.80.235:50406/IndustryPioneer.svc/";
     /**
      * Module01
      */

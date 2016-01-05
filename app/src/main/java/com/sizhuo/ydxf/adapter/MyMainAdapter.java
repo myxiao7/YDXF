@@ -102,19 +102,19 @@ public class MyMainAdapter extends BaseAdapter{
             case TYPE_ONE:
                 MainBean mainBean = null;
                 if(position == 0){
-                    viewHolder01.icon.setBackgroundResource(R.mipmap.ic_launcher);
+                    viewHolder01.icon.setBackgroundResource(R.mipmap.ic_m01);
                     viewHolder01.columnTv.setText("大事小情");
                 }
                 if(position == 1){
-                    viewHolder01.icon.setBackgroundResource(R.mipmap.ic_icon);
+                    viewHolder01.icon.setBackgroundResource(R.mipmap.ic_m02);
                     viewHolder01.columnTv.setText("党务公开");
                 }
                 if(position == 3){
-                    viewHolder01.icon.setBackgroundResource(R.mipmap.ic_launcher);
+                    viewHolder01.icon.setBackgroundResource(R.mipmap.ic_m03);
                     viewHolder01.columnTv.setText("我有好点子");
                 }
                 if(position == 4){
-                    viewHolder01.icon.setBackgroundResource(R.mipmap.ic_launcher);
+                    viewHolder01.icon.setBackgroundResource(R.mipmap.ic_m04);
                     viewHolder01.columnTv.setText("活动专区");
                 }
 

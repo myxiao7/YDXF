@@ -45,9 +45,9 @@
                     >
 
                     <ImageView
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        android:background="@mipmap/ic_launcher"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@mipmap/ic_m07"
                         android:focusable="false"
                         android:clickable="false"
                         />
@@ -74,9 +74,9 @@
                     android:paddingTop="10dp">
 
                     <ImageView
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        android:background="@mipmap/ic_launcher"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@mipmap/ic_m08"
                         android:focusable="false"
                         android:clickable="false"
                         />
@@ -109,9 +109,9 @@
                     android:paddingTop="10dp">
 
                     <ImageView
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        android:background="@mipmap/ic_launcher"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@mipmap/ic_m09"
                         android:focusable="false"
                         android:clickable="false"
                         />
@@ -138,9 +138,9 @@
                     android:paddingTop="10dp">
 
                     <ImageView
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        android:background="@mipmap/ic_launcher"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@mipmap/ic_m10"
                         android:focusable="false"
                         android:clickable="false"
                         />

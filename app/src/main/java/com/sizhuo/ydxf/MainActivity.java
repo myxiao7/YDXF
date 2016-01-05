@@ -1,5 +1,6 @@
 package com.sizhuo.ydxf;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.*;
 import android.support.v7.widget.Toolbar;
@@ -146,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
 
             case R.id.main_menu_person:
                 Toast.makeText(MainActivity.this,"我的",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, PersonCenter.class);
+                startActivity(intent);
                 break;
         }
         return true;
