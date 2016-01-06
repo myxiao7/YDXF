@@ -5,6 +5,7 @@ import android.graphics.Color;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.baidu.mapapi.SDKInitializer;
 import com.daimajia.slider.library.BuildConfig;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -56,7 +57,7 @@ public class MyApplication extends Application{
                 .setFunctionConfig(functionConfig)
         .build();
         GalleryFinal.init(coreConfig);
-
+        SDKInitializer.initialize(getApplicationContext());
     }
 
     public RequestQueue getHttpRequestQueue(){

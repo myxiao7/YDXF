@@ -11,6 +11,7 @@ import java.io.Serializable;
  * @version 1.0
  */
 public class imgextra implements Serializable{
+    private static final long serialVersionUID = -12469631560618241L;
     /**
      * 图片地址
      */

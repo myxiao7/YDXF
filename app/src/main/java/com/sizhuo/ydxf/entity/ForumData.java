@@ -12,6 +12,7 @@ import java.util.List;
  * @version 1.0
  */
 public class ForumData implements Serializable{
+    private static final long serialVersionUID = 6688311442163022459L;
     /**
      * 头像
      */

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.sizhuo.ydxf.Forum;
 import com.sizhuo.ydxf.Module01;
 import com.sizhuo.ydxf.R;
+import com.sizhuo.ydxf.RedMap;
 import com.sizhuo.ydxf.VideoModule;
 import com.sizhuo.ydxf.entity.MainBean;
 
@@ -234,6 +235,8 @@ public class MyMainAdapter extends BaseAdapter{
                     context.startActivity(intent);
                 case R.id.main_list_item03_img:
                     Toast.makeText(context, "红色地图", Toast.LENGTH_SHORT).show();
+                    Intent intent2 = new Intent(context, RedMap.class);
+                    context.startActivity(intent2);
                     break;
             }
         }
