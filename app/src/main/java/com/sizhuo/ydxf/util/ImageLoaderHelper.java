@@ -34,7 +34,7 @@ public class ImageLoaderHelper {
 
     private void init() {
         options = new DisplayImageOptions.Builder()
-                .showImageOnFail(R.mipmap.ic_launcher)
+                .showImageOnFail(R.mipmap.default__img)
                 .imageScaleType(ImageScaleType.EXACTLY)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)

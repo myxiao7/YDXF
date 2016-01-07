@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.sizhuo.ydxf.PhotoWatch;
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.entity.ForumData;
+import com.sizhuo.ydxf.entity.PostDetailData;
 import com.sizhuo.ydxf.entity.imgextra;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
@@ -27,11 +28,11 @@ import java.util.List;
  * @version 1.0
  */
 public class MyForumAdapter extends BaseAdapter{
-    private List<ForumData> list;
+    private List<PostDetailData> list;
     private Context context;
     private final int TYPE_ONE = 0, TYPE_TWO = 1, TYPE_THREE = 2, TYPE_COUNT = 3;
 
-    public MyForumAdapter(List<ForumData> list,Context context) {
+    public MyForumAdapter(List<PostDetailData> list,Context context) {
         this.list = list;
         this.context = context;
     }
@@ -119,29 +120,29 @@ public class MyForumAdapter extends BaseAdapter{
                     break;
             }
         }
-        ForumData forumData = list.get(position);
+        PostDetailData postDetailData = list.get(position);
         switch (type){
             case TYPE_ONE:
-                ImageLoaderHelper.getIstance().loadImg(forumData.getIconUrl(), holder01.iconImg);
-                holder01.idTv.setText(forumData.getId());
-                holder01.dataTv.setText(forumData.getDate());
-                holder01.likeTv.setText(forumData.getLikeCount());
-                holder01.replyTv.setText(forumData.getReplyCount());
-                holder01.titleTv.setText(forumData.getTitle());
-                holder01.desTv.setText(forumData.getDes());
-                ImageLoaderHelper.getIstance().loadImg(forumData.getImgUrl(), holder01.img);
+                ImageLoaderHelper.getIstance().loadImg(postDetailData.getIconUrl(), holder01.iconImg);
+                holder01.idTv.setText(postDetailData.getId());
+                holder01.dataTv.setText(postDetailData.getDate());
+                holder01.likeTv.setText(postDetailData.getLikeCount());
+                holder01.replyTv.setText(postDetailData.getReplyCount());
+                holder01.titleTv.setText(postDetailData.getTitle());
+                holder01.desTv.setText(postDetailData.getDes());
+                ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgUrl(), holder01.img);
                 holder01.img.setOnClickListener(new WatchPhoto(position,0));
                 break;
 
             case TYPE_TWO:
-                List<imgextra> imgExtrases = forumData.getImgextra();
-                ImageLoaderHelper.getIstance().loadImg(forumData.getIconUrl(), holder02.iconImg);
-                holder02.idTv.setText(forumData.getId());
-                holder02.dataTv.setText(forumData.getDate());
-                holder02.likeTv.setText(forumData.getLikeCount());
-                holder02.replyTv.setText(forumData.getReplyCount());
-                holder02.titleTv.setText(forumData.getTitle());
-                holder02.desTv.setText(forumData.getDes());
+                List<imgextra> imgExtrases = postDetailData.getImgextra();
+                ImageLoaderHelper.getIstance().loadImg(postDetailData.getIconUrl(), holder02.iconImg);
+                holder02.idTv.setText(postDetailData.getId());
+                holder02.dataTv.setText(postDetailData.getDate());
+                holder02.likeTv.setText(postDetailData.getLikeCount());
+                holder02.replyTv.setText(postDetailData.getReplyCount());
+                holder02.titleTv.setText(postDetailData.getTitle());
+                holder02.desTv.setText(postDetailData.getDes());
                 ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(0).getUrl(), holder02.img01);
                 ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(1).getUrl(), holder02.img02);
                 ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(2).getUrl(), holder02.img03);
@@ -151,13 +152,13 @@ public class MyForumAdapter extends BaseAdapter{
                 break;
 
             case TYPE_THREE:
-                ImageLoaderHelper.getIstance().loadImg(forumData.getIconUrl(), holder03.iconImg);
-                holder03.idTv.setText(forumData.getId());
-                holder03.dataTv.setText(forumData.getDate());
-                holder03.likeTv.setText(forumData.getLikeCount());
-                holder03.replyTv.setText(forumData.getReplyCount());
-                holder03.titleTv.setText(forumData.getTitle());
-                holder03.desTv.setText(forumData.getDes());
+                ImageLoaderHelper.getIstance().loadImg(postDetailData.getIconUrl(), holder03.iconImg);
+                holder03.idTv.setText(postDetailData.getId());
+                holder03.dataTv.setText(postDetailData.getDate());
+                holder03.likeTv.setText(postDetailData.getLikeCount());
+                holder03.replyTv.setText(postDetailData.getReplyCount());
+                holder03.titleTv.setText(postDetailData.getTitle());
+                holder03.desTv.setText(postDetailData.getDes());
                 break;
         }
         return convertView;
@@ -182,7 +183,7 @@ public class MyForumAdapter extends BaseAdapter{
         return TYPE_COUNT;
     }
 
-    public void notifyDataSetChanged(List<ForumData> list) {
+    public void notifyDataSetChanged(List<PostDetailData> list) {
         this.list = list;
         notifyDataSetChanged();
     }

@@ -17,6 +17,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.sizhuo.ydxf.entity.ForumData;
+import com.sizhuo.ydxf.entity.PostDetailData;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import java.util.List;
 public class PhotoWatch extends Activity {
     private TextView countTxt, cutTxt;//图片数量，当前位置
     private ViewPager viewPager;
-    private ForumData forumData;//图片数据
+    private PostDetailData postDetailData;//图片数据
     private int position = 0;//所选帖子数据，默认为第一条
     private int index = 0;//所选图片位置，默认为第一张
     private PhotoView photoView;
@@ -41,7 +42,7 @@ public class PhotoWatch extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photowactch);
-        forumData = (ForumData) this.getIntent().getSerializableExtra("data");
+        postDetailData = (PostDetailData) this.getIntent().getSerializableExtra("data");
         index = this.getIntent().getIntExtra("index", 0);
         initViews();
         PagerAdapter pagerAdapter = new PagerAdapter() {
@@ -51,11 +52,11 @@ public class PhotoWatch extends Activity {
                 photoView.enable();
                 photoView.setScaleType(ImageView.ScaleType.CENTER);
 //                photoView.set
-                if(forumData.getType().equals("1")){
-                ImageLoaderHelper.getIstance().loadImg(forumData.getImgUrl(),photoView);
-                }else if(forumData.getType().equals("2")){
-                    Log.d("xinwen",forumData.getImgextra().size()+"-----------------");
-                    ImageLoaderHelper.getIstance().loadImg(forumData.getImgextra().get(position).getUrl(),photoView);
+                if(postDetailData.getType().equals("1")){
+                ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgUrl(),photoView);
+                }else if(postDetailData.getType().equals("2")){
+                    Log.d("xinwen",postDetailData.getImgextra().size()+"-----------------");
+                    ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgextra().get(position).getUrl(),photoView);
                 }
                 photoView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -74,9 +75,9 @@ public class PhotoWatch extends Activity {
 
             @Override
             public int getCount() {
-                if(forumData.getType().equals("1")){
+                if(postDetailData.getType().equals("1")){
                     return 1;
-                }else if(forumData.getType().equals("2")){
+                }else if(postDetailData.getType().equals("2")){
                     return 3;
                 }else{
                     return 0;
@@ -117,9 +118,9 @@ public class PhotoWatch extends Activity {
         countTxt = (TextView) findViewById(R.id.photowatch_count_txt);
         cutTxt = (TextView) findViewById(R.id.photowatch_cut_txt);
 //        photoView = (PhotoView) findViewById(R.id.image_watch_photoview);
-        if(forumData.getType().equals("1")){
+        if(postDetailData.getType().equals("1")){
             countTxt.setText("1");
-        }else if(forumData.getType().equals("2")){
+        }else if(postDetailData.getType().equals("2")){
             countTxt.setText("3");
         }
     }

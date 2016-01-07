@@ -63,7 +63,9 @@
                 android:layout_weight="1"
                 android:scaleType="fitXY"
                 android:clickable="false"
-                android:focusable="false" />
+                android:focusable="false"
+                android:background="@mipmap/default__img"
+                />
 
             <ImageView
                 android:id="@+id/module01_list_item02_img02"
@@ -73,7 +75,10 @@
                 android:layout_weight="1"
                 android:scaleType="fitXY"
                 android:clickable="false"
-                android:focusable="false" />
+                android:focusable="false"
+                android:background="@mipmap/default__img"
+
+                />
 
             <ImageView
                 android:id="@+id/module01_list_item02_img03"
@@ -82,7 +87,9 @@
                 android:layout_weight="1"
                 android:scaleType="fitXY"
                 android:clickable="false"
-                android:focusable="false" />
+                android:focusable="false"
+                android:background="@mipmap/default__img"
+                />
 
         </LinearLayout>
     </LinearLayout>

@@ -19,8 +19,9 @@
             android:layout_height="wrap_content"
             android:background="@color/holo_red_light"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:navigationIcon="@mipmap/ic_back"
             android:fitsSystemWindows="true"
+            app:titleTextAppearance="@style/CustomTextAppearance"
             app:title="@string/space" />
 
         <android.support.design.widget.TabLayout

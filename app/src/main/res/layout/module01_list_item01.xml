@@ -29,6 +29,7 @@
                 android:clickable="false"
                 android:focusable="false"
                 android:scaleType="fitXY"
+                android:background="@mipmap/default__img"
                 />
 
             <LinearLayout

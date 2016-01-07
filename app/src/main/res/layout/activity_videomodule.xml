@@ -11,7 +11,7 @@
         android:background="@color/holo_red_light"
         android:fitsSystemWindows="true"
         app:titleTextAppearance="@style/CustomTextAppearance"
-        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIcon="@mipmap/ic_back"
         >
     </android.support.v7.widget.Toolbar>
     <com.sizhuo.ydxf.view.VRefresh

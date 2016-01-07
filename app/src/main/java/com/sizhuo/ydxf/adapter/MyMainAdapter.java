@@ -135,7 +135,7 @@ public class MyMainAdapter extends BaseAdapter{
                 }else if(position > 2){
                     mainBean = list.get(position-1);
                 }
-                viewHolder01.imageView.setBackgroundResource(R.mipmap.ic_icon);
+                viewHolder01.imageView.setBackgroundResource(R.mipmap.default__img);
                 viewHolder01.titleTv.setText(mainBean.getTitle());
                 viewHolder01.desTv.setText(mainBean.getDes());
                 viewHolder01.moreRe.setOnClickListener(new View.OnClickListener() {
@@ -233,6 +233,7 @@ public class MyMainAdapter extends BaseAdapter{
                     Toast.makeText(context, "电视栏目", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context, VideoModule.class);
                     context.startActivity(intent);
+                    break;
                 case R.id.main_list_item03_img:
                     Toast.makeText(context, "红色地图", Toast.LENGTH_SHORT).show();
                     Intent intent2 = new Intent(context, RedMap.class);

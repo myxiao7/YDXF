@@ -69,7 +69,6 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish);
-        new StatusBar(this).initStatusBar();
         toolbar = (Toolbar) findViewById(R.id.publish_toolbar);
         toolbar.setTitle("发表帖子");
         setSupportActionBar(toolbar);

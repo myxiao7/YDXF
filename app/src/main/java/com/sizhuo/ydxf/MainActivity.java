@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity{
         });
         //便民服务
         for (int i = 0; i <4 ; i++) {
-            GridBean gridBean = new GridBean(R.mipmap.ic_icon, "部门"+i);
+            GridBean gridBean = new GridBean(R.mipmap.default__img, "部门"+i);
             gridList.add(gridBean);
         }
         MyBottomGridAdapter myBottomGridAdapter = new MyBottomGridAdapter(gridList,this);
@@ -136,12 +136,14 @@ public class MainActivity extends AppCompatActivity{
         switch (item.getItemId()){
             case R.id.main_menu_serch:
                 Toast.makeText(MainActivity.this,"搜索",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, Login.class);
+                startActivity(intent);
                 break;
 
             case R.id.main_menu_person:
                 Toast.makeText(MainActivity.this,"我的",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, PersonCenter.class);
-                startActivity(intent);
+                Intent intent2 = new Intent(MainActivity.this, PersonCenter.class);
+                startActivity(intent2);
                 break;
         }
         return true;

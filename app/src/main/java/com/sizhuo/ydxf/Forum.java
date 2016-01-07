@@ -67,7 +67,7 @@ public class Forum extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.forum_menu, menu);
         return true;
     }
 
@@ -75,11 +75,7 @@ public class Forum extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.main_menu_serch:
-                Toast.makeText(Forum.this, "搜索", Toast.LENGTH_SHORT).show();
-                break;
-
-            case R.id.main_menu_person:
+            case R.id.forum_menu_item01:
                 Toast.makeText(Forum.this,"发帖",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Forum.this, Publish.class);
                 this.startActivity(intent);

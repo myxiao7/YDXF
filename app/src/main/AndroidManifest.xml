@@ -39,6 +39,9 @@
         <activity android:name=".Module01" />
         <activity android:name=".VideoModule" />
         <activity android:name=".Forum"/>
+        <activity android:name=".PostDetails"
+            android:windowSoftInputMode="stateHidden"
+            />
         <activity android:name=".Publish"
             android:windowSoftInputMode="stateAlwaysVisible"
             />
@@ -49,6 +52,11 @@
             />
 
         <activity android:name=".RedMap"/>
+        <activity android:name=".Login"
+            />
+        <activity android:name=".Register"
+            android:windowSoftInputMode="stateAlwaysVisible"
+            />
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="pqbhfGaPVNjO6GOjIrL3abb4" />

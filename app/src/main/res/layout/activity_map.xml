@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@color/holo_red_light"
         android:fitsSystemWindows="true"
-        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIcon="@mipmap/ic_back"
         app:titleTextAppearance="@style/CustomTextAppearance"></android.support.v7.widget.Toolbar>
     <com.baidu.mapapi.map.MapView
         android:layout_below="@+id/map_toolbar"

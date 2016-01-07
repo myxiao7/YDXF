@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/postdetails_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/holo_red_light"
+        android:fitsSystemWindows="true"
+        app:navigationIcon="@mipmap/ic_back"
+        app:titleTextAppearance="@style/CustomTextAppearance"></android.support.v7.widget.Toolbar>
+
+    <com.sizhuo.ydxf.view.zrclistview.ZrcListView
+        android:id="@+id/postdetails_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@color/lighter_gray"
+        android:dividerHeight="1dp"></com.sizhuo.ydxf.view.zrclistview.ZrcListView>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="5dp"
+        app:cardBackgroundColor="@color/colorWhite"
+        >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:drawableLeft="@mipmap/ic_reply"
+            android:hint="发表回复"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="回复"
+            />
+    </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>
