@@ -26,6 +26,7 @@ import com.sizhuo.ydxf.view.NoScollerGridView;
 import com.sizhuo.ydxf.view.zrclistview.SimpleFooter;
 import com.sizhuo.ydxf.view.zrclistview.SimpleHeader;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
+import com.umeng.update.UmengUpdateAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,6 +100,8 @@ public class MainActivity extends AppCompatActivity{
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        //自动更新
+        UmengUpdateAgent.update(this);
         listView = (ZrcListView) findViewById(R.id.main_list);
         LayoutInflater inflater = getLayoutInflater();
         headView = inflater.inflate(R.layout.main_list_header,null);

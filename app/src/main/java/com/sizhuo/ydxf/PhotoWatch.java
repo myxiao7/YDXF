@@ -124,4 +124,4 @@ public class PhotoWatch extends Activity {
             countTxt.setText("3");
         }
     }
-    }
+}

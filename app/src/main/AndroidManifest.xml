@@ -57,11 +57,23 @@
         <activity android:name=".Register"
             android:windowSoftInputMode="stateAlwaysVisible"
             />
+        <!--地图-->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="pqbhfGaPVNjO6GOjIrL3abb4" />
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
         </service>
+        <!--umeng-->
+        <meta-data android:value="568f09c6e0f55adb080010bf" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="Channel ID" android:name="UMENG_CHANNEL"/>
+        <service
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService" >
+        </service>
+        <activity
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
     </application>
 
 </manifest>
