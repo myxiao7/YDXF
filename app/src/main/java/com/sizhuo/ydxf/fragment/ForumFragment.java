@@ -10,10 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -22,10 +20,7 @@ import com.android.volley.toolbox.Volley;
 import com.sizhuo.ydxf.PostDetails;
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.adapter.MyForumAdapter;
-import com.sizhuo.ydxf.application.MyApplication;
-import com.sizhuo.ydxf.entity.ForumData;
 import com.sizhuo.ydxf.entity.PostDetailData;
-import com.sizhuo.ydxf.entity.ReplyData;
 import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.view.zrclistview.SimpleFooter;
 import com.sizhuo.ydxf.view.zrclistview.SimpleHeader;
@@ -34,7 +29,6 @@ import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

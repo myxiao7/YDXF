@@ -11,7 +11,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.daimajia.slider.library.SliderLayout;
@@ -42,7 +44,7 @@ import java.util.List;
  *@version 1.0
  *
  */
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Toolbar toolbar;//Toolbar
     private SliderLayout mSlider;//轮播图
     private ZrcListView listView;
@@ -51,8 +53,10 @@ public class MainActivity extends AppCompatActivity{
     private final int LOADMORE_COMPLETE = 0X101;//加载完成
     private List<MainBean> list = new ArrayList<MainBean>();
     private HashMap<String,String> url_maps = new LinkedHashMap<String, String>();
+    private RelativeLayout moreRe;//便民更多
     private GridView gridView;//便民服务
     private List<GridBean> gridList = new ArrayList<GridBean>();
+    private RelativeLayout moreRe2;//便民114更多
     private NoScollerGridView gridView2;//便民114
     private List<GridBean2> gridList2 = new ArrayList<GridBean2>();
     @Override
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
+        initEvents();
         //前3栏目
         MainBean mainBean01 = new MainBean("1","1","1","1");
         MainBean mainBean02 = new MainBean("2","2","2","2");
@@ -92,6 +97,13 @@ public class MainActivity extends AppCompatActivity{
         }
         MyBottomGridAdapter2 myBottomListAdapter = new MyBottomGridAdapter2(gridList2,this);
         gridView2.setAdapter(myBottomListAdapter);
+        gridView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, AddressListDetails.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
     }
 
     //初始化
@@ -107,7 +119,9 @@ public class MainActivity extends AppCompatActivity{
         headView = inflater.inflate(R.layout.main_list_header,null);
         mSlider = (SliderLayout) headView.findViewById(R.id.main_list_header_slider);
         footView = inflater.inflate(R.layout.main_bottom,null);
+        moreRe = (RelativeLayout) footView.findViewById(R.id.main_bottom_re_more);
         gridView = (GridView) footView.findViewById(R.id.main_bottom_grid);
+        moreRe2 = (RelativeLayout) footView.findViewById(R.id.main_bottom_re_more02);
         gridView2 = (NoScollerGridView) footView.findViewById(R.id.main_bottom_grid2);
         // 设置下拉刷新的样式（可选，但如果没有Header则无法下拉刷新）
         SimpleHeader header = new SimpleHeader(this);
@@ -123,6 +137,11 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+    }
+
+    private void initEvents() {
+        moreRe.setOnClickListener(this);
+        moreRe2.setOnClickListener(this);
     }
 
     //toolbar菜单
@@ -173,4 +192,15 @@ public class MainActivity extends AppCompatActivity{
         }
     };
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.main_bottom_re_more:
+                break;
+            case R.id.main_bottom_re_more02:
+                Intent intent = new Intent(MainActivity.this, AddressList.class);
+                startActivity(intent);
+                break;
+        }
+    }
 }

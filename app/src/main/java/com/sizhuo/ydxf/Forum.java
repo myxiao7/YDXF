@@ -47,7 +47,7 @@ public class Forum extends AppCompatActivity {
             ForumFragment forumFragment = new ForumFragment();
             fragments.add(forumFragment);
         }
-        myFragPagerAdapter = new MyFragPagerAdapter(getSupportFragmentManager(), fragments);
+        myFragPagerAdapter = new MyFragPagerAdapter(getSupportFragmentManager(), fragments, titles);
         viewPager.setAdapter(myFragPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabsFromPagerAdapter(myFragPagerAdapter);

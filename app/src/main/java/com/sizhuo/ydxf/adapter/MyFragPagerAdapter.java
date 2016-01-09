@@ -18,10 +18,11 @@ import java.util.List;
  */
 public class MyFragPagerAdapter extends FragmentStatePagerAdapter {
     private List<Fragment> fragments;
-    private String[] titles = {"看帖","热点","精品","其他"};
+    private String[] titles;
 
-    public MyFragPagerAdapter(FragmentManager fm,List<Fragment> fragments) {
+    public MyFragPagerAdapter(FragmentManager fm,List<Fragment> fragments, String[] titles) {
         super(fm);
+        this.titles = titles;
         this.fragments = fragments;
     }
 
