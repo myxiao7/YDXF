@@ -34,6 +34,7 @@
                 android:id="@+id/login_name_txt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:digits="123456789_qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
                 android:hint="请输入账号" />
 
         </android.support.design.widget.TextInputLayout>
@@ -50,6 +51,7 @@
                 android:id="@+id/login_pwd_txt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textPassword"
                 android:hint="请输入密码" />
         </android.support.design.widget.TextInputLayout>
 

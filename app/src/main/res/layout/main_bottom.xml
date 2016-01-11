@@ -53,7 +53,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/main_bottom_icon"
-                android:text="便民服务"
+                android:text="便民窗口"
                 android:textColor="@color/holo_red_light"
                 android:textSize="18sp"
 

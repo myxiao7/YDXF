@@ -11,8 +11,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -100,8 +103,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         gridView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, AddressListDetails.class);
-                MainActivity.this.startActivity(intent);
+               /* Intent intent = new Intent(MainActivity.this, AddressListDetails.class);
+                MainActivity.this.startActivity(intent);*/
+                showDetails(gridList2.get(position).getItem());
+            }
+        });
+    }
+
+    /**
+     * 便民114 Dialog
+     */
+    private void showDetails(final String phone) {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.show();
+        Window window = alertDialog.getWindow();
+        window.setContentView(R.layout.dialog_addresslist);
+        Button callBtn= (Button) window.findViewById(R.id.dialog_addresslist_call_btn);
+        callBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "call" + phone, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -196,11 +217,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.main_bottom_re_more:
+                Intent intent = new Intent(MainActivity.this, Organization.class);
+                startActivity(intent);
                 break;
             case R.id.main_bottom_re_more02:
-                Intent intent = new Intent(MainActivity.this, AddressList.class);
-                startActivity(intent);
+                Intent intent2 = new Intent(MainActivity.this, AddressList.class);
+                startActivity(intent2);
                 break;
         }
     }
+
 }

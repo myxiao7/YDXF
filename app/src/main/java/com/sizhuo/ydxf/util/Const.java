@@ -13,7 +13,7 @@ public class Const {
      * URL
      */
     public static final String URL = "http://192.168.1.114:8080/xinwen/";
-//    public static final String URL = "http://112.54.80.235:50406/IndustryPioneer.svc/";
+    public static final String URL2 = "http://112.54.80.235:50406/IndustryPioneer.svc/";
     /**
      * Module01
      */
@@ -22,5 +22,13 @@ public class Const {
      * forum
      */
     public static final String MFORUM = URL+"forum.html";
+    /**
+     * 注册
+     */
+    public static final String LOGIN = URL2 + "login";
+    /**
+     * 注册
+     */
+    public static final String REGISTER = URL2 + "insertUser";
 
 }
