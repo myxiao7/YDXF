@@ -84,6 +84,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listView.setOnItemClickListener(new ZrcListView.OnItemClickListener() {
             @Override
             public void onItemClick(ZrcListView parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, NewsDetails.class);
+                MainActivity.this.startActivity(intent);
+                Toast.makeText(MainActivity.this,"点击了"+position,Toast.LENGTH_SHORT).show();
             }
         });
         //便民服务

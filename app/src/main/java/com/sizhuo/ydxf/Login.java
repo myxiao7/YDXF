@@ -91,12 +91,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         weiboBtn = (ImageView) findViewById(R.id.login_weibo_btn);
 
         mShareAPI = UMShareAPI.get(this);
-        //微信 appid appsecret
-        PlatformConfig.setWeixin("wx9b63dbf2820914ef", "5aa18dcbac1f9a9fba06c48fd0789876");
-        //新浪微博 appkey appsecret
-        PlatformConfig.setSinaWeibo("3132564276","622b15838ec6c62f505c758d0ed7a027");
-        // QQ和Qzone appid appkey
-        PlatformConfig.setQQZone("1105095650", "SY79nsQpRpeIN29I");
 
     }
 

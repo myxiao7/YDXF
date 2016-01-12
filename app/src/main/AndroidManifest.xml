@@ -48,6 +48,7 @@
         </activity>
         <!--主界面-->
         <activity android:name=".MainActivity" />
+        <activity android:name=".NewsDetails" />
         <activity android:name=".Module01" />
         <!--红色地图-->
         <activity android:name=".RedMap"/>
@@ -57,7 +58,6 @@
         <activity android:name=".AddressList" />
         <!--便民114详情-->
         <activity android:name=".AddressListDetails"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             />
         <!--视频-->
         <activity android:name=".VideoModule" />

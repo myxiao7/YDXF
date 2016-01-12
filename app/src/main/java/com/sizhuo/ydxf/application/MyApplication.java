@@ -11,6 +11,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.util.UILImageLoader;
+import com.umeng.socialize.PlatformConfig;
 
 
 import cn.finalteam.galleryfinal.CoreConfig;
@@ -32,6 +33,12 @@ public class MyApplication extends Application{
     public void onCreate() {
         super.onCreate();
         queue = Volley.newRequestQueue(getApplicationContext());
+        //微信 appid appsecret
+        PlatformConfig.setWeixin("wx9b63dbf2820914ef", "5aa18dcbac1f9a9fba06c48fd0789876");
+        //新浪微博 appkey appsecret
+        PlatformConfig.setSinaWeibo("3132564276", "622b15838ec6c62f505c758d0ed7a027");
+        // QQ和Qzone appid appkey
+        PlatformConfig.setQQZone("1105095650", "SY79nsQpRpeIN29I");
         //创建默认的ImageLoader配置参数
         ImageLoaderConfiguration imageLoaderConfiguration = ImageLoaderConfiguration.createDefault(getApplicationContext());
         //Initialize ImageLoader with configuration.

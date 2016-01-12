@@ -6,4 +6,7 @@
     <string name="share">分享</string>
     <string name="person">个人中心</string>
     <string name="title_activity_forum">Forum</string>
+    <string name="menu_news_like">收藏</string>
+    <string name="menu_news_share">分享</string>
+    <string name="menu_news_reply">评论</string>
 </resources>
