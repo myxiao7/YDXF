@@ -31,7 +31,7 @@
                 android:id="@+id/mapmarker_info_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@mipmap/default__img"
+                android:background="@mipmap/default_img"
                 android:layout_margin="5dp"
                 />
         </LinearLayout>

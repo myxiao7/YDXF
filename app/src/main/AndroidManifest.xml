@@ -48,7 +48,11 @@
         </activity>
         <!--主界面-->
         <activity android:name=".MainActivity" />
+        <!--新闻详情-->
         <activity android:name=".NewsDetails" />
+        <!--新闻评论列表-->
+        <activity android:name=".NewsComment" />
+
         <activity android:name=".Module01" />
         <!--红色地图-->
         <activity android:name=".RedMap"/>
@@ -77,6 +81,21 @@
             />
         <!--个人中心-->
         <activity android:name=".PersonCenter"
+            />
+        <!--设置-->
+        <activity android:name=".Setting"
+            />
+        <!--个人资料-->
+        <activity android:name=".setting.PersonInfo"
+            />
+        <!--修改密码-->
+        <activity android:name=".setting.ModifyPwd"
+            />
+        <!--信息反馈-->
+        <activity android:name=".setting.Feedback"
+            />
+        <!--关于我们-->
+        <activity android:name=".setting.About"
             />
         <!--登录-->
         <activity android:name=".Login"

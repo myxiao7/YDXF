@@ -16,7 +16,7 @@
             android:id="@+id/frag_forum_item01_icon_img"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:background="@mipmap/default__img"
+            android:background="@mipmap/default_img"
             />
         <LinearLayout
             android:layout_width="0dp"
@@ -50,7 +50,7 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:background="@mipmap/default__img"
+                android:background="@mipmap/default_img"
                 />
             <TextView
                 android:id="@+id/frag_forum_item01_likecount_tv"
@@ -66,7 +66,7 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:background="@mipmap/default__img"
+                android:background="@mipmap/default_img"
                 />
             <TextView
                 android:id="@+id/frag_forum_item01_replycount_tv"
@@ -110,7 +110,7 @@
             android:layout_width="120dp"
             android:layout_height="150dp"
             android:layout_marginRight="16dp"
-            android:background="@mipmap/default__img"
+            android:background="@mipmap/default_img"
             android:scaleType="fitXY"
             />
         </LinearLayout>

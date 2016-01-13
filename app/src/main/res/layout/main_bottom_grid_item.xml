@@ -10,7 +10,7 @@
         android:id="@+id/main_bottom_grid_img"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@mipmap/default__img"
+        android:background="@mipmap/default_img"
         />
     <TextView
         android:id="@+id/main_bottom_grid_title_tv"

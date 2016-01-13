@@ -72,6 +72,13 @@ public class NewsDetails extends AppCompatActivity{
                 }
             }
         });
+        countTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NewsDetails.this, NewsComment.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private UMShareListener umShareListener = new UMShareListener() {

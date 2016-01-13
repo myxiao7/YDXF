@@ -14,14 +14,55 @@
         app:titleTextAppearance="@style/CustomTextAppearance"></android.support.v7.widget.Toolbar>
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:background="@color/holo_red_light"
+        android:layout_height="175dp"
+        android:background="@mipmap/per_bg_default"
         >
         <RelativeLayout
+            android:id="@+id/personcenter_def_top_re"
             android:layout_width="match_parent"
             android:layout_height="85dp"
             android:layout_gravity="bottom"
             android:layout_marginBottom="35dp"
+            >
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/personcenter_def_icon_img"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@mipmap/ic_choose_pic_normal"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/colorWhite"
+                android:layout_marginLeft="20dp"
+                android:layout_centerVertical="true"
+                android:clickable="false"
+                android:focusable="false"
+                />
+            <TextView
+                android:id="@+id/personcenter_def_name_txt"
+                android:layout_toRightOf="@id/personcenter_def_icon_img"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="点击登录"
+                android:textSize="20sp"
+                android:textColor="@color/colorWhite"
+                />
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:background="@mipmap/next"
+                android:layout_marginRight="16dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/personcenter_top_re"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="35dp"
+            android:visibility="gone"
             >
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/personcenter_icon_img"
@@ -55,9 +96,11 @@
         </RelativeLayout>
     </FrameLayout>
     <RelativeLayout
+        android:id="@+id/personcenter_menu01_re"
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="64dp"
         android:layout_gravity="bottom"
+        android:background="@drawable/list_setlect_bg"
         >
         <ImageView
             android:id="@+id/personcenter_item01_img"
@@ -66,6 +109,8 @@
             android:layout_centerVertical="true"
             android:background="@mipmap/per_item01"
             android:layout_marginLeft="20dp"
+            android:clickable="false"
+            android:focusable="false"
             />
         <TextView
             android:layout_toRightOf="@id/personcenter_item01_img"
@@ -75,7 +120,7 @@
             android:text="我的收藏"
             android:textColor="@color/black"
             android:layout_marginLeft="15dp"
-            android:textSize="18sp"
+            android:textSize="20sp"
             />
         <ImageView
             android:layout_width="26dp"
@@ -84,12 +129,21 @@
             android:layout_marginRight="16dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:clickable="false"
+            android:focusable="false"
             />
     </RelativeLayout>
-    <RelativeLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="1dp"
+        android:background="@color/darker_gray"
+        />
+    <RelativeLayout
+        android:id="@+id/personcenter_menu02_re"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
         android:layout_gravity="bottom"
+        android:background="@drawable/list_setlect_bg"
         >
         <ImageView
             android:id="@+id/personcenter_item02_img"
@@ -98,6 +152,8 @@
             android:layout_centerVertical="true"
             android:background="@mipmap/per_item02"
             android:layout_marginLeft="20dp"
+            android:clickable="false"
+            android:focusable="false"
             />
         <TextView
             android:layout_toRightOf="@id/personcenter_item02_img"
@@ -116,12 +172,21 @@
             android:layout_marginRight="16dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:clickable="false"
+            android:focusable="false"
             />
     </RelativeLayout>
-    <RelativeLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="1dp"
+        android:background="@color/darker_gray"
+        />
+    <RelativeLayout
+        android:id="@+id/personcenter_menu03_re"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
         android:layout_gravity="bottom"
+        android:background="@drawable/list_setlect_bg"
         >
         <ImageView
             android:id="@+id/personcenter_item03_img"
@@ -130,6 +195,8 @@
             android:layout_centerVertical="true"
             android:background="@mipmap/per_item03"
             android:layout_marginLeft="20dp"
+            android:clickable="false"
+            android:focusable="false"
             />
         <TextView
             android:layout_toRightOf="@id/personcenter_item03_img"
@@ -148,12 +215,21 @@
             android:layout_marginRight="16dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:clickable="false"
+            android:focusable="false"
             />
     </RelativeLayout>
-    <RelativeLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="1dp"
+        android:background="@color/darker_gray"
+        />
+    <RelativeLayout
+        android:id="@+id/personcenter_menu04_re"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
         android:layout_gravity="bottom"
+        android:background="@drawable/list_setlect_bg"
         >
         <ImageView
             android:id="@+id/personcenter_item04_img"
@@ -162,6 +238,8 @@
             android:layout_centerVertical="true"
             android:background="@mipmap/per_item04"
             android:layout_marginLeft="20dp"
+            android:clickable="false"
+            android:focusable="false"
             />
         <TextView
             android:layout_toRightOf="@id/personcenter_item04_img"
@@ -180,6 +258,13 @@
             android:layout_marginRight="16dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:clickable="false"
+            android:focusable="false"
             />
     </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/darker_gray"
+        />
 </LinearLayout>

@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.GridView;
 
-import com.sizhuo.ydxf.adapter.MyBottomGridAdapter;
 import com.sizhuo.ydxf.adapter.MyOrgGridAdapter;
 import com.sizhuo.ydxf.entity.GridBean;
 import com.sizhuo.ydxf.view.TypeTextView;
@@ -37,7 +36,7 @@ public class Organization extends AppCompatActivity{
         gridView = (GridView) findViewById(R.id.org_grid);
         //便民服务
         for (int i = 0; i <9 ; i++) {
-            GridBean gridBean = new GridBean(R.mipmap.default__img, "部门"+i);
+            GridBean gridBean = new GridBean(R.mipmap.default_img, "部门"+i);
             gridList.add(gridBean);
         }
         MyOrgGridAdapter myBottomGridAdapter = new MyOrgGridAdapter(gridList,this);

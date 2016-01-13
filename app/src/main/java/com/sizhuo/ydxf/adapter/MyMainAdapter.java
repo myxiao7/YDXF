@@ -135,7 +135,7 @@ public class MyMainAdapter extends BaseAdapter{
                 }else if(position > 2){
                     mainBean = list.get(position-1);
                 }
-                viewHolder01.imageView.setBackgroundResource(R.mipmap.default__img);
+                viewHolder01.imageView.setBackgroundResource(R.mipmap.default_img);
                 viewHolder01.titleTv.setText(mainBean.getTitle());
                 viewHolder01.desTv.setText(mainBean.getDes());
                 viewHolder01.moreRe.setOnClickListener(new View.OnClickListener() {

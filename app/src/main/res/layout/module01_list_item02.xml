@@ -64,7 +64,7 @@
                 android:scaleType="fitXY"
                 android:clickable="false"
                 android:focusable="false"
-                android:background="@mipmap/default__img"
+                android:background="@mipmap/default_img"
                 />
 
             <ImageView
@@ -76,7 +76,7 @@
                 android:scaleType="fitXY"
                 android:clickable="false"
                 android:focusable="false"
-                android:background="@mipmap/default__img"
+                android:background="@mipmap/default_img"
 
                 />
 
@@ -88,7 +88,7 @@
                 android:scaleType="fitXY"
                 android:clickable="false"
                 android:focusable="false"
-                android:background="@mipmap/default__img"
+                android:background="@mipmap/default_img"
                 />
 
         </LinearLayout>

@@ -16,7 +16,7 @@
             android:id="@+id/postdetails_list_header_icon_img"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:background="@mipmap/default__img"
+            android:background="@mipmap/default_img"
             />
         <LinearLayout
             android:layout_width="0dp"
@@ -48,7 +48,7 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:background="@mipmap/default__img"
+                android:background="@mipmap/default_img"
                 />
             <TextView
                 android:id="@+id/postdetails_list_header_replycount_tv"
@@ -92,7 +92,7 @@
             android:id="@+id/postdetails_list_header_img01"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:background="@mipmap/default__img"
+            android:background="@mipmap/default_img"
             android:scaleType="fitXY"
             android:layout_marginTop="10dp"
             />
@@ -100,7 +100,7 @@
             android:id="@+id/postdetails_list_header_img02"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:background="@mipmap/default__img"
+            android:background="@mipmap/default_img"
             android:scaleType="fitXY"
             android:layout_marginTop="10dp"
             />
@@ -108,7 +108,7 @@
             android:id="@+id/postdetails_list_header_img03"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:background="@mipmap/default__img"
+            android:background="@mipmap/default_img"
             android:scaleType="fitXY"
             android:layout_marginTop="10dp"
             />

@@ -11,7 +11,7 @@
     android:id="@+id/selectphoto_grid_item_img"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@mipmap/default__img"
+    android:background="@mipmap/default_img"
     />
     <CheckBox
         android:id="@+id/selectphoto_grid_item_check"

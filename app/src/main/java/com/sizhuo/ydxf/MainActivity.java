@@ -15,7 +15,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -28,7 +27,6 @@ import com.sizhuo.ydxf.entity.GridBean2;
 import com.sizhuo.ydxf.entity.MainBean;
 import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.NoScollerGridView;
-import com.sizhuo.ydxf.view.zrclistview.SimpleFooter;
 import com.sizhuo.ydxf.view.zrclistview.SimpleHeader;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
 import com.umeng.update.UmengUpdateAgent;
@@ -91,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         //便民服务
         for (int i = 0; i <4 ; i++) {
-            GridBean gridBean = new GridBean(R.mipmap.default__img, "部门"+i);
+            GridBean gridBean = new GridBean(R.mipmap.default_img, "部门"+i);
             gridList.add(gridBean);
         }
         MyBottomGridAdapter myBottomGridAdapter = new MyBottomGridAdapter(gridList,this);
