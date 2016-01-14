@@ -195,14 +195,15 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         Map<String, String> map = new HashMap<>();
         map.put("userName",userName);
         map.put("userPwd",userPwd);
-        map.put("wxOpenid","");
+       /* map.put("wxOpenid","");
         map.put("qqOpenid","");
-        map.put("wbOpenid","");
+        map.put("wbOpenid","");*/
         JSONObject jsonObject = new JSONObject(map);
-        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.REGISTER, jsonObject, new Response.Listener<JSONObject>() {
+        Log.d("log.d", "jsonObject"+jsonObject.toString());
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.LOGIN, jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                Log.d("log.d",jsonObject.toString());
+                Log.d("log.d","result"+jsonObject.toString());
             }
         }, new Response.ErrorListener() {
             @Override
