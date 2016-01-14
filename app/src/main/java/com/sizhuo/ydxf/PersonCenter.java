@@ -12,6 +12,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sizhuo.ydxf.per.MyCollection;
+import com.sizhuo.ydxf.per.MyComment;
+import com.sizhuo.ydxf.per.MyNews;
+import com.sizhuo.ydxf.per.MyPost;
 import com.sizhuo.ydxf.setting.PersonInfo;
 import com.sizhuo.ydxf.util.StatusBar;
 
@@ -93,16 +97,20 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent2);
                 break;
             case R.id.personcenter_menu01_re:
-
+                Intent intent3 = new Intent(PersonCenter.this, MyCollection.class);
+                startActivity(intent3);
                 break;
             case R.id.personcenter_menu02_re:
-
+                Intent intent4 = new Intent(PersonCenter.this, MyComment.class);
+                startActivity(intent4);
                 break;
             case R.id.personcenter_menu03_re:
-
+                Intent intent5 = new Intent(PersonCenter.this, MyPost.class);
+                startActivity(intent5);
                 break;
             case R.id.personcenter_menu04_re:
-
+                Intent intent6= new Intent(PersonCenter.this, MyNews.class);
+                startActivity(intent6);
                 break;
 
         }

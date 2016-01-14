@@ -82,6 +82,18 @@
         <!--个人中心-->
         <activity android:name=".PersonCenter"
             />
+        <!--我的收藏-->
+        <activity android:name=".per.MyCollection"
+            />
+        <!--我的评论-->
+        <activity android:name=".per.MyComment"
+            />
+        <!--我的帖子-->
+        <activity android:name=".per.MyPost"
+            />
+        <!--我的消息-->
+        <activity android:name=".per.MyNews"
+            />
         <!--设置-->
         <activity android:name=".Setting"
             />

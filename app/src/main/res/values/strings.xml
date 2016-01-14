@@ -9,4 +9,6 @@
     <string name="menu_news_like">收藏</string>
     <string name="menu_news_share">分享</string>
     <string name="menu_news_reply">评论</string>
+    <string name="menu_edit_edit"> 编辑 </string>
+    <string name="menu_edit_comp"> 完成 </string>
 </resources>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <android.support.v7.widget.Toolbar
         android:id="@+id/personcenter_toolbar"
         android:layout_width="match_parent"
@@ -150,7 +150,7 @@
             android:layout_width="26dp"
             android:layout_height="26dp"
             android:layout_centerVertical="true"
-            android:background="@mipmap/per_item02"
+            android:background="@mipmap/per_item04"
             android:layout_marginLeft="20dp"
             android:clickable="false"
             android:focusable="false"
@@ -160,7 +160,7 @@
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="我的消息"
+            android:text="我的评论"
             android:textColor="@color/black"
             android:layout_marginLeft="15dp"
             android:textSize="20sp"
@@ -236,7 +236,7 @@
             android:layout_width="26dp"
             android:layout_height="26dp"
             android:layout_centerVertical="true"
-            android:background="@mipmap/per_item04"
+            android:background="@mipmap/per_item02"
             android:layout_marginLeft="20dp"
             android:clickable="false"
             android:focusable="false"
@@ -246,7 +246,7 @@
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="我的评论"
+            android:text="我的消息"
             android:textColor="@color/black"
             android:layout_marginLeft="15dp"
             android:textSize="20sp"
@@ -267,4 +267,6 @@
         android:layout_height="1dp"
         android:background="@color/darker_gray"
         />
+
+
 </LinearLayout>
