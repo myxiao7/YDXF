@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.entity.GridBean;
+import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class MyBottomGridAdapter extends BaseAdapter{
             viewHolder = (ViewHolder) convertView.getTag();
         }
         GridBean gridBean = list.get(position);
-        viewHolder.imageView.setBackgroundResource(gridBean.getImg());
+        ImageLoaderHelper.getIstance().loadImg(gridBean.getImg() + "", viewHolder.imageView);
         viewHolder.textView.setText(gridBean.getTitle());
         return convertView;
     }

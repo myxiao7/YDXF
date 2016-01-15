@@ -66,8 +66,6 @@ public class MyAddressListAdapter extends BaseAdapter{
             holder.img = (ImageView) convertView.findViewById(R.id.frag_addresslist_list_item_img);
             holder.nameTv = (TextView) convertView.findViewById(R.id.frag_addresslist_list_item_name_tv);
             holder.phoneTv = (TextView) convertView.findViewById(R.id.frag_addresslist_list_item_phone_tv);
-            holder.Tag01 = (TextView) convertView.findViewById(R.id.frag_addresslist_list_item_tag01_tv);
-            holder.Tag02 = (TextView) convertView.findViewById(R.id.frag_addresslist_list_item_tag02_tv);
             holder.callBtn = (ImageView) convertView.findViewById(R.id.frag_addresslist_list_item_call_btn);
             holder.addTv = (TextView) convertView.findViewById(R.id.frag_addresslist_list_item_add_tv);
             holder.saveBtn = (LinearLayout) convertView.findViewById(R.id.frag_addresslist_list_item_save_lin);
@@ -79,8 +77,6 @@ public class MyAddressListAdapter extends BaseAdapter{
         ImageLoaderHelper.getIstance().loadImg(addressListData.getImg(), holder.img);
         holder.nameTv.setText(addressListData.getName());
         holder.phoneTv.setText(addressListData.getPhone());
-        holder.Tag01.setText(addressListData.getTag01());
-        holder.Tag02.setText(addressListData.getTag02());
         holder.addTv.setText(addressListData.getAddress());
         holder.callBtn.setOnClickListener(new MyAddOnClickListener(addressListData));
         holder.saveBtn.setOnClickListener(new MyAddOnClickListener(addressListData));
@@ -115,8 +111,6 @@ public class MyAddressListAdapter extends BaseAdapter{
         ImageView img;
         TextView nameTv;
         TextView phoneTv;
-        TextView Tag01;
-        TextView Tag02;
         TextView addTv;
         ImageView callBtn;
         LinearLayout saveBtn;

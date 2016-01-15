@@ -58,6 +58,8 @@
         <activity android:name=".RedMap"/>
         <!--组织机构-->
         <activity android:name=".Organization" />
+        <!--组织机构 详情-->
+        <activity android:name=".OrgDetails" />
         <!--便民114-->
         <activity android:name=".AddressList" />
         <!--便民114详情-->

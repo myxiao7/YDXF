@@ -12,23 +12,23 @@ public class GridBean {
     /**
      * 图标
      */
-    private int img;
+    private String img;
     /**
      * 标题
      */
     private String title;
 
-    public GridBean(int img, String title) {
+    public GridBean(String img, String title) {
 
         this.img = img;
         this.title = title;
     }
 
-    public int getImg() {
+    public String getImg() {
         return img;
     }
 
-    public void setImg(int img) {
+    public void setImg(String img) {
         this.img = img;
     }
 

@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
-    >
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/adddetails_toolbar"
@@ -19,49 +18,158 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1.5"
-            android:paddingBottom="20dp"
-            android:orientation="vertical"
             android:background="@color/holo_red_light"
-            >
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:orientation="vertical"
                 android:background="@color/holo_red_light"
                 android:gravity="center"
-                >
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:src="@mipmap/ic_icon"
-                app:civ_border_width="2dp"
-                app:civ_border_color="@color/colorWhite"
-                />
+                android:orientation="vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:src="@mipmap/ic_icon"
+                    app:civ_border_color="@color/colorWhite"
+                    app:civ_border_width="2dp" />
             </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:text="深圳腾讯科技"
                 android:textColor="@color/colorWhite"
-                android:textSize="20sp"
-                android:gravity="center_horizontal"
-                />
+                android:textSize="20sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2.5"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_setlect_bg"
+                android:padding="15dp">
+
+                <ImageView
+                    android:id="@+id/adddetails_menu01_img"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerVertical="true"
+                    android:background="@mipmap/ic_m06" />
+
+                <TextView
+                    android:id="@+id/adddetails_menu01_phone_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@+id/adddetails_menu01_img"
+                    android:text="0535-6691999"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/darker_gray"
+                />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_setlect_bg"
+                android:padding="15dp">
+
+                <ImageView
+                    android:id="@+id/adddetails_menu02_img"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerVertical="true"
+                    android:background="@mipmap/ic_m12" />
+
+                <TextView
+                    android:id="@+id/adddetails_menu02_web_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@+id/adddetails_menu02_img"
+                    android:text="www.12306.cn"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/darker_gray"
+                />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_setlect_bg"
+                android:padding="15dp">
+
+                <ImageView
+                    android:id="@+id/adddetails_menu03_img"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerVertical="true"
+                    android:background="@mipmap/ic_m11" />
+
+                <TextView
+                    android:id="@+id/adddetails_menu03_add_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@+id/adddetails_menu03_img"
+                    android:text="烟台市烟台山路烟台山"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/darker_gray"
+                />
 
         </LinearLayout>
-
+        <LinearLayout
+            android:id="@+id/adddetails_call_lin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/btn_border"
+            >
+            <Button
+                android:id="@+id/adddetails_call_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/list_setlect_bg"
+                android:text="拨打电话"
+                android:textSize="18sp"
+                />
+        </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.sizhuo.ydxf.application;
 
 import android.app.Application;
 import android.graphics.Color;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -13,6 +14,9 @@ import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.util.UILImageLoader;
 import com.umeng.socialize.PlatformConfig;
 
+
+import org.xutils.DbManager;
+import org.xutils.x;
 
 import cn.finalteam.galleryfinal.CoreConfig;
 import cn.finalteam.galleryfinal.FunctionConfig;
@@ -29,9 +33,13 @@ import cn.finalteam.galleryfinal.ThemeConfig;
  */
 public class MyApplication extends Application{
     public RequestQueue queue;
+//    public DbManager.DaoConfig daoConfig;
+    public DbManager dbManager;
     @Override
     public void onCreate() {
         super.onCreate();
+        x.Ext.init(this);
+        x.Ext.setDebug(BuildConfig.DEBUG);
         queue = Volley.newRequestQueue(getApplicationContext());
         //微信 appid appsecret
         PlatformConfig.setWeixin("wx9b63dbf2820914ef", "5aa18dcbac1f9a9fba06c48fd0789876");
@@ -65,9 +73,19 @@ public class MyApplication extends Application{
         .build();
         GalleryFinal.init(coreConfig);
         SDKInitializer.initialize(getApplicationContext());
+        Log.d("log.d","myapplication");
     }
 
     public RequestQueue getHttpRequestQueue(){
         return queue;
+    }
+
+    public DbManager getDbManager(){
+        //创建数据库
+        DbManager.DaoConfig daoConfig = new DbManager.DaoConfig()
+                .setDbName("ydxf_db")
+                .setDbVersion(1);
+        dbManager = x.getDb(daoConfig);
+        return dbManager;
     }
 }

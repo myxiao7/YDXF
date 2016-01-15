@@ -89,11 +89,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         //便民服务
         for (int i = 0; i <4 ; i++) {
-            GridBean gridBean = new GridBean(R.mipmap.default_img, "部门"+i);
+            GridBean gridBean = new GridBean("http://192.168.1.114:8080/xinwen/img/icon.png", "部门"+i);
             gridList.add(gridBean);
         }
         MyBottomGridAdapter myBottomGridAdapter = new MyBottomGridAdapter(gridList,this);
         gridView.setAdapter(myBottomGridAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, OrgDetails.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
         //便民114
         for (int i = 0; i <4 ; i++) {
             GridBean2 gridBean2 = new GridBean2("烟台市政府"+i);
@@ -104,16 +111,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         gridView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               /* Intent intent = new Intent(MainActivity.this, AddressListDetails.class);
-                MainActivity.this.startActivity(intent);*/
-                showDetails(gridList2.get(position).getItem());
+                Intent intent = new Intent(MainActivity.this, AddressListDetails.class);
+                MainActivity.this.startActivity(intent);
             }
         });
     }
 
     /**
      * 便民114 Dialog
-     */
+     *//*
     private void showDetails(final String phone) {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.show();
@@ -126,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(MainActivity.this, "call" + phone, Toast.LENGTH_SHORT).show();
             }
         });
-    }
+    }*/
 
     //初始化
     private void initViews() {

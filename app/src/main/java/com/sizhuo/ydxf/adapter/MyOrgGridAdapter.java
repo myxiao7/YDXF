@@ -10,8 +10,11 @@ import android.widget.TextView;
 
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.entity.GridBean;
+import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * 项目名称: YDXF
@@ -52,20 +55,20 @@ public class MyOrgGridAdapter extends BaseAdapter{
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.org_grid_item, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.imageView = (ImageView) convertView.findViewById(R.id.org_grid_img);
+            viewHolder.imageView = (CircleImageView) convertView.findViewById(R.id.org_grid_img);
             viewHolder.textView = (TextView) convertView.findViewById(R.id.org_grid_title_tv);
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         GridBean gridBean = list.get(position);
-        viewHolder.imageView.setBackgroundResource(gridBean.getImg());
+        ImageLoaderHelper.getIstance().loadImg(gridBean.getImg()+"",viewHolder.imageView);
         viewHolder.textView.setText(gridBean.getTitle());
         return convertView;
     }
 
     class ViewHolder{
-        ImageView imageView;
+        CircleImageView imageView;
         TextView textView;
     }
 }

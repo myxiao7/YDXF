@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,17 +26,26 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.baidu.platform.comapi.map.t;
+import com.sizhuo.ydxf.application.MyApplication;
+import com.sizhuo.ydxf.entity.db.User;
 import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.util.StatusBar;
+import com.sizhuo.ydxf.view.ZProgressHUD;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
+import org.xutils.x;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,6 +72,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private JsonObjectRequest jsonObjectRequest;
     private final String REQUEST_TAB = "LOGIN_REQUEST";
 
+    private DbManager dbManager;
+    private DbManager.DaoConfig daoConfig;
+
+    ZProgressHUD progressHUD;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +84,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         //初始化控件
         initViews();
         queue = Volley.newRequestQueue(this);
+        dbManager = new MyApplication().getDbManager();
+        progressHUD = ZProgressHUD.getInstance(this);
+        progressHUD.setSpinnerType(ZProgressHUD.SIMPLE_ROUND_SPINNER  );
+        initEvents();
+
+    }
+
+    private void initEvents() {
         wechatBtn.setOnClickListener(this);
         qqBtn.setOnClickListener(this);
         weiboBtn.setOnClickListener(this);
@@ -172,6 +195,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 nameStr = nameEdit.getText().toString();
                 pwdStr = pwdEdit.getText().toString();
                 login(nameStr, pwdStr);
+                progressHUD.show();
                 break;
             case R.id.login_wechat_btn:
                 Toast.makeText(Login.this,"微信",Toast.LENGTH_SHORT).show();
@@ -204,6 +228,28 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 Log.d("log.d","result"+jsonObject.toString());
+                    try {
+                        String code = jsonObject.getString("code");
+                        //登陆成功，返回信息data
+                        if(code.equals("200")) {
+                            //清空表
+                            dbManager.delete(User.class);
+                            //保存用户信息
+                            User user = JSON.parseObject(jsonObject.getString("data").toString(),User.class);
+                            user.setUserPwd(userPwd);
+                            dbManager.save(user);
+                            Toast.makeText(Login.this, "suessful", Toast.LENGTH_SHORT).show();
+                            progressHUD.dismissWithSuccess("登录成功");
+                            Login.this.finish();
+                        }else{
+                            Toast.makeText(Login.this, "failt", Toast.LENGTH_SHORT).show();
+                            progressHUD.dismissWithSuccess("登录失败");
+                        }
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }catch (JSONException e2) {
+                        e2.printStackTrace();
+                    }
             }
         }, new Response.ErrorListener() {
             @Override

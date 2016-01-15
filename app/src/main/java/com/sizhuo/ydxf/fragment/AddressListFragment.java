@@ -33,9 +33,9 @@ public class AddressListFragment extends Fragment{
         if(mView == null){
             initViews(inflater, container);
         }
-        AddressListData data = new AddressListData("","烟台高新区银行","0535-5165161","高新区","银行","烟台高新区创业路36号");
-        AddressListData data2 = new AddressListData("","烟台莱山区酒店","0535-213123231","莱山区","餐饮","烟台高新区创业路36号");
-        AddressListData data3 = new AddressListData("","烟台高新区政府","0535-42524342","高新区","政务","烟台高新区创业路36号");
+        AddressListData data = new AddressListData("","烟台高新区银行","0535-5165161","烟台高新区创业路36号");
+        AddressListData data2 = new AddressListData("","烟台莱山区酒店","0535-213123231","烟台高新区创业路36号");
+        AddressListData data3 = new AddressListData("","烟台高新区政府","0535-42524342","烟台高新区创业路36号");
         list.add(data);
         list.add(data2);
         list.add(data3);
