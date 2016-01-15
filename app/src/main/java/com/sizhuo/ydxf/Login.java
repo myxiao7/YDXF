@@ -73,7 +73,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private final String REQUEST_TAB = "LOGIN_REQUEST";
 
     private DbManager dbManager;
-    private DbManager.DaoConfig daoConfig;
+//    private DbManager.DaoConfig daoConfig;
 
     ZProgressHUD progressHUD;
 

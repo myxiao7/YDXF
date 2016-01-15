@@ -37,7 +37,7 @@ public class Organization extends AppCompatActivity{
         gridView = (GridView) findViewById(R.id.org_grid);
         //便民服务
         for (int i = 0; i <9 ; i++) {
-            GridBean gridBean = new GridBean("http://192.168.1.114:8080/xinwen/img/icon.png", "部门"+i);
+            GridBean gridBean = new GridBean("http://192.168.1.114:8080/xinwen/img/item01.jpg", "部门"+i);
             gridList.add(gridBean);
         }
         MyOrgGridAdapter myBottomGridAdapter = new MyOrgGridAdapter(gridList,this);

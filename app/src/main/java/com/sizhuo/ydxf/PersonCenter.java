@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,12 +13,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sizhuo.ydxf.application.MyApplication;
+import com.sizhuo.ydxf.entity.db.User;
 import com.sizhuo.ydxf.per.MyCollection;
 import com.sizhuo.ydxf.per.MyComment;
 import com.sizhuo.ydxf.per.MyNews;
 import com.sizhuo.ydxf.per.MyPost;
 import com.sizhuo.ydxf.setting.PersonInfo;
+import com.sizhuo.ydxf.util.ImageLoaderHelper;
 import com.sizhuo.ydxf.util.StatusBar;
+
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -34,12 +41,37 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
     private RelativeLayout topDefBtn, topBtn, menuBtn01, menuBtn02, menuBtn03, menuBtn04;//登录，我的资料，我的收藏，消息，帖子，评论
     private CircleImageView icon;//头像
     private TextView nameTv;//昵称
+
+    private DbManager dbManager;//数据库操作
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personcenter);
         initViews();
         initEvents();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ImageLoaderHelper.getIstance().loadImg("http://192.168.1.114:8080/xinwen/img/icon.png",icon);
+                Log.d("log.d","url");
+            }
+        }).start();
+        dbManager = new MyApplication().getDbManager();
+        try {
+            user = dbManager.findFirst(User.class);
+            if(user!=null){
+                topBtn.setVisibility(View.VISIBLE);
+                topDefBtn.setVisibility(View.GONE);
+
+                nameTv.setText(user.getNickName());
+            }else{
+                topBtn.setVisibility(View.GONE);
+                topDefBtn.setVisibility(View.VISIBLE);
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 
 
