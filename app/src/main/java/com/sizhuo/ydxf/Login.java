@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.baidu.platform.comapi.map.t;
+import com.renn.rennsdk.param.ShareType;
 import com.sizhuo.ydxf.application.MyApplication;
 import com.sizhuo.ydxf.entity.db.User;
 import com.sizhuo.ydxf.util.Const;
@@ -47,6 +49,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 项目名称: YDXF
@@ -61,6 +65,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private TextInputLayout nameLayout, pwdLayout;//账号，密码
     private EditText nameEdit, pwdEdit;//账号，密码编辑
     private String nameStr, pwdStr;//账号，密码编辑
+    private String sex, openid, nick, icon, shareType;//快捷登录用户信息
     private Button loginBtn;//登录按钮
     private TextView forgetBtn;//忘记密码
     private static final int REGISTER_REQUESTCODE = 0X200;
@@ -85,7 +90,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         initViews();
         queue = Volley.newRequestQueue(this);
         dbManager = new MyApplication().getDbManager();
-        progressHUD = ZProgressHUD.getInstance(this);
+        progressHUD = new ZProgressHUD(this);
         progressHUD.setSpinnerType(ZProgressHUD.SIMPLE_ROUND_SPINNER  );
         initEvents();
 
@@ -118,21 +123,35 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void initAuth(SHARE_MEDIA platforms) {
+
         SHARE_MEDIA platform = platforms;
         mShareAPI.doOauthVerify(this, platform, new UMAuthListener() {
             @Override
             public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
-                Toast.makeText(getApplicationContext(), "Authorize succeed", Toast.LENGTH_SHORT).show();
+                Log.d("sso", "doOauthVerify----------"+data.toString());
+                Toast.makeText(getApplicationContext(), "授权成功，正在登陆"+shareType+openid, Toast.LENGTH_SHORT).show();
+                if(!TextUtils.isEmpty(openid)){
+                    progressHUD.show();
+//                    Toast.makeText(getApplicationContext(), "授权成功，正在登陆"+shareType+openid, Toast.LENGTH_SHORT).show();
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            fastLogin(shareType, openid);
+                        }
+                    },1200);
+                }
             }
 
             @Override
             public void onError(SHARE_MEDIA platform, int action, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Authorize fail", Toast.LENGTH_SHORT).show();
+                progressHUD.dismiss();
             }
 
             @Override
             public void onCancel(SHARE_MEDIA platform, int action) {
                 Toast.makeText(getApplicationContext(), "Authorize cancel", Toast.LENGTH_SHORT).show();
+                progressHUD.dismiss();
             }
         });
         mShareAPI.getPlatformInfo(Login.this, platform, new UMAuthListener() {
@@ -140,10 +159,22 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> data) {
 
                 if (data != null) {
-                    Toast.makeText(getApplicationContext(), data.toString(), Toast.LENGTH_SHORT).show();
-                    Log.d("sso", data.toString());
-                    Log.d("sso", "share_media");
-                    Log.d("sso", "status" + i);
+//                    Toast.makeText(getApplicationContext(), data.toString(), Toast.LENGTH_SHORT).show();
+                    Log.d("sso", "getPlatformInfo----------" + data.toString());
+
+                    if(SHARE_MEDIA.QQ.equals(share_media)){
+                        shareType = "qqOpenid";
+                    }else if(SHARE_MEDIA.WEIXIN.equals(share_media)){
+                        shareType = "wxOpenid";
+                        sex = data.get("sex");
+                        openid = data.get("openid");
+                        nick = data.get("nickname");
+                        icon = data.get("headimgurl");
+                    }else if(SHARE_MEDIA.SINA.equals(share_media)){
+                        shareType = "wbOpenid";
+                    }
+                    //QQ,WEINXIN,SINA
+                    Log.d("sso", "share_media" + icon);
                 }
             }
 
@@ -215,6 +246,71 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
+    /**
+     * 快速登录
+     * @param type 类型
+     * @param openID openID
+     */
+    private void fastLogin(String type, String openID) {
+        Map<String, String> map = new HashMap<>();
+        map.put(type,openID);
+       /* map.put("wxOpenid","");
+        map.put("qqOpenid","");
+        map.put("wbOpenid","");*/
+        JSONObject jsonObject = new JSONObject(map);
+        Log.d("log.d", "jsonObject"+jsonObject.toString());
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.LOGIN, jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Log.d("log.d","result"+jsonObject.toString());
+                try {
+                    String code = jsonObject.getString("code");
+                    //已经绑定了账号
+                    if(code.equals("200")) {
+                        //清空表
+                        dbManager.delete(User.class);
+                        //保存用户信息
+                        User user = JSON.parseObject(jsonObject.getString("data").toString(),User.class);
+//                        user.setUserPwd(userPwd);
+                        dbManager.save(user);
+                    }else if(code.equals("400")){
+                        //未经绑定了账号
+                        Toast.makeText(Login.this, "请先绑定账户", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Login.this, BindUser.class);
+                        Bundle bundle = new Bundle();
+
+                        bundle.putString("type",shareType);
+                        bundle.putString("openid",openid);
+                        bundle.putString("icon",icon);
+                        bundle.putString("nick",nick);
+                        bundle.putString("sex", sex);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                    Login.this.finish();
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }catch (JSONException e2) {
+                    e2.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Log.d("log.d",volleyError.toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Accept", "application/json");
+                return headers;
+            }
+        };
+        queue.add(jsonObjectRequest);
+        jsonObjectRequest.setTag(REQUEST_TAB);
+    }
+
     private void login(final String userName,final String userPwd) {
         Map<String, String> map = new HashMap<>();
         map.put("userName",userName);
@@ -266,6 +362,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         };
         queue.add(jsonObjectRequest);
         jsonObjectRequest.setTag(REQUEST_TAB);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(progressHUD!=null){
+            progressHUD.dismiss();
+        }
     }
 
     @Override

@@ -114,6 +114,9 @@
         <!--登录-->
         <activity android:name=".Login"
             />
+        <!--绑定-->
+        <activity android:name=".BindUser"
+            />
         <!--注册-->
         <activity android:name=".Register"
             android:windowSoftInputMode="stateAlwaysVisible"

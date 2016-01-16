@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,34 +46,15 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
 
     private DbManager dbManager;//数据库操作
     private User user;
+
+    private final int SETTINGR_ESULT = 0X200;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personcenter);
         initViews();
         initEvents();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ImageLoaderHelper.getIstance().loadImg("http://192.168.1.114:8080/xinwen/img/icon.png",icon);
-                Log.d("log.d","url");
-            }
-        }).start();
-        dbManager = new MyApplication().getDbManager();
-        try {
-            user = dbManager.findFirst(User.class);
-            if(user!=null){
-                topBtn.setVisibility(View.VISIBLE);
-                topDefBtn.setVisibility(View.GONE);
 
-                nameTv.setText(user.getNickName());
-            }else{
-                topBtn.setVisibility(View.GONE);
-                topDefBtn.setVisibility(View.VISIBLE);
-            }
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -111,10 +94,45 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()){
             case R.id.per_menu_setting:
                 Intent intent = new Intent(PersonCenter.this, Setting.class);
-                startActivity(intent);
+                startActivityForResult(intent,SETTINGR_ESULT);
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==SETTINGR_ESULT && requestCode==RESULT_OK){
+            //注销登录
+            if(!data.getBooleanExtra("loginFlag",true)){
+                onResume();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dbManager = new MyApplication().getDbManager();
+        try {
+            user = dbManager.findFirst(User.class);
+            if(user!=null){
+                topBtn.setVisibility(View.VISIBLE);
+                topDefBtn.setVisibility(View.GONE);
+                //设置头像和昵称
+                if(!TextUtils.isEmpty(user.getPortrait())){
+                    ImageLoaderHelper.getIstance().loadImg(user.getPortrait(), icon);
+                }
+                if(!TextUtils.isEmpty(user.getNickName())){
+                    nameTv.setText(user.getNickName());
+                }
+            }else{
+                topBtn.setVisibility(View.GONE);
+                topDefBtn.setVisibility(View.VISIBLE);
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -127,6 +145,7 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
             case R.id.personcenter_top_re:
                 Intent intent2 = new Intent(PersonCenter.this, PersonInfo.class);
                 startActivity(intent2);
+
                 break;
             case R.id.personcenter_menu01_re:
                 Intent intent3 = new Intent(PersonCenter.this, MyCollection.class);
@@ -147,4 +166,5 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
 
         }
     }
+
 }
