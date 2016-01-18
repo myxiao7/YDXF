@@ -8,7 +8,7 @@ package com.sizhuo.ydxf.entity;
  *
  * @version 1.0
  */
-public class SliderData {
+public class _SliderData {
     /**
      * 轮播标题
      */
@@ -58,7 +58,7 @@ public class SliderData {
         this.url = url;
     }
 
-    public SliderData(String title, String imgsrc, String docid, String url) {
+    public _SliderData(String title, String imgsrc, String docid, String url) {
 
         this.title = title;
         this.imgsrc = imgsrc;
@@ -66,6 +66,6 @@ public class SliderData {
         this.url = url;
     }
 
-    public SliderData() {
+    public _SliderData() {
     }
 }

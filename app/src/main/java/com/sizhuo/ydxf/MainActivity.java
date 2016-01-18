@@ -2,41 +2,59 @@ package com.sizhuo.ydxf;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.*;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.sizhuo.ydxf.adapter.MyBottomGridAdapter;
 import com.sizhuo.ydxf.adapter.MyBottomGridAdapter2;
 import com.sizhuo.ydxf.adapter.MyMainAdapter;
 import com.sizhuo.ydxf.entity.GridBean;
 import com.sizhuo.ydxf.entity.GridBean2;
-import com.sizhuo.ydxf.entity.MainBean;
+import com.sizhuo.ydxf.entity._MainData;
+import com.sizhuo.ydxf.entity._NewsData;
+import com.sizhuo.ydxf.entity._PostDetailData;
+import com.sizhuo.ydxf.entity._ServiceData;
+import com.sizhuo.ydxf.entity._SliderData;
+import com.sizhuo.ydxf.util.Const;
+import com.sizhuo.ydxf.util.ImageLoaderHelper;
 import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.NoScollerGridView;
-import com.sizhuo.ydxf.view.zrclistview.SimpleHeader;
-import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
 import com.umeng.update.UmengUpdateAgent;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -47,21 +65,29 @@ import java.util.List;
  *@version 1.0
  *
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, BaseSliderView.OnSliderClickListener {
     private Toolbar toolbar;//Toolbar
     private SliderLayout mSlider;//轮播图
-    private ZrcListView listView;
-    private View headView, footView;
-    private final int REFRESH_COMPLETE = 0X100;//刷新完成
-    private final int LOADMORE_COMPLETE = 0X101;//加载完成
-    private List<MainBean> list = new ArrayList<MainBean>();
     private HashMap<String,String> url_maps = new LinkedHashMap<String, String>();
+
+    private List<_NewsData> newsList = new LinkedList<_NewsData>();//新闻
+    private List<_PostDetailData> forumList = new LinkedList<_PostDetailData>();//论坛
+    private RelativeLayout itemReMore01,itemReMore02,itemReMore03,itemReMore04;//新闻和论坛更多
+    private LinearLayout menuLin01, menuLin02, menuLin03, menuLin04;
+    private ImageView imageView01, imageView02, imageView03, imageView04;
+    private TextView titleTv01, conTv01, dataTv01,titleTv02, conTv02, dataTv02,titleTv03, conTv03, dataTv03, titleTv04, conTv04, dataTv04;
+    private ImageView mapBtn;
+
     private RelativeLayout moreRe;//便民更多
     private GridView gridView;//便民服务
-    private List<GridBean> gridList = new ArrayList<GridBean>();
+    private List<_ServiceData> gridList = new ArrayList<_ServiceData>();
+    private MyBottomGridAdapter myBottomGridAdapter;
+
     private RelativeLayout moreRe2;//便民114更多
     private NoScollerGridView gridView2;//便民114
-    private List<GridBean2> gridList2 = new ArrayList<GridBean2>();
+    private List<_ServiceData> gridList2 = new ArrayList<_ServiceData>();
+    private MyBottomGridAdapter myBottomGridAdapter2;
+
 
     //网络相关
     private RequestQueue queue;
@@ -87,33 +113,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initViews();
         initEvents();
-        //前3栏目
-        MainBean mainBean01 = new MainBean("1","1","1","1");
-        MainBean mainBean02 = new MainBean("2","2","2","2");
-        MainBean mainBean03 = new MainBean("3","3","3","3");
-        MainBean mainBean04 = new MainBean("4","4","4","4");
-        list.add(mainBean01);
-        list.add(mainBean02);
-        list.add(mainBean03);
-        list.add(mainBean04);
-        MyMainAdapter myMainAdapter = new MyMainAdapter(list,this);
-        listView.addHeaderView(headView);
-        listView.addFooterView(footView);
-        listView.setAdapter(myMainAdapter);
-        listView.setOnItemClickListener(new ZrcListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(ZrcListView parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, NewsDetails.class);
-                MainActivity.this.startActivity(intent);
-                Toast.makeText(MainActivity.this,"点击了"+position,Toast.LENGTH_SHORT).show();
-            }
-        });
-        //便民服务
-        for (int i = 0; i <4 ; i++) {
-            GridBean gridBean = new GridBean("http://192.168.1.114:8080/xinwen/img/icon.png", "纪检部");
-            gridList.add(gridBean);
-        }
-        MyBottomGridAdapter myBottomGridAdapter = new MyBottomGridAdapter(gridList,this);
+        queue = Volley.newRequestQueue(this);
+
+
+       myBottomGridAdapter = new MyBottomGridAdapter(gridList,this);
         gridView.setAdapter(myBottomGridAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -122,13 +125,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 MainActivity.this.startActivity(intent);
             }
         });
-        //便民114
-        for (int i = 0; i <4 ; i++) {
-            GridBean2 gridBean2 = new GridBean2("烟台市政府"+i);
-            gridList2.add(gridBean2);
-        }
-        MyBottomGridAdapter2 myBottomListAdapter = new MyBottomGridAdapter2(gridList2,this);
-        gridView2.setAdapter(myBottomListAdapter);
+
+        myBottomGridAdapter2 = new MyBottomGridAdapter(gridList2,this);
+        gridView2.setAdapter(myBottomGridAdapter2);
         gridView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -136,24 +135,101 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 MainActivity.this.startActivity(intent);
             }
         });
+
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Const.MAIN_URL, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Log.d("log.d","main"+jsonObject.toString());
+                try {
+                    String code = jsonObject.getString("code");
+                    //获取成功，返回信息data
+                    if(code.equals("200")){
+                        _MainData mainData = JSON.parseObject(jsonObject.getString("data"),_MainData.class);
+                        List<_SliderData> sliderDatas = mainData.getCarousel();
+
+                        newsList = mainData.getNews();
+                        forumList = mainData.getCard();
+                        gridList = mainData.getConvenience();
+                        gridList2 = mainData.getDirectory();
+
+                        for (int i = 0; i <sliderDatas.size() ; i++) {
+                            url_maps.put(sliderDatas.get(i).getTitle(),sliderDatas.get(i).getImgsrc());
+                            Log.d("xinwen",sliderDatas.get(i).getTitle());
+                            TextSliderView textSliderView = new TextSliderView(MainActivity.this);
+                            // initialize a SliderLayout
+                            textSliderView
+                                    .description(sliderDatas.get(i).getTitle())
+                                    .image(sliderDatas.get(i).getImgsrc())
+                                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                                    .setOnSliderClickListener(MainActivity.this);
+
+                            //add your extra information`
+                            textSliderView.bundle(new Bundle());
+                            textSliderView.getBundle()
+                                    .putString("extra", sliderDatas.get(i).getUrl());
+
+                            mSlider.addSlider(textSliderView);
+                        }
+
+                        if(newsList.get(0)!=null){
+                            if(TextUtils.isEmpty(newsList.get(0).getImgsrc())){
+                                ImageLoaderHelper.getIstance().loadImg(newsList.get(0).getImgsrc(),imageView01);
+                            }
+                            titleTv01.setText(newsList.get(0).getTitle());
+                            conTv01.setText(newsList.get(0).getDigest());
+                            dataTv01.setText(newsList.get(0).getPtime());
+                        }
+                        if(newsList.get(1)!=null){
+                            if(TextUtils.isEmpty(newsList.get(1).getImgsrc())){
+                                ImageLoaderHelper.getIstance().loadImg(newsList.get(1).getImgsrc(),imageView02);
+                            }
+                            titleTv02.setText(newsList.get(1).getTitle());
+                            conTv02.setText(newsList.get(1).getDigest());
+                            dataTv02.setText(newsList.get(1).getPtime());
+                        }
+                        if(forumList.get(0)!=null){
+                            if(TextUtils.isEmpty(forumList.get(0).getImgsrc())){
+                                ImageLoaderHelper.getIstance().loadImg(forumList.get(0).getImgsrc(),imageView03);
+                            }
+                            titleTv03.setText(forumList.get(0).getTitle());
+                            conTv03.setText(forumList.get(0).getDigest());
+                            dataTv03.setText(forumList.get(0).getPtime());
+                        }
+                        if(forumList.get(1)!=null){
+                            if(TextUtils.isEmpty(forumList.get(1).getImgsrc())){
+                                ImageLoaderHelper.getIstance().loadImg(forumList.get(1).getImgsrc(),imageView04);
+                            }
+                            titleTv04.setText(forumList.get(1).getTitle());
+                            conTv04.setText(forumList.get(1).getDigest());
+                            dataTv04.setText(forumList.get(1).getPtime());
+                        }
+
+                        myBottomGridAdapter.notifyDataSetChanged(gridList);
+                        myBottomGridAdapter2.notifyDataSetChanged(gridList2);
+
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Log.d("log.d","main"+volleyError.toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Accept", "application/json");
+                return headers;
+            }
+        };
+        queue.add(jsonObjectRequest);
+        jsonObjectRequest.setTag(TAG);
     }
 
-    /**
-     * 便民114 Dialog
-     *//*
-    private void showDetails(final String phone) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.show();
-        Window window = alertDialog.getWindow();
-        window.setContentView(R.layout.dialog_addresslist);
-        Button callBtn= (Button) window.findViewById(R.id.dialog_addresslist_call_btn);
-        callBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "call" + phone, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }*/
 
     //初始化
     private void initViews() {
@@ -163,35 +239,116 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
         //自动更新
         UmengUpdateAgent.update(this);
-        listView = (ZrcListView) findViewById(R.id.main_list);
-        LayoutInflater inflater = getLayoutInflater();
-        headView = inflater.inflate(R.layout.main_list_header,null);
-        mSlider = (SliderLayout) headView.findViewById(R.id.main_list_header_slider);
-        footView = inflater.inflate(R.layout.main_bottom,null);
-        moreRe = (RelativeLayout) footView.findViewById(R.id.main_bottom_re_more);
-        gridView = (GridView) footView.findViewById(R.id.main_bottom_grid);
-        moreRe2 = (RelativeLayout) footView.findViewById(R.id.main_bottom_re_more02);
-        gridView2 = (NoScollerGridView) footView.findViewById(R.id.main_bottom_grid2);
-        // 设置下拉刷新的样式（可选，但如果没有Header则无法下拉刷新）
-        SimpleHeader header = new SimpleHeader(this);
-        header.setTextColor(0xff0066aa);
-        header.setCircleColor(0xff33bbee);
-        listView.setHeadable(header);
-        listView.setOnRefreshStartListener(new ZrcListView.OnStartListener() {
-            @Override
-            public void onStart() {
-                Message message = handler.obtainMessage();
-                message.what = REFRESH_COMPLETE;
-                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
-            }
-        });
+        mSlider = (SliderLayout) findViewById(R.id.main_slider);
+        mSlider.setPresetTransformer(SliderLayout.Transformer.Default);
+        mSlider.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
+        mSlider.setCustomAnimation(new DescriptionAnimation());
+        mSlider.startAutoCycle(2500, 4000, true);
+
+        itemReMore01 = (RelativeLayout) findViewById(R.id.main_list_item01_01_re_more);
+        imageView01 = (ImageView) findViewById(R.id.main_list_item01_01_img);
+        titleTv01 = (TextView) findViewById(R.id.main_list_item01_01_title_tv);
+        conTv01 = (TextView) findViewById(R.id.main_list_item01_01_des_tv);
+        dataTv01 = (TextView) findViewById(R.id.main_list_item01_01_date_tv);
+
+        itemReMore02 = (RelativeLayout) findViewById(R.id.main_list_item01_02_re_more);
+        imageView02 = (ImageView) findViewById(R.id.main_list_item01_02_img);
+        titleTv02 = (TextView) findViewById(R.id.main_list_item01_02_title_tv);
+        conTv02 = (TextView) findViewById(R.id.main_list_item01_02_des_tv);
+        dataTv02 = (TextView) findViewById(R.id.main_list_item01_02_date_tv);
+
+        itemReMore03 = (RelativeLayout) findViewById(R.id.main_list_item01_03_re_more);
+        imageView03 = (ImageView) findViewById(R.id.main_list_item01_03_img);
+        titleTv03 = (TextView) findViewById(R.id.main_list_item01_03_title_tv);
+        conTv03 = (TextView) findViewById(R.id.main_list_item01_03_des_tv);
+        dataTv03 = (TextView) findViewById(R.id.main_list_item01_03_date_tv);
+
+        itemReMore04 = (RelativeLayout) findViewById(R.id.main_list_item01_04_re_more);
+        imageView04 = (ImageView) findViewById(R.id.main_list_item01_04_img);
+        titleTv04 = (TextView) findViewById(R.id.main_list_item01_04_title_tv);
+        conTv04 = (TextView) findViewById(R.id.main_list_item01_04_des_tv);
+        dataTv04 = (TextView) findViewById(R.id.main_list_item01_04_date_tv);
+
+        menuLin01 = (LinearLayout) findViewById(R.id.main_list_item02_menu04_lin);
+        menuLin02 = (LinearLayout) findViewById(R.id.main_list_item02_menu04_lin);
+        menuLin03 = (LinearLayout) findViewById(R.id.main_list_item02_menu04_lin);
+        menuLin04 = (LinearLayout) findViewById(R.id.main_list_item02_menu04_lin);
+
+        mapBtn = (ImageView) findViewById(R.id.main_list_item03_img);
+
+        moreRe = (RelativeLayout) findViewById(R.id.main_bottom_re_more);
+        gridView = (GridView) findViewById(R.id.main_bottom_grid);
+
+        moreRe2 = (RelativeLayout) findViewById(R.id.main_bottom_re_more02);
+        gridView2 = (NoScollerGridView) findViewById(R.id.main_bottom_grid2);
+
 
     }
 
     private void initEvents() {
+        itemReMore01.setOnClickListener(this);
+        itemReMore02.setOnClickListener(this);
+        itemReMore03.setOnClickListener(this);
+        itemReMore04.setOnClickListener(this);
+        menuLin01.setOnClickListener(this);
+        menuLin02.setOnClickListener(this);
+        menuLin03.setOnClickListener(this);
+        menuLin04.setOnClickListener(this);
+        mapBtn.setOnClickListener(this);
         moreRe.setOnClickListener(this);
         moreRe2.setOnClickListener(this);
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.main_list_item01_01_re_more:
+                Intent intent = new Intent(MainActivity.this, Module01.class);
+                startActivity(intent);
+                break;
+             case R.id.main_list_item01_02_re_more:
+                Intent intent2 = new Intent(MainActivity.this, Module01.class);
+                startActivity(intent2);
+                break;
+             case R.id.main_list_item01_03_re_more:
+                Intent intent3 = new Intent(MainActivity.this, Forum.class);
+                startActivity(intent3);
+                break;
+             case R.id.main_list_item01_04_re_more:
+                Intent intent4 = new Intent(MainActivity.this, Forum.class);
+                startActivity(intent4);
+                break;
+             case R.id.main_list_item02_menu01_lin:
+                Intent intent5 = new Intent(MainActivity.this, VideoModule.class);
+                startActivity(intent5);
+                break;
+             case R.id.main_list_item02_menu02_lin:
+                Intent intent6 = new Intent(MainActivity.this, VideoModule.class);
+                startActivity(intent6);
+                break;
+             case R.id.main_list_item02_menu03_lin:
+                Intent intent7 = new Intent(MainActivity.this, VideoModule.class);
+                startActivity(intent7);
+                break;
+             case R.id.main_list_item02_menu04_lin:
+                Intent intent8 = new Intent(MainActivity.this, VideoModule.class);
+                startActivity(intent8);
+                break;
+             case R.id.main_list_item03_img:
+                Intent intent9 = new Intent(MainActivity.this, RedMap.class);
+                startActivity(intent9);
+                break;
+             case R.id.main_bottom_re_more:
+                Intent intent10 = new Intent(MainActivity.this, Organization.class);
+                startActivity(intent10);
+                break;
+            case R.id.main_bottom_re_more02:
+                Intent intent11 = new Intent(MainActivity.this, AddressList.class);
+                startActivity(intent11);
+                break;
+        }
+    }
+
 
     //toolbar菜单
     @Override
@@ -223,36 +380,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onStop() {
-        mSlider.stopAutoCycle();
+//        mSlider.stopAutoCycle();
         super.onStop();
     }
-    Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what){
-                case LOADMORE_COMPLETE:
-                    listView.setLoadMoreSuccess();
-                    listView.stopLoadMore();
-                    break;
-                case REFRESH_COMPLETE:
-                    listView.setRefreshSuccess("更新完成"); // 通知加载成功
-                    break;
-            }
-        }
-    };
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.main_bottom_re_more:
-                Intent intent = new Intent(MainActivity.this, Organization.class);
-                startActivity(intent);
-                break;
-            case R.id.main_bottom_re_more02:
-                Intent intent2 = new Intent(MainActivity.this, AddressList.class);
-                startActivity(intent2);
-                break;
-        }
+    protected void onDestroy() {
+        super.onDestroy();
+        queue.cancelAll(TAG);
     }
 
+
+    @Override
+    public void onSliderClick(BaseSliderView slider) {
+        Toast.makeText(this, slider.getBundle().get("extra") + "", Toast.LENGTH_SHORT).show();
+    }
 }

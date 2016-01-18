@@ -2,6 +2,7 @@ package com.sizhuo.ydxf.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,10 @@ import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.RedMap;
 import com.sizhuo.ydxf.VideoModule;
 import com.sizhuo.ydxf.entity.MainBean;
+import com.sizhuo.ydxf.entity._MainData;
+import com.sizhuo.ydxf.entity._NewsData;
+import com.sizhuo.ydxf.entity._PostDetailData;
+import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
 import java.util.List;
 
@@ -30,28 +35,28 @@ import java.util.List;
  * @version 1.0
  */
 public class MyMainAdapter extends BaseAdapter{
-    private List<MainBean> list;
+    private List<_MainData> list;
     private Context context;
     private final int TYPE_ONE = 0, TYPE_TWO = 1, TYPE_THREE = 2, TYPE_COUNT = 3;//子布局类型和个数
 
-    public MyMainAdapter(List<MainBean> list, Context context) {
+    public MyMainAdapter(List<_MainData> list, Context context) {
         this.list = list;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return list.size()+2;
+        return list.get(0).getNews().size()+list.get(0).getCard().size()+2;
     }
 
     @Override
     public Object getItem(int position) {
-        return list.get(position);
+        return list.get(0);
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return 0;
     }
 
     @Override
@@ -73,6 +78,7 @@ public class MyMainAdapter extends BaseAdapter{
                     viewHolder01.imageView = (ImageView) convertView.findViewById(R.id.main_list_item01_img);
                     viewHolder01.titleTv = (TextView) convertView.findViewById(R.id.main_list_item01_title_tv);
                     viewHolder01.desTv = (TextView) convertView.findViewById(R.id.main_list_item01_des_tv);
+                    viewHolder01.dateTv = (TextView) convertView.findViewById(R.id.main_list_item01_date_tv);
                     convertView.setTag(viewHolder01);
                     break;
 
@@ -112,7 +118,8 @@ public class MyMainAdapter extends BaseAdapter{
 
         switch (type){
             case TYPE_ONE:
-                MainBean mainBean = null;
+                _NewsData newsData = null;
+                _PostDetailData postDetailData = null;
                 if(position == 0){
                     viewHolder01.icon.setBackgroundResource(R.mipmap.ic_m01);
                     viewHolder01.columnTv.setText("大事小情");
@@ -131,13 +138,23 @@ public class MyMainAdapter extends BaseAdapter{
                 }
 
                 if(position<2){
-                    mainBean = list.get(position);
+                    newsData = list.get(0).getNews().get(position);
+                    if(!TextUtils.isEmpty(newsData.getUrl())){
+                        ImageLoaderHelper.getIstance().loadImg(newsData.getUrl(),viewHolder01.imageView);
+                    }
+                    viewHolder01.titleTv.setText(newsData.getTitle());
+                    viewHolder01.desTv.setText(newsData.getDigest());
+                    viewHolder01.dateTv.setText(newsData.getPtime());
                 }else if(position > 2){
-                    mainBean = list.get(position-1);
+                    postDetailData = list.get(0).getCard().get(position);
+                    if(!TextUtils.isEmpty(newsData.getUrl())){
+                        ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgsrc(),viewHolder01.imageView);
+                    }
+                    viewHolder01.titleTv.setText(postDetailData.getTitle());
+                    viewHolder01.desTv.setText(postDetailData.getDigest());
+                    viewHolder01.dateTv.setText(postDetailData.getPtime());
                 }
-                viewHolder01.imageView.setBackgroundResource(R.mipmap.default_img);
-                viewHolder01.titleTv.setText(mainBean.getTitle());
-                viewHolder01.desTv.setText(mainBean.getDes());
+
                 viewHolder01.moreRe.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -177,10 +194,11 @@ public class MyMainAdapter extends BaseAdapter{
      */
     @Override
     public int getItemViewType(int position) {
-        //在第三项显示需要的布局2，其他项显示布局1
-        if(position == 2){
+        //在新闻数据后 设置布局为2
+        if(position == list.get(0).getNews().size()){
             return TYPE_TWO;
-        }else if(position == 5){
+        }else if(position == list.get(0).getNews().size()+list.get(0).getCard().size()+1){
+            //在新闻数据后和论坛数据后+1（布局2）设置布局为3
             return TYPE_THREE;
         }else{
             return TYPE_ONE;
@@ -204,6 +222,7 @@ public class MyMainAdapter extends BaseAdapter{
         public ImageView imageView;//新闻缩略图
         public TextView titleTv;//新闻标题
         public TextView desTv;//新闻简介
+        public TextView dateTv;//新闻简介
     }
 
     public class ViewHolder02{
@@ -242,7 +261,7 @@ public class MyMainAdapter extends BaseAdapter{
             }
         }
     }
-    public void notifyDataSetChanged(List<MainBean> list) {
+    public void notifyDataSetChanged(List<_MainData> list) {
         this.list = list;
         notifyDataSetChanged();
     }

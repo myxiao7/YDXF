@@ -26,35 +26,35 @@
         >
 
         <RelativeLayout
-            android:id="@+id/main_list_item01_re_more"
+            android:id="@+id/main_list_item01_04_re_more"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical">
 
             <ImageView
-                android:id="@+id/main_list_item01_icon"
+                android:id="@+id/main_list_item01_04_icon"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:background="@mipmap/default_img"
+                android:background="@mipmap/ic_m03"
                 android:clickable="false"
                 android:focusable="false"
                 />
 
             <TextView
-                android:id="@+id/main_list_item01_column_tv"
+                android:id="@+id/main_list_item01_04_column_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/main_list_item01_icon"
-                android:text="大事小情"
+                android:layout_toRightOf="@id/main_list_item01_04_icon"
+                android:text="活动专区"
                 android:textColor="@color/holo_red_light"
                 android:textSize="18sp"
 
                 />
 
             <TextView
-                android:id="@+id/main_list_item01_more_tv"
+                android:id="@+id/main_list_item01_04_more_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -72,7 +72,7 @@
             android:orientation="horizontal"
             >
             <ImageView
-                android:id="@+id/main_list_item01_img"
+                android:id="@+id/main_list_item01_04_img"
                 android:layout_width="125dp"
                 android:layout_height="85dp"
                 android:background="@mipmap/default_img"
@@ -87,7 +87,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/main_list_item01_title_tv"
+                    android:id="@+id/main_list_item01_04_title_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="新闻标题"
@@ -101,14 +101,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                 <TextView
-                    android:id="@+id/main_list_item01_des_tv"
+                    android:id="@+id/main_list_item01_04_des_tv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="新闻简略信息"
                     android:textColor="@color/lighter_gray"
                     android:textSize="16sp" />
                     <TextView
-                        android:id="@+id/main_list_item01_date_tv"
+                        android:id="@+id/main_list_item01_04_date_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="2015-12-24"

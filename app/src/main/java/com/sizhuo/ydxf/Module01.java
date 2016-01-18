@@ -3,13 +3,11 @@ package com.sizhuo.ydxf;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -23,11 +21,10 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.sizhuo.ydxf.adapter.MyModule01Adapter;
-import com.sizhuo.ydxf.entity.NewsData;
-import com.sizhuo.ydxf.entity.SliderData;
+import com.sizhuo.ydxf.entity._NewsData;
+import com.sizhuo.ydxf.entity._SliderData;
 import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.util.StatusBar;
-import com.sizhuo.ydxf.view.VRefresh;
 import com.sizhuo.ydxf.view.zrclistview.SimpleFooter;
 import com.sizhuo.ydxf.view.zrclistview.SimpleHeader;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
@@ -52,7 +49,7 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
     private Toolbar toolbar;//标题栏
     private SliderLayout sliderLayout;//轮播
     private ZrcListView listView;
-    private List<NewsData> list = new LinkedList<NewsData>();//数据列表
+    private List<_NewsData> list = new LinkedList<_NewsData>();//数据列表
     private HashMap<String,String> url_maps = new LinkedHashMap<String, String>();//幻灯片数据
     private MyModule01Adapter myModule01Adapter;
     private final int REFRESH_COMPLETE = 0X100;//刷新完成
@@ -89,7 +86,7 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
                         //获取data所有数据
                         com.alibaba.fastjson.JSONObject data = JSON.parseObject(jsonObject.getString("data"));
                         //获取轮播图数据
-                        List<SliderData> sliderDatas = JSON.parseArray(data.getString("carousel").toString(), SliderData.class);
+                        List<_SliderData> sliderDatas = JSON.parseArray(data.getString("carousel").toString(), _SliderData.class);
                         Log.d("xinwen", "sliderDatas:------" + sliderDatas.size());
                         for (int i = 0; i <sliderDatas.size() ; i++) {
                             url_maps.put(sliderDatas.get(i).getTitle(),sliderDatas.get(i).getImgsrc());
@@ -101,7 +98,6 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
                                     .image(sliderDatas.get(i).getImgsrc())
                                     .setScaleType(BaseSliderView.ScaleType.Fit)
                                     .setOnSliderClickListener(Module01.this);
-                            ;
 
                             //add your extra information`
                             textSliderView.bundle(new Bundle());
@@ -128,7 +124,7 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
                             sliderLayout.addSlider(textSliderView);
                         }*/
                         //获取新闻
-                        list = JSON.parseArray(data.getString("news").toString(), NewsData.class);
+                        list = JSON.parseArray(data.getString("news").toString(), _NewsData.class);
                        /* Log.d("xinwen", list.size()+"-----111");
                         Log.d("xinwen", list.get(3).getImgextra().toString()+"-----22222");
                         Log.d("xinwen", list.get(0).getTitle()+"------3333");*/

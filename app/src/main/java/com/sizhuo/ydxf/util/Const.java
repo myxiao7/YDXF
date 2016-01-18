@@ -15,6 +15,10 @@ public class Const {
     public static final String URL = "http://192.168.1.114:8080/xinwen/";
     public static final String URL2 = "http://112.54.80.235:50406/IndustryPioneer.svc/";
     /**
+     * 主界面
+     */
+    public static final String MAIN_URL =URL2 + "selectIndex";
+    /**
      * Module01
      */
     public static final String M01 = "infos.html";

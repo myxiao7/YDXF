@@ -19,7 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sizhuo.ydxf.entity.NewsData;
+import com.sizhuo.ydxf.entity._NewsData;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class Search extends AppCompatActivity{
     private LinearLayout hisLin;
     private ListView hisListView;//阅读历史
     private ZrcListView listView;
-    private List<NewsData> list = new ArrayList<>();
+    private List<_NewsData> list = new ArrayList<>();
 
     private EditText contentEdit;
 
@@ -48,7 +48,7 @@ public class Search extends AppCompatActivity{
         setContentView(R.layout.activity_serch);
         initViews();
 
-        NewsData newsData = new NewsData();
+        _NewsData newsData = new _NewsData();
         newsData.setTitle("看过的的新闻看过的的新闻看过的的新闻看过的的新闻看过的的新闻看过的的新闻");
         newsData.setPtime("2016-1-18");
         list.add(newsData);
@@ -86,9 +86,9 @@ public class Search extends AppCompatActivity{
     }
 
     class MySearchAdapter extends BaseAdapter{
-        private List<NewsData> list;
+        private List<_NewsData> list;
 
-        public MySearchAdapter(List<NewsData> list) {
+        public MySearchAdapter(List<_NewsData> list) {
             this.list = list;
         }
 
@@ -120,7 +120,7 @@ public class Search extends AppCompatActivity{
             }else{
                 holder = (ViewHolder) convertView.getTag();
             }
-            NewsData newsData = list.get(position);
+            _NewsData newsData = list.get(position);
             //关键字高亮
             String str = newsData.getTitle();
             int fstart=str.indexOf("新闻");

@@ -1,5 +1,6 @@
 package com.sizhuo.ydxf.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,8 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class NewsData {
+public class _NewsData implements Serializable{
+    private static final long serialVersionUID = -228286441826334138L;
     /**
      * 标题
      */
@@ -44,7 +46,7 @@ public class NewsData {
      */
     private List<com.sizhuo.ydxf.entity.imgextra> imgextra;
 
-    public NewsData() {
+    public _NewsData() {
     }
 
     public String getTitle() {

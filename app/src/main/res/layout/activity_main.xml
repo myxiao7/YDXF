@@ -22,15 +22,52 @@
             android:textColor="@color/colorWhite"
             android:textSize="22sp" />
     </android.support.v7.widget.Toolbar>
-
-    <com.sizhuo.ydxf.view.zrclistview.ZrcListView
-        android:id="@+id/main_list"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@color/colorWhite"
-        android:dividerHeight="0dp"
-        android:overScrollMode="never"
-        android:scrollbars="none"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
 
-        ></com.sizhuo.ydxf.view.zrclistview.ZrcListView>
+    <!--模块 上部分轮播图-->
+    <com.daimajia.slider.library.SliderLayout
+        android:id="@+id/main_slider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/slid_height"
+        />
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="党建动态"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        />
+    <include
+        layout="@layout/main_list_item01_01"
+        />
+    <include
+        layout="@layout/main_list_item01_02"
+        />
+    <include
+        layout="@layout/main_list_item02"
+        />
+    <include
+        layout="@layout/main_list_item01_03"
+        />
+    <include
+        layout="@layout/main_list_item01_04"
+        />
+    <include
+        layout="@layout/main_list_item03"
+        />
+    <include
+        layout="@layout/main_bottom"
+        />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.entity.imgextra;
-import com.sizhuo.ydxf.entity.NewsData;
+import com.sizhuo.ydxf.entity._NewsData;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
 import java.util.List;
@@ -24,11 +24,11 @@ import java.util.List;
  * @version 1.0
  */
 public class MyModule01Adapter extends BaseAdapter {
-    private List<NewsData> list;
+    private List<_NewsData> list;
     private Context context;
     private final int TYPE_ONE = 0, TYPE_TWO = 1, TYPE_THREE = 2, TYPE_COUNT = 3;//子布局类型和个数
 
-    public MyModule01Adapter(List<NewsData> list, Context context) {
+    public MyModule01Adapter(List<_NewsData> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -101,7 +101,7 @@ public class MyModule01Adapter extends BaseAdapter {
             }
         }
         //设置数据
-        NewsData newsData = list.get(position);
+        _NewsData newsData = list.get(position);
         switch (type) {
             case TYPE_ONE:
                 ImageLoaderHelper.getIstance().loadImg(newsData.getImgsrc(),holder01.imageView);
@@ -164,7 +164,7 @@ public class MyModule01Adapter extends BaseAdapter {
         TextView dateTv;
     }
 
-    public void notifyDataSetChanged(List<NewsData> list) {
+    public void notifyDataSetChanged(List<_NewsData> list) {
         this.list = list;
         notifyDataSetChanged();
     }
