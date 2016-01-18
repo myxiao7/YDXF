@@ -128,18 +128,54 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         mShareAPI.doOauthVerify(this, platform, new UMAuthListener() {
             @Override
             public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
-                Log.d("sso", "doOauthVerify----------"+data.toString());
-                Toast.makeText(getApplicationContext(), "授权成功，正在登陆"+shareType+openid, Toast.LENGTH_SHORT).show();
-                if(!TextUtils.isEmpty(openid)){
-                    progressHUD.show();
+                mShareAPI.getPlatformInfo(Login.this, platform, new UMAuthListener() {
+                    @Override
+                    public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> data) {
+
+                        if (data != null) {
+//                    Toast.makeText(getApplicationContext(), data.toString(), Toast.LENGTH_SHORT).show();
+                            Log.d("sso", "getPlatformInfo----------" + data.toString());
+
+                            if (SHARE_MEDIA.QQ.equals(share_media)) {
+                                shareType = "qqOpenid";
+                            } else if (SHARE_MEDIA.WEIXIN.equals(share_media)) {
+                                shareType = "wxOpenid";
+                                sex = data.get("sex");
+                                openid = data.get("openid");
+                                nick = data.get("nickname");
+                                icon = data.get("headimgurl");
+                            } else if (SHARE_MEDIA.SINA.equals(share_media)) {
+                                shareType = "wbOpenid";
+                            }
+                            //QQ,WEINXIN,SINA
+                            Log.d("sso", "share_media" + icon);
+                            Toast.makeText(getApplicationContext(), "授权成功，正在登陆" + shareType + openid, Toast.LENGTH_SHORT).show();
+                            if (!TextUtils.isEmpty(openid)) {
+                                progressHUD.show();
 //                    Toast.makeText(getApplicationContext(), "授权成功，正在登陆"+shareType+openid, Toast.LENGTH_SHORT).show();
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            fastLogin(shareType, openid);
+                                new Timer().schedule(new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        fastLogin(shareType, openid);
+                                    }
+                                }, 1200);
+                            }
                         }
-                    },1200);
-                }
+                    }
+
+                    @Override
+                    public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+                        Toast.makeText(getApplicationContext(), "get fail", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancel(SHARE_MEDIA share_media, int i) {
+                        Toast.makeText(getApplicationContext(), "get cancel", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                Log.d("sso", "doOauthVerify----------" + data.toString());
+
+
             }
 
             @Override
@@ -154,40 +190,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 progressHUD.dismiss();
             }
         });
-        mShareAPI.getPlatformInfo(Login.this, platform, new UMAuthListener() {
-            @Override
-            public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> data) {
 
-                if (data != null) {
-//                    Toast.makeText(getApplicationContext(), data.toString(), Toast.LENGTH_SHORT).show();
-                    Log.d("sso", "getPlatformInfo----------" + data.toString());
 
-                    if(SHARE_MEDIA.QQ.equals(share_media)){
-                        shareType = "qqOpenid";
-                    }else if(SHARE_MEDIA.WEIXIN.equals(share_media)){
-                        shareType = "wxOpenid";
-                        sex = data.get("sex");
-                        openid = data.get("openid");
-                        nick = data.get("nickname");
-                        icon = data.get("headimgurl");
-                    }else if(SHARE_MEDIA.SINA.equals(share_media)){
-                        shareType = "wbOpenid";
-                    }
-                    //QQ,WEINXIN,SINA
-                    Log.d("sso", "share_media" + icon);
-                }
-            }
-
-            @Override
-            public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
-                Toast.makeText(getApplicationContext(), "get fail", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancel(SHARE_MEDIA share_media, int i) {
-                Toast.makeText(getApplicationContext(), "get cancel", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
