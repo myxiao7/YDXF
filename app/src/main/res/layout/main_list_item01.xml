@@ -92,7 +92,10 @@
                     android:layout_height="wrap_content"
                     android:text="新闻标题"
                     android:textColor="@color/black"
-                    android:textSize="22sp" />
+                    android:textSize="22sp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    />
 
                 <FrameLayout
                     android:layout_width="match_parent"

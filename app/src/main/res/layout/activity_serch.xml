@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/search_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/holo_red_light"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:navigationIcon="@mipmap/ic_back"
+            android:fitsSystemWindows="true"
+            app:titleTextAppearance="@style/CustomTextAppearance"
+            app:title="@string/space" />
+
+    <EditText
+        android:id="@+id/search_content_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:drawableLeft="@mipmap/ic_search_gray"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:hint="请输入关键字..."
+        android:singleLine="true"
+        android:textColorHint="@color/darker_gray"
+        android:layout_margin="15dp"
+        android:background="@drawable/btn_border"
+        android:imeOptions="actionSearch"
+        />
+    <LinearLayout
+        android:id="@+id/search_his_lin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="阅读历史"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/darker_gray"
+            />
+        <ListView
+            android:id="@+id/search_his_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dividerHeight="1dp"
+            android:divider="@color/darker_gray"
+            />
+    </LinearLayout>
+
+    <com.sizhuo.ydxf.view.zrclistview.ZrcListView
+        android:id="@+id/search_listview"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:visibility="gone"
+        >
+    </com.sizhuo.ydxf.view.zrclistview.ZrcListView>
+</LinearLayout>

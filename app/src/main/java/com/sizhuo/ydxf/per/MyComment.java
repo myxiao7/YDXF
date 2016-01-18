@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.sizhuo.ydxf.NewsDetails;
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.entity.MyCommentData;
+import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
 
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class MyComment extends AppCompatActivity {
     }
 
     private void initViews() {
+        new StatusBar(this).initStatusBar();
         toolbar = (Toolbar) findViewById(R.id.mycomment_toolbar);
         toolbar.setTitle("新闻评论");
         setSupportActionBar(toolbar);

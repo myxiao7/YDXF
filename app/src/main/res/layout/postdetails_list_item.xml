@@ -8,6 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         >
         <ImageView
             android:id="@+id/postdetails_list_item_icon_img"
@@ -34,7 +36,6 @@
             android:layout_height="wrap_content"
             android:text="1楼"
             android:textSize="16sp"
-            android:layout_marginRight="15dp"
             android:layout_centerVertical="true"
             />
     </RelativeLayout>
@@ -43,6 +44,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="5dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         >
         <TextView
             android:id="@+id/postdetails_list_item_content_tv"
@@ -58,7 +61,6 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp"
             android:text="2015-12-25"
             android:textSize="14sp"
             android:textColor="@color/lighter_gray"

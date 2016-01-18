@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,12 +17,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sizhuo.ydxf.application.MyApplication;
+import com.sizhuo.ydxf.entity.db.User;
+import com.sizhuo.ydxf.util.ImageLoaderHelper;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
+
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 
 /**
  * 项目名称: YDXF
@@ -38,12 +45,35 @@ public class NewsDetails extends AppCompatActivity{
     private TextView countTv;//评论数
     private Button pubBtn;//发布
 
+    private DbManager dbManager;//数据库操作
+    private User user;
+    private Boolean loginFlag = false;
+
     @Override
     public void onBackPressed() {
         if(replyEdit.hasFocus()){
             replyEdit.clearFocus();
         }else{
             this.finish();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dbManager = new MyApplication().getDbManager();
+        //检查登录状态
+        try {
+            user = dbManager.findFirst(User.class);
+            if(user!=null){
+                loginFlag = true;
+                Toast.makeText(NewsDetails.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
+            }else{
+                loginFlag = false;
+                Toast.makeText(NewsDetails.this,"没有登录",Toast.LENGTH_SHORT).show();
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
         }
     }
 
@@ -77,6 +107,17 @@ public class NewsDetails extends AppCompatActivity{
             public void onClick(View v) {
                 Intent intent = new Intent(NewsDetails.this, NewsComment.class);
                 startActivity(intent);
+            }
+        });
+        pubBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(loginFlag==true){
+                    Toast.makeText(NewsDetails.this,"发表...",Toast.LENGTH_SHORT).show();
+                }else{
+                    Intent intent = new Intent(NewsDetails.this, Login.class);
+                    NewsDetails.this.startActivity(intent);
+                }
             }
         });
     }
@@ -140,6 +181,12 @@ public class NewsDetails extends AppCompatActivity{
         switch (item.getItemId()) {
             case R.id.news_menu_like:
                 item.setIcon(R.mipmap.ic_love_yet);
+                if(loginFlag==true){
+                    Toast.makeText(NewsDetails.this,"收藏成功",Toast.LENGTH_SHORT).show();
+                }else{
+                    Intent intent = new Intent(NewsDetails.this, Login.class);
+                    NewsDetails.this.startActivity(intent);
+                }
                 break;
 
             case R.id.news_menu_share:

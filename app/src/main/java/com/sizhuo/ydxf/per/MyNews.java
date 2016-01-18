@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.entity.MyNewsData;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
+import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class MyNews extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mynews);
+        new StatusBar(this).initStatusBar();
         toolbar = (Toolbar) findViewById(R.id.mynews_toolbar);
         toolbar.setTitle("我的消息");
         setSupportActionBar(toolbar);

@@ -18,6 +18,8 @@ import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.daimajia.slider.library.SliderLayout;
 import com.sizhuo.ydxf.adapter.MyBottomGridAdapter;
 import com.sizhuo.ydxf.adapter.MyBottomGridAdapter2;
@@ -60,6 +62,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RelativeLayout moreRe2;//便民114更多
     private NoScollerGridView gridView2;//便民114
     private List<GridBean2> gridList2 = new ArrayList<GridBean2>();
+
+    //网络相关
+    private RequestQueue queue;
+    private JsonObjectRequest jsonObjectRequest;
+    private final String TAG = "JSONOBJECTREQUEST";
+
+    long waitTime = 2000;
+    long touchTime = 0;
+    @Override
+    public void onBackPressed() {
+        long currentTime = System.currentTimeMillis();
+        if((currentTime-touchTime) >= waitTime) {
+            Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
+            touchTime = currentTime;
+        }else {
+            finish();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         //便民服务
         for (int i = 0; i <4 ; i++) {
-            GridBean gridBean = new GridBean("http://192.168.1.114:8080/xinwen/img/icon.png", "部门"+i);
+            GridBean gridBean = new GridBean("http://192.168.1.114:8080/xinwen/img/icon.png", "纪检部");
             gridList.add(gridBean);
         }
         MyBottomGridAdapter myBottomGridAdapter = new MyBottomGridAdapter(gridList,this);
@@ -186,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()){
             case R.id.main_menu_serch:
                 Toast.makeText(MainActivity.this,"搜索",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, Login.class);
+                Intent intent = new Intent(MainActivity.this, Search.class);
                 startActivity(intent);
                 break;
 

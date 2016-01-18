@@ -1,20 +1,13 @@
 package com.sizhuo.ydxf;
 
 import android.content.Intent;
-import android.location.Address;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.sizhuo.ydxf.adapter.MyAddressListAdapter;
-import com.sizhuo.ydxf.adapter.MyFragPagerAdapter;
 import com.sizhuo.ydxf.entity.AddressListData;
-import com.sizhuo.ydxf.fragment.AddressListFragment;
-import com.sizhuo.ydxf.fragment.ForumFragment;
 import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
 

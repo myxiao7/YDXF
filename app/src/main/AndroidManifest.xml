@@ -84,6 +84,9 @@
         <!--个人中心-->
         <activity android:name=".PersonCenter"
             />
+        <!--搜索-->
+        <activity android:name=".Search"
+            />
         <!--我的收藏-->
         <activity android:name=".per.MyCollection"
             />

@@ -11,6 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         >
         <ImageView
             android:id="@+id/postdetails_list_header_icon_img"
@@ -63,6 +66,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
             android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             >
         <TextView
             android:id="@+id/postdetails_list__header_title_tv"
@@ -87,6 +92,8 @@
         android:layout_marginTop="5dp"
         android:orientation="vertical"
         android:gravity="center_horizontal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         >
         <ImageView
             android:id="@+id/postdetails_list_header_img01"

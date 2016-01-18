@@ -18,6 +18,7 @@ import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.entity.MyCollectionDate;
 import com.sizhuo.ydxf.entity.PostDetailData;
 import com.sizhuo.ydxf.entity.ReplyData;
+import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class MyPost extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypost);
+        new StatusBar(this).initStatusBar();
         toolbar = (Toolbar) findViewById(R.id.mypost_toolbar);
         toolbar.setTitle("我的帖子");
         setSupportActionBar(toolbar);

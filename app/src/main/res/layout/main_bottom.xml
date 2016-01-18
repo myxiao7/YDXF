@@ -39,9 +39,10 @@
 
             <ImageView
                 android:id="@+id/main_bottom_icon"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:background="@mipmap/default_img"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_centerVertical="true"
+                android:background="@mipmap/ic_m05"
                 android:clickable="false"
                 android:focusable="false"
                 />
@@ -93,9 +94,10 @@
 
             <ImageView
                 android:id="@+id/main_bottom_icon2"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:background="@mipmap/default_img"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_centerVertical="true"
+                android:background="@mipmap/ic_m06"
                 android:clickable="false"
                 android:focusable="false"
                 />

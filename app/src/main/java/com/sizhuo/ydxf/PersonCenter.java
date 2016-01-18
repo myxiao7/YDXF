@@ -46,6 +46,7 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
 
     private DbManager dbManager;//数据库操作
     private User user;
+    private Boolean loginFlag = false;
 
     private final int SETTINGR_ESULT = 0X200;
     @Override
@@ -119,6 +120,7 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
             if(user!=null){
                 topBtn.setVisibility(View.VISIBLE);
                 topDefBtn.setVisibility(View.GONE);
+                loginFlag = true;
                 //设置头像和昵称
                 if(!TextUtils.isEmpty(user.getPortrait())){
                     ImageLoaderHelper.getIstance().loadImg(user.getPortrait(), icon);
@@ -129,6 +131,7 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
             }else{
                 topBtn.setVisibility(View.GONE);
                 topDefBtn.setVisibility(View.VISIBLE);
+                loginFlag = false;
             }
         } catch (DbException e) {
             e.printStackTrace();
@@ -148,23 +151,48 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.personcenter_menu01_re:
-                Intent intent3 = new Intent(PersonCenter.this, MyCollection.class);
-                startActivity(intent3);
+                startAct(0);
                 break;
             case R.id.personcenter_menu02_re:
-                Intent intent4 = new Intent(PersonCenter.this, MyComment.class);
-                startActivity(intent4);
+                startAct(1);
                 break;
             case R.id.personcenter_menu03_re:
-                Intent intent5 = new Intent(PersonCenter.this, MyPost.class);
-                startActivity(intent5);
+                startAct(2);
                 break;
             case R.id.personcenter_menu04_re:
-                Intent intent6= new Intent(PersonCenter.this, MyNews.class);
-                startActivity(intent6);
+                startAct(3);
                 break;
 
         }
     }
 
+    /**
+     * 根据登录状态，跳转
+     * @param posi menu的位置
+     */
+    private void startAct(int posi){
+        if(loginFlag==true){
+            switch (posi){
+                case 0:
+                    Intent intent1 = new Intent(PersonCenter.this, MyCollection.class);
+                    startActivity(intent1);
+                    break;
+                case 1:
+                    Intent intent2 = new Intent(PersonCenter.this, MyComment.class);
+                    startActivity(intent2);
+                    break;
+                case 2:
+                    Intent intent3 = new Intent(PersonCenter.this, MyPost.class);
+                    startActivity(intent3);
+                    break;
+                case 3:
+                    Intent intent4= new Intent(PersonCenter.this, MyNews.class);
+                    startActivity(intent4);
+                    break;
+            }
+        }else{
+            Intent intent= new Intent(PersonCenter.this, Login.class);
+            startActivity(intent);
+        }
+    }
 }

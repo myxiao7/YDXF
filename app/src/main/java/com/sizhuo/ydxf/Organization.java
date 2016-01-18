@@ -10,6 +10,7 @@ import android.widget.GridView;
 
 import com.sizhuo.ydxf.adapter.MyOrgGridAdapter;
 import com.sizhuo.ydxf.entity.GridBean;
+import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.TypeTextView;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class Organization extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_org);
+        new StatusBar(this).initStatusBar();
         toolbar = (Toolbar) findViewById(R.id.org_toolbar);
         toolbar.setTitle("组织机构");
         setSupportActionBar(toolbar);

@@ -55,7 +55,7 @@ public class BindUser extends AppCompatActivity implements View.OnClickListener 
     //网络请求相关
     private RequestQueue queue;
     private JsonObjectRequest jsonObjectRequest;
-    private final String REQUEST_TAB = "LOGIN_REQUEST";
+    private final String REQUEST_TAB = "BINDER_REQUEST";
 
     private DbManager dbManager;
 //    private DbManager.DaoConfig daoConfig;

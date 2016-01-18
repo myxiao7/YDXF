@@ -14,6 +14,8 @@ import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * 项目名称: YDXF
  * 类描述:  便民服务Adapter
@@ -53,7 +55,7 @@ public class MyBottomGridAdapter extends BaseAdapter{
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.main_bottom_grid_item, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.imageView = (ImageView) convertView.findViewById(R.id.main_bottom_grid_img);
+            viewHolder.imageView = (CircleImageView) convertView.findViewById(R.id.main_bottom_grid_img);
             viewHolder.textView = (TextView) convertView.findViewById(R.id.main_bottom_grid_title_tv);
             convertView.setTag(viewHolder);
         }else {
@@ -66,7 +68,7 @@ public class MyBottomGridAdapter extends BaseAdapter{
     }
 
     class ViewHolder{
-        ImageView imageView;
+        CircleImageView imageView;
         TextView textView;
     }
 }

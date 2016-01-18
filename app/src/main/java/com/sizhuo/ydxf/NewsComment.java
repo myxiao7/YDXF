@@ -1,6 +1,7 @@
 package com.sizhuo.ydxf;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -8,11 +9,17 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.sizhuo.ydxf.adapter.MyPostDetailsAdapter;
+import com.sizhuo.ydxf.application.MyApplication;
 import com.sizhuo.ydxf.entity.PostDetailData;
 import com.sizhuo.ydxf.entity.ReplyData;
+import com.sizhuo.ydxf.entity.db.User;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
+
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +40,29 @@ public class NewsComment extends AppCompatActivity {
     private EditText comEdit;//评论内容
     private Button comBtn;//提交评论
 
+    private DbManager dbManager;//数据库操作
+    private User user;
+    private Boolean loginFlag = false;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dbManager = new MyApplication().getDbManager();
+        //检查登录状态
+        try {
+            user = dbManager.findFirst(User.class);
+            if(user!=null){
+                loginFlag = true;
+                Toast.makeText(NewsComment.this, "登录" + user.getNickName(), Toast.LENGTH_SHORT).show();
+            }else{
+                loginFlag = false;
+                Toast.makeText(NewsComment.this,"没有登录",Toast.LENGTH_SHORT).show();
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +79,17 @@ public class NewsComment extends AppCompatActivity {
         list.add(replyData4);
         adapter = new MyPostDetailsAdapter(list, this);
         listView.setAdapter(adapter);
+        comBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(loginFlag==true){
+                    Toast.makeText(NewsComment.this,"发表...",Toast.LENGTH_SHORT).show();
+                }else{
+                    Intent intent = new Intent(NewsComment.this, Login.class);
+                    NewsComment.this.startActivity(intent);
+                }
+            }
+        });
     }
 
     private void initViews() {

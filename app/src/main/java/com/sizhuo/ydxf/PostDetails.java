@@ -8,15 +8,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sizhuo.ydxf.adapter.MyPostDetailsAdapter;
+import com.sizhuo.ydxf.application.MyApplication;
 import com.sizhuo.ydxf.entity.PostDetailData;
 import com.sizhuo.ydxf.entity.ReplyData;
+import com.sizhuo.ydxf.entity.db.User;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
+
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +46,33 @@ public class PostDetails extends AppCompatActivity{
     private View headView;
     private ImageView icon, img01, img02, img03;//发帖人头像， 3图
     private TextView nameTv, dataTV, titleTv, desTv, countTv; //发帖人ID, 时间, 标题, 内容, 回复数
+
+    private EditText contentEdit;//回复内容
+    private Button replyBtn;//回复
+
+    private DbManager dbManager;//数据库操作
+    private User user;
+    private Boolean loginFlag = false;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dbManager = new MyApplication().getDbManager();
+        //检查登录状态
+        try {
+            user = dbManager.findFirst(User.class);
+            if(user!=null){
+                loginFlag = true;
+                Toast.makeText(PostDetails.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
+            }else{
+                loginFlag = false;
+                Toast.makeText(PostDetails.this,"没有登录",Toast.LENGTH_SHORT).show();
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +91,20 @@ public class PostDetails extends AppCompatActivity{
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
+
+        replyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(loginFlag==true){
+                    Toast.makeText(PostDetails.this,"发帖",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(PostDetails.this, Publish.class);
+                    PostDetails.this.startActivity(intent);
+                }else{
+                    Intent intent = new Intent(PostDetails.this, Login.class);
+                    PostDetails.this.startActivity(intent);
+                }
+            }
+        });
     }
 
     private void initViews() {
@@ -64,6 +112,8 @@ public class PostDetails extends AppCompatActivity{
         toolbar.setTitle("查看帖子");
         setSupportActionBar(toolbar);
         listView = (ZrcListView) findViewById(R.id.postdetails_list);
+        replyBtn = (Button) findViewById(R.id.postdetails_reply_btn);
+        contentEdit = (EditText) findViewById(R.id.postdetails_content_edit);
         LayoutInflater inflater = getLayoutInflater();
         headView = inflater.inflate(R.layout.postdetails_list_header, null, false);
         icon = (ImageView) headView.findViewById(R.id.postdetails_list_header_icon_img);
