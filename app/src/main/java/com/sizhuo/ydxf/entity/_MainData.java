@@ -26,11 +26,11 @@ public class _MainData {
     /**
      * 组织机构数据集合
      */
-    private List<_ServiceData> convenience;
+    private List<_OrgData> convenience;
     /**
      * 便民114数据集合
      */
-    private List<_ServiceData> directory;
+    private List<_AddListData> directory;
 
     public _MainData() {
     }
@@ -59,19 +59,19 @@ public class _MainData {
         this.card = card;
     }
 
-    public List<_ServiceData> getConvenience() {
+    public List<_OrgData> getConvenience() {
         return convenience;
     }
 
-    public void setConvenience(List<_ServiceData> convenience) {
+    public void setConvenience(List<_OrgData> convenience) {
         this.convenience = convenience;
     }
 
-    public List<_ServiceData> getDirectory() {
+    public List<_AddListData> getDirectory() {
         return directory;
     }
 
-    public void setDirectory(List<_ServiceData> directory) {
+    public void setDirectory(List<_AddListData> directory) {
         this.directory = directory;
     }
 }

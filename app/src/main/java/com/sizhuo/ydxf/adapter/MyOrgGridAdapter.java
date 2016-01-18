@@ -1,6 +1,7 @@
 package com.sizhuo.ydxf.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.entity.GridBean;
+import com.sizhuo.ydxf.entity._OrgData;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
 import java.util.List;
@@ -25,10 +27,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * @version 1.0
  */
 public class MyOrgGridAdapter extends BaseAdapter{
-    private List<GridBean> list;
+    private List<_OrgData> list;
     private Context context;
 
-    public MyOrgGridAdapter(List<GridBean> list, Context context) {
+    public MyOrgGridAdapter(List<_OrgData> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -61,14 +63,21 @@ public class MyOrgGridAdapter extends BaseAdapter{
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        GridBean gridBean = list.get(position);
-        ImageLoaderHelper.getIstance().loadImg(gridBean.getImg()+"",viewHolder.imageView);
-        viewHolder.textView.setText(gridBean.getTitle());
+        _OrgData orgData = list.get(position);
+        if(!TextUtils.isEmpty(orgData.getPicture())){
+            ImageLoaderHelper.getIstance().loadImg(orgData.getPicture()+"",viewHolder.imageView);
+        }
+        viewHolder.textView.setText(orgData.getName());
         return convertView;
     }
 
     class ViewHolder{
         CircleImageView imageView;
         TextView textView;
+    }
+
+    public void notifyDataSetChanged(List<_OrgData> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 }

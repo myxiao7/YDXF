@@ -37,6 +37,7 @@
                 android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/orgdetails_img"
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:src="@mipmap/ic_icon"
@@ -45,6 +46,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/orgdetails_name_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -63,12 +65,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=" 烟台市纪检部简介"
+                android:text=" 简介"
                 android:textSize="20sp"
                 android:textColor="@color/black"
                 android:layout_margin="10dp"
                 />
            <TextView
+               android:id="@+id/orgdetails_des_tv"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:text="烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部烟台市纪检部"

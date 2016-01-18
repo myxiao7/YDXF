@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.entity.AddressListData;
+import com.sizhuo.ydxf.entity._AddListData;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
 import java.net.URI;
@@ -33,10 +34,10 @@ import java.util.List;
  * @version 1.0
  */
 public class MyAddressListAdapter extends BaseAdapter{
-    private List<AddressListData> list;
+    private List<_AddListData> list;
     private Context context;
 
-    public MyAddressListAdapter(List<AddressListData> list, Context context) {
+    public MyAddressListAdapter(List<_AddListData> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -73,20 +74,21 @@ public class MyAddressListAdapter extends BaseAdapter{
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
-        AddressListData addressListData = list.get(position);
-        ImageLoaderHelper.getIstance().loadImg(addressListData.getImg(), holder.img);
-        holder.nameTv.setText(addressListData.getName());
-        holder.phoneTv.setText(addressListData.getPhone());
-        holder.addTv.setText(addressListData.getAddress());
-        holder.callBtn.setOnClickListener(new MyAddOnClickListener(addressListData));
-        holder.saveBtn.setOnClickListener(new MyAddOnClickListener(addressListData));
+        _AddListData addListData = list.get(position);
+        if(!TextUtils.isEmpty(addListData.getPicture())){
+            ImageLoaderHelper.getIstance().loadImg(addListData.getPicture(), holder.img);
+        }
+        holder.nameTv.setText(addListData.getName());
+        holder.phoneTv.setText(addListData.getTelephone());
+        holder.addTv.setText(addListData.getAdd());
+        holder.callBtn.setOnClickListener(new MyAddOnClickListener(addListData));
         return convertView;
     }
 
     class MyAddOnClickListener implements View.OnClickListener{
-        private AddressListData data;
+        private _AddListData data;
 
-        public MyAddOnClickListener(AddressListData data) {
+        public MyAddOnClickListener(_AddListData data) {
             this.data = data;
         }
 
@@ -94,13 +96,9 @@ public class MyAddressListAdapter extends BaseAdapter{
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.frag_addresslist_list_item_call_btn:
-                    Uri uri = Uri.parse("tel:"+data.getPhone());
+                    Uri uri = Uri.parse("tel:"+data.getTelephone());
                     Intent intent = new Intent(Intent.ACTION_DIAL,uri);
                     context.startActivity(intent);
-                    break;
-
-                case R.id.frag_addresslist_list_item_save_lin:
-
                     break;
             }
         }
@@ -116,7 +114,7 @@ public class MyAddressListAdapter extends BaseAdapter{
         LinearLayout saveBtn;
     }
 
-    public void notifyDataSetChanged(List<AddressListData> list) {
+    public void notifyDataSetChanged(List<_AddListData> list) {
         this.list = list;
         notifyDataSetChanged();
     }

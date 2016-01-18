@@ -4,12 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
+import com.alibaba.fastjson.JSON;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.sizhuo.ydxf.adapter.MyAddressListAdapter;
 import com.sizhuo.ydxf.entity.AddressListData;
+import com.sizhuo.ydxf.entity._AddListData;
+import com.sizhuo.ydxf.entity._OrgData;
+import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,42 +38,56 @@ import java.util.List;
 public class AddressList extends AppCompatActivity{
     private Toolbar toolbar;
     private ZrcListView listView;
-    private List<AddressListData> list = new ArrayList<>();
+    private List<_AddListData> list = new ArrayList<_AddListData>();
     private MyAddressListAdapter myAddressListAdapter;
-   /* private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private List<Fragment> fragments = new ArrayList<>();
-    private String[] titles = {"热门","餐饮","娱乐","医疗","其他"};
-    private MyFragPagerAdapter myFragPagerAdapter;*/
+
+    //网络请求
+    private RequestQueue queue;
+    private JsonObjectRequest jsonObjectRequest;
+    private final String TAG01 = "jsonObjectRequest";//请求数据TAG
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addresslist);
         initViews();
-        AddressListData data = new AddressListData("","烟台高新区银行","0535-5165161","烟台高新区创业路36号");
-        AddressListData data2 = new AddressListData("","烟台莱山区酒店","0535-213123231","烟台高新区创业路36号");
-        AddressListData data3 = new AddressListData("","烟台高新区政府","0535-42524342","烟台高新区创业路36号");
-        list.add(data);
-        list.add(data2);
-        list.add(data3);
+        queue = Volley.newRequestQueue(this);
         myAddressListAdapter = new MyAddressListAdapter(list,this);
         listView.setAdapter(myAddressListAdapter);
         listView.setOnItemClickListener(new ZrcListView.OnItemClickListener() {
             @Override
             public void onItemClick(ZrcListView parent, View view, int position, long id) {
                 Intent intent = new Intent(AddressList.this, AddressListDetails.class);
+                intent.putExtra("data", list.get(position));
                 AddressList.this.startActivity(intent);
             }
         });
-       /* for (int i = 0; i < 5; i++) {
-            AddressListFragment addressListFragment = new AddressListFragment();
-            fragments.add(addressListFragment);
-        }
-        myFragPagerAdapter = new MyFragPagerAdapter(getSupportFragmentManager(), fragments, titles);
-        viewPager.setAdapter(myFragPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabsFromPagerAdapter(myFragPagerAdapter);*/
+
+        jsonObjectRequest = new JsonObjectRequest(Const.ORGANIZATION, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+//                Log.d("xinwen", jsonObject.toString()+"");
+                try {
+                    //获取服务器code
+                    int code = jsonObject.getInt("code");
+                    if(code == 200){
+                        list = JSON.parseArray(jsonObject.getString("data"), _AddListData.class);
+                        myAddressListAdapter.notifyDataSetChanged(list);
+                    }else{
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Log.d("xinwen", volleyError.toString() + volleyError);
+            }
+        });
+        queue.add(jsonObjectRequest);
+        jsonObjectRequest.setTag(TAG01);
     }
 
     private void initViews() {
@@ -69,7 +96,11 @@ public class AddressList extends AppCompatActivity{
         toolbar.setTitle("便民114");
         setSupportActionBar(toolbar);
         listView = (ZrcListView) findViewById(R.id.addresslist_listview);
-       /* tabLayout = (TabLayout) findViewById(R.id.addresslist_tablayout);
-        viewPager = (ViewPager) findViewById(R.id.addresslist_viewpager);*/
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        queue.cancelAll(TAG01);
     }
 }

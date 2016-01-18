@@ -19,6 +19,14 @@ public class Const {
      */
     public static final String MAIN_URL =URL2 + "selectIndex";
     /**
+     * 组织机构
+     */
+    public static final String ORGANIZATION =URL2 + "selectConvenience";
+    /**
+     * 便民114
+     */
+    public static final String ADDRESSLIST =URL2 + "selectDirectory";
+    /**
      * Module01
      */
     public static final String M01 = "infos.html";

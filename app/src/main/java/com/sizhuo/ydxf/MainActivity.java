@@ -35,8 +35,10 @@ import com.sizhuo.ydxf.adapter.MyBottomGridAdapter2;
 import com.sizhuo.ydxf.adapter.MyMainAdapter;
 import com.sizhuo.ydxf.entity.GridBean;
 import com.sizhuo.ydxf.entity.GridBean2;
+import com.sizhuo.ydxf.entity._AddListData;
 import com.sizhuo.ydxf.entity._MainData;
 import com.sizhuo.ydxf.entity._NewsData;
+import com.sizhuo.ydxf.entity._OrgData;
 import com.sizhuo.ydxf.entity._PostDetailData;
 import com.sizhuo.ydxf.entity._ServiceData;
 import com.sizhuo.ydxf.entity._SliderData;
@@ -80,13 +82,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private RelativeLayout moreRe;//便民更多
     private GridView gridView;//便民服务
-    private List<_ServiceData> gridList = new ArrayList<_ServiceData>();
+    private List<_OrgData> gridList = new ArrayList<_OrgData>();
     private MyBottomGridAdapter myBottomGridAdapter;
 
     private RelativeLayout moreRe2;//便民114更多
     private NoScollerGridView gridView2;//便民114
-    private List<_ServiceData> gridList2 = new ArrayList<_ServiceData>();
-    private MyBottomGridAdapter myBottomGridAdapter2;
+    private List<_AddListData> gridList2 = new ArrayList<_AddListData>();
+    private MyBottomGridAdapter2 myBottomGridAdapter2;
 
 
     //网络相关
@@ -122,16 +124,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, OrgDetails.class);
+                intent.putExtra("data",gridList.get(position));
                 MainActivity.this.startActivity(intent);
             }
         });
 
-        myBottomGridAdapter2 = new MyBottomGridAdapter(gridList2,this);
+        myBottomGridAdapter2 = new MyBottomGridAdapter2(gridList2,this);
         gridView2.setAdapter(myBottomGridAdapter2);
         gridView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, AddressListDetails.class);
+                intent.putExtra("data",gridList2.get(position));
                 MainActivity.this.startActivity(intent);
             }
         });

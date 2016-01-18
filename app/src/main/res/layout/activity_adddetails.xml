@@ -37,6 +37,7 @@
                 android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/adddetails_img"
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:src="@mipmap/ic_icon"
@@ -45,6 +46,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/adddetails_name_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"

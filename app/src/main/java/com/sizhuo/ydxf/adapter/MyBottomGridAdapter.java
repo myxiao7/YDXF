@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.entity.GridBean;
+import com.sizhuo.ydxf.entity._OrgData;
 import com.sizhuo.ydxf.entity._ServiceData;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
@@ -27,10 +28,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * @version 1.0
  */
 public class MyBottomGridAdapter extends BaseAdapter{
-    private List<_ServiceData> list;
+    private List<_OrgData> list;
     private Context context;
 
-    public MyBottomGridAdapter(List<_ServiceData> list, Context context) {
+    public MyBottomGridAdapter(List<_OrgData> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -63,11 +64,11 @@ public class MyBottomGridAdapter extends BaseAdapter{
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        _ServiceData serviceData = list.get(position);
-        if(!TextUtils.isEmpty(serviceData.getPicture())){
-            ImageLoaderHelper.getIstance().loadImg(serviceData.getPicture() + "", viewHolder.imageView);
+        _OrgData orgData = list.get(position);
+        if(!TextUtils.isEmpty(orgData.getPicture())){
+            ImageLoaderHelper.getIstance().loadImg(orgData.getPicture() + "", viewHolder.imageView);
         }
-        viewHolder.textView.setText(serviceData.getName());
+        viewHolder.textView.setText(orgData.getName());
         return convertView;
     }
 
@@ -76,7 +77,7 @@ public class MyBottomGridAdapter extends BaseAdapter{
         TextView textView;
     }
 
-    public void notifyDataSetChanged(List<_ServiceData> list) {
+    public void notifyDataSetChanged(List<_OrgData> list) {
         this.list = list;
         notifyDataSetChanged();
     }
