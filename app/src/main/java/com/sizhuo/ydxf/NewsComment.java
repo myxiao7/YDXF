@@ -20,6 +20,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.sizhuo.ydxf.adapter.MyPostDetailsAdapter;
 import com.sizhuo.ydxf.application.MyApplication;
 import com.sizhuo.ydxf.entity.PostDetailData;
@@ -52,6 +53,7 @@ public class NewsComment extends AppCompatActivity {
     private ZrcListView listView;
     private MyPostDetailsAdapter adapter;
     private List<_ReplyData> list = new ArrayList<>();//评论数据
+    private String id;//新闻ID
     private EditText comEdit;//评论内容
     private Button comBtn;//提交评论
 
@@ -91,6 +93,7 @@ public class NewsComment extends AppCompatActivity {
         setContentView(R.layout.activity_newscomment);
         //初始化控件
         initViews();
+        queue = Volley.newRequestQueue(this);
         adapter = new MyPostDetailsAdapter(list, this);
         listView.setAdapter(adapter);
         comBtn.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +111,7 @@ public class NewsComment extends AppCompatActivity {
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("userName", user.getUserName());
                     map.put("userPwd", user.getUserPwd());
-                    map.put("news","");
+                    map.put("news",id);
                     map.put("content", contentStr);
                     JSONObject jsonObject = new JSONObject(map);
                     Log.d("xinwen", jsonObject.toString());
@@ -190,6 +193,7 @@ public class NewsComment extends AppCompatActivity {
         comEdit = (EditText) findViewById(R.id.newscomment_reply_edit);
         comBtn = (Button) findViewById(R.id.newscomment_com_btn);
         list = (List<_ReplyData>) getIntent().getSerializableExtra("datas");
+        id = getIntent().getStringExtra("id");
     }
 
 }

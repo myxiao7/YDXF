@@ -110,6 +110,7 @@ public class NewsDetails extends AppCompatActivity{
         } catch (DbException e) {
             e.printStackTrace();
         }
+        loadData();
     }
 
     @Override
@@ -126,36 +127,7 @@ public class NewsDetails extends AppCompatActivity{
         webView.setWebChromeClient(new WebChromeClient());
         webView.loadUrl(newsData.getUrl());
 
-        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Const.SELNEWSCOMMENT+newsData.getDocid()+"/1", null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                Log.d("xinwen", jsonObject.toString());
-                try {
-                    //获取服务器code
-                    int code = jsonObject.getInt("code");
-                    if (code == 200) {
-                        Log.d("log.d", jsonObject.toString());
-                        replyData = JSON.parseArray(jsonObject.getString("data"), _ReplyData.class);
-                        if(replyData!=null){
-                            countTv.setText(replyData.size()+"");
-                        }
-                    }  else if(code == 400){
-                        countTv.setText("0");
-                        replyData = new LinkedList<>();
-                        Toast.makeText(NewsDetails.this, "没有评论数据", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-//                Log.d("xinwen", volleyError.getMessage());
-            }
-        });
-        jsonObjectRequest.setTag(TAG01);
-        queue.add(jsonObjectRequest);
+        loadData();
 
         replyEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -175,6 +147,7 @@ public class NewsDetails extends AppCompatActivity{
                 if(replyData!=null&&replyData.size()>0){
                     Intent intent = new Intent(NewsDetails.this, NewsComment.class);
                     intent.putExtra("datas",(Serializable)replyData);
+                    intent.putExtra("id",newsData.getDocid());
                     startActivity(intent);
                 }else{
                     Toast.makeText(NewsDetails.this, "还没有回复", Toast.LENGTH_SHORT).show();
@@ -252,6 +225,42 @@ public class NewsDetails extends AppCompatActivity{
                 }
             }
         });
+    }
+
+    /**
+     * 加载数据
+     */
+    private void loadData() {
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Const.SELNEWSCOMMENT+newsData.getDocid()+"/1", null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Log.d("xinwen", jsonObject.toString());
+                try {
+                    //获取服务器code
+                    int code = jsonObject.getInt("code");
+                    if (code == 200) {
+                        Log.d("log.d", jsonObject.toString());
+                        replyData = JSON.parseArray(jsonObject.getString("data"), _ReplyData.class);
+                        if(replyData!=null){
+                            countTv.setText(replyData.size()+"");
+                        }
+                    }  else if(code == 400){
+                        countTv.setText("0");
+                        replyData = new LinkedList<>();
+                        Toast.makeText(NewsDetails.this, "没有评论数据", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+//                Log.d("xinwen", volleyError.getMessage());
+            }
+        });
+        jsonObjectRequest.setTag(TAG01);
+        queue.add(jsonObjectRequest);
     }
 
     private UMShareListener umShareListener = new UMShareListener() {
