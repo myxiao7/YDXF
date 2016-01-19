@@ -1,6 +1,7 @@
 package com.sizhuo.ydxf;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -20,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -44,7 +47,10 @@ import org.json.JSONObject;
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 
+import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,6 +69,7 @@ public class NewsDetails extends AppCompatActivity{
     private Button pubBtn;//发布
 
     private _NewsData newsData;//新闻数据
+    private List<_ReplyData> replyData = new LinkedList<_ReplyData>();//评论数据
 
     private DbManager dbManager;//数据库操作
     private User user;
@@ -70,8 +77,10 @@ public class NewsDetails extends AppCompatActivity{
 
     //网络相关
     private RequestQueue queue;
-    private JsonObjectRequest jsonObjectRequest;
-    private final String TAG01 = "jsonObjectRequest";//请求数据TAG
+    private JsonObjectRequest jsonObjectRequest,jsonObjectRequest2,jsonObjectRequest3;
+    private final String TAG01 = "jsonObjectRequest";//获取评论
+    private final String TAG02 = "jsonObjectRequest2";//评论TAG
+    private final String TAG03 = "jsonObjectRequest3";//收藏TAG
 
     private ProgressDialog dialog;
 
@@ -117,6 +126,37 @@ public class NewsDetails extends AppCompatActivity{
         webView.setWebChromeClient(new WebChromeClient());
         webView.loadUrl(newsData.getUrl());
 
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Const.SELNEWSCOMMENT+newsData.getDocid()+"/1", null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Log.d("xinwen", jsonObject.toString());
+                try {
+                    //获取服务器code
+                    int code = jsonObject.getInt("code");
+                    if (code == 200) {
+                        Log.d("log.d", jsonObject.toString());
+                        replyData = JSON.parseArray(jsonObject.getString("data"), _ReplyData.class);
+                        if(replyData!=null){
+                            countTv.setText(replyData.size()+"");
+                        }
+                    }  else if(code == 400){
+                        countTv.setText("0");
+                        replyData = new LinkedList<>();
+                        Toast.makeText(NewsDetails.this, "没有评论数据", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+//                Log.d("xinwen", volleyError.getMessage());
+            }
+        });
+        jsonObjectRequest.setTag(TAG01);
+        queue.add(jsonObjectRequest);
+
         replyEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -132,15 +172,80 @@ public class NewsDetails extends AppCompatActivity{
         countTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NewsDetails.this, NewsComment.class);
-                startActivity(intent);
+                if(replyData!=null&&replyData.size()>0){
+                    Intent intent = new Intent(NewsDetails.this, NewsComment.class);
+                    intent.putExtra("datas",(Serializable)replyData);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(NewsDetails.this, "还没有回复", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         pubBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 if(loginFlag==true){
-                    Toast.makeText(NewsDetails.this,"发表...",Toast.LENGTH_SHORT).show();
+                    final String contentStr = replyEdit.getText().toString().trim();
+                    if (TextUtils.isEmpty(contentStr)) {
+                        Toast.makeText(NewsDetails.this, "请填写评论内容", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    dialog = ProgressDialog.show(NewsDetails.this,
+                            null, "正在提交", true, true);
+                    dialog.show();
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("userName", user.getUserName());
+                    map.put("userPwd", user.getUserPwd());
+                    map.put("news",newsData.getDocid());
+                    map.put("content", contentStr);
+                    JSONObject jsonObject = new JSONObject(map);
+                    Log.d("xinwen", jsonObject.toString());
+                    jsonObjectRequest2 = new JsonObjectRequest(Request.Method.POST, Const.NEWSCOMMENT, jsonObject, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject jsonObject) {
+                            Log.d("xinwen", jsonObject.toString());
+                            try {
+                                //获取服务器code
+                                int code = jsonObject.getInt("code");
+                                if (code == 200) {
+                                    Log.d("log.d", jsonObject.toString());
+                                    _ReplyData reply = new _ReplyData();
+                                    reply.setPortrait(user.getPortrait());
+                                    reply.setNickName(user.getNickName());
+                                    reply.setContent(contentStr);
+                                    reply.setpTime("刚刚");
+                                    replyData.add(reply);
+                                    countTv.setText(replyData.size()+"");
+                                    Toast.makeText(NewsDetails.this, "评论成功", Toast.LENGTH_SHORT).show();
+                                } else if (code == 201) {
+                                    Toast.makeText(NewsDetails.this, "您已被禁言", Toast.LENGTH_SHORT).show();
+                                    //禁言
+                                } else {
+                                    Toast.makeText(NewsDetails.this, "失败，可能是人品问题", Toast.LENGTH_SHORT).show();
+                                }
+                                replyEdit.setText("");
+                                replyEdit.clearFocus();
+                                hideSoftInput(v);
+                                dialog.dismiss();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+//                Log.d("xinwen", volleyError.getMessage());
+                            hideSoftInput(v);
+                            dialog.dismiss();
+                        }
+                    });
+                    jsonObjectRequest2.setTag(TAG02);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            queue.add(jsonObjectRequest2);
+                        }
+                    }, 1000);
                 }else{
                     Intent intent = new Intent(NewsDetails.this, Login.class);
                     NewsDetails.this.startActivity(intent);
@@ -187,6 +292,16 @@ public class NewsDetails extends AppCompatActivity{
 
     }
 
+    /**
+     * 隐藏键盘
+     * @param view
+     */
+    private void hideSoftInput(View view) {
+        InputMethodManager imm = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     private void initViews() {
         toolbar = (Toolbar) findViewById(R.id.newsdetails_toolbar);
         toolbar.setTitle("返回");
@@ -202,6 +317,8 @@ public class NewsDetails extends AppCompatActivity{
         pubBtn = (Button) findViewById(R.id.newsdetails_pub_btn);
         Intent intent = this.getIntent();
         newsData = (_NewsData) intent.getSerializableExtra("data");
+        //评价详情
+        replyData = newsData.getReply();
     }
 
     @Override
@@ -215,7 +332,6 @@ public class NewsDetails extends AppCompatActivity{
             menu.getItem(1).setTitle("未收藏");
             menu.getItem(1).setIcon(R.mipmap.ic_love_not);
         }
-            Toast.makeText(NewsDetails.this,"收藏成功",Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -282,5 +398,13 @@ public class NewsDetails extends AppCompatActivity{
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        queue.cancelAll(TAG01);
+        queue.cancelAll(TAG02);
+        queue.cancelAll(TAG03);
     }
 }

@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:drawableLeft="@mipmap/ic_reply_count"
-                android:text="12"
+                android:text="0"
                 android:layout_gravity="center_vertical"
                 />
         </LinearLayout>

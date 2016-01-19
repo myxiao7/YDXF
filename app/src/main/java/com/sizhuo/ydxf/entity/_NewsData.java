@@ -45,6 +45,14 @@ public class _NewsData implements Serializable{
      * 多图新闻
      */
     private List<com.sizhuo.ydxf.entity.imgextra> imgextra;
+    /**
+     * 评价数
+     */
+    private String replyCount;
+    /**
+     * 评价
+     */
+    private List<_ReplyData> reply;
 
     public _NewsData() {
     }
@@ -111,5 +119,21 @@ public class _NewsData implements Serializable{
 
     public void setImgextra(List<com.sizhuo.ydxf.entity.imgextra> imgextra) {
         this.imgextra = imgextra;
+    }
+
+    public List<_ReplyData> getReply() {
+        return reply;
+    }
+
+    public void setReply(List<_ReplyData> reply) {
+        this.reply = reply;
+    }
+
+    public String getReplyCount() {
+        return replyCount;
+    }
+
+    public void setReplyCount(String replyCount) {
+        this.replyCount = replyCount;
     }
 }

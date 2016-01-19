@@ -256,7 +256,7 @@ public class PostDetails extends AppCompatActivity{
         titleTv.setText(postDetailData.getTitle());
         desTv.setText(postDetailData.getDigest());
         countTv.setText(postDetailData.getReplyCount());
-        if(postDetailData.getImgextra()!=null){
+        if(postDetailData.getImgextra().size()!=0){
             if(postDetailData.getImgextra().size()==1){
                 if(!TextUtils.isEmpty(postDetailData.getImgextra().get(0).getUrl())){
                     ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgextra().get(0).getUrl(), img01);

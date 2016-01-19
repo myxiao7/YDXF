@@ -31,13 +31,21 @@ public class Const {
      */
     public static final String M01 = URL2 + "selectNews/1/";
     /**
-     * forum
+     * 帖子评价
      */
     public static final String POSTREPLY = URL2+"insertReply";
     /**
-     * 帖子评价
+     * 论坛
      */
     public static final String MFORUM = URL2+"selectCard/1/";
+    /**
+     * 获取新闻评价
+     */
+    public static final String SELNEWSCOMMENT = URL2+"selectNewsComment/";
+    /**
+     * 评价新闻
+     */
+    public static final String NEWSCOMMENT = URL2+"insertComment";
     /**
      * 收藏新闻
      */

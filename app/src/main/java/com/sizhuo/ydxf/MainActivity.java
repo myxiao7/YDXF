@@ -26,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.baidu.location.f;
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<_NewsData> newsList = new LinkedList<_NewsData>();//新闻
     private List<_PostDetailData> forumList = new LinkedList<_PostDetailData>();//论坛
     private RelativeLayout itemReMore01,itemReMore02,itemReMore03,itemReMore04;//新闻和论坛更多
+    private LinearLayout itemLin01,itemLin02,itemLin03,itemLin04;//新闻和论坛详情
     private LinearLayout menuLin01, menuLin02, menuLin03, menuLin04;
     private ImageView imageView01, imageView02, imageView03, imageView04;
     private TextView titleTv01, conTv01, dataTv01,titleTv02, conTv02, dataTv02,titleTv03, conTv03, dataTv03, titleTv04, conTv04, dataTv04;
@@ -153,6 +155,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         newsList = mainData.getNews();
                         forumList = mainData.getCard();
+                        Log.d("log.d",forumList.get(1).getImgextra().size()+"");
+                        Log.d("log.d",forumList.get(1).getImgextra().toString()+"");
                         gridList = mainData.getConvenience();
                         gridList2 = mainData.getDirectory();
 
@@ -250,24 +254,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSlider.startAutoCycle(2500, 4000, true);
 
         itemReMore01 = (RelativeLayout) findViewById(R.id.main_list_item01_01_re_more);
+        itemLin01 = (LinearLayout) findViewById(R.id.main_list_item01_01_lin);
         imageView01 = (ImageView) findViewById(R.id.main_list_item01_01_img);
         titleTv01 = (TextView) findViewById(R.id.main_list_item01_01_title_tv);
         conTv01 = (TextView) findViewById(R.id.main_list_item01_01_des_tv);
         dataTv01 = (TextView) findViewById(R.id.main_list_item01_01_date_tv);
 
         itemReMore02 = (RelativeLayout) findViewById(R.id.main_list_item01_02_re_more);
+        itemLin02 = (LinearLayout) findViewById(R.id.main_list_item01_02_lin);
         imageView02 = (ImageView) findViewById(R.id.main_list_item01_02_img);
         titleTv02 = (TextView) findViewById(R.id.main_list_item01_02_title_tv);
         conTv02 = (TextView) findViewById(R.id.main_list_item01_02_des_tv);
         dataTv02 = (TextView) findViewById(R.id.main_list_item01_02_date_tv);
 
         itemReMore03 = (RelativeLayout) findViewById(R.id.main_list_item01_03_re_more);
+        itemLin03 = (LinearLayout) findViewById(R.id.main_list_item01_03_lin);
         imageView03 = (ImageView) findViewById(R.id.main_list_item01_03_img);
         titleTv03 = (TextView) findViewById(R.id.main_list_item01_03_title_tv);
         conTv03 = (TextView) findViewById(R.id.main_list_item01_03_des_tv);
         dataTv03 = (TextView) findViewById(R.id.main_list_item01_03_date_tv);
 
         itemReMore04 = (RelativeLayout) findViewById(R.id.main_list_item01_04_re_more);
+        itemLin04 = (LinearLayout) findViewById(R.id.main_list_item01_04_lin);
         imageView04 = (ImageView) findViewById(R.id.main_list_item01_04_img);
         titleTv04 = (TextView) findViewById(R.id.main_list_item01_04_title_tv);
         conTv04 = (TextView) findViewById(R.id.main_list_item01_04_des_tv);
@@ -291,9 +299,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initEvents() {
         itemReMore01.setOnClickListener(this);
+        itemLin01.setOnClickListener(this);
         itemReMore02.setOnClickListener(this);
+        itemLin02.setOnClickListener(this);
         itemReMore03.setOnClickListener(this);
+        itemLin03.setOnClickListener(this);
         itemReMore04.setOnClickListener(this);
+        itemLin04.setOnClickListener(this);
+
         menuLin01.setOnClickListener(this);
         menuLin02.setOnClickListener(this);
         menuLin03.setOnClickListener(this);
@@ -322,6 +335,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent4 = new Intent(MainActivity.this, Forum.class);
                 startActivity(intent4);
                 break;
+            case R.id.main_list_item01_01_lin:
+                Intent intent12 = new Intent(MainActivity.this, NewsDetails.class);
+                intent12.putExtra("data",newsList.get(0));
+                startActivity(intent12);
+                break;
+            case R.id.main_list_item01_02_lin:
+                Intent intent13 = new Intent(MainActivity.this, NewsDetails.class);
+                intent13.putExtra("data",newsList.get(1));
+                startActivity(intent13);
+
+                break;
+            case R.id.main_list_item01_03_lin:
+                Intent intent14 = new Intent(MainActivity.this, PostDetails.class);
+                intent14.putExtra("data", forumList.get(0));
+                startActivity(intent14);
+
+                break;
+            case R.id.main_list_item01_04_lin:
+                Intent intent15 = new Intent(MainActivity.this, PostDetails.class);
+                intent15.putExtra("data", forumList.get(1));
+                startActivity(intent15);
+                break;
+
              case R.id.main_list_item02_menu01_lin:
                 Intent intent5 = new Intent(MainActivity.this, VideoModule.class);
                 startActivity(intent5);

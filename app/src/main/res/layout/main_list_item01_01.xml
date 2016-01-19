@@ -66,6 +66,7 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/main_list_item01_01_lin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
