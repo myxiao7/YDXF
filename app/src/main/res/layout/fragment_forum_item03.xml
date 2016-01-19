@@ -15,7 +15,6 @@
             android:id="@+id/frag_forum_item03_icon_img"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:background="@mipmap/default_img"
             />
         <LinearLayout
             android:layout_width="0dp"
@@ -27,7 +26,7 @@
                 android:id="@+id/frag_forum_item03_id_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="发帖ID"
+                android:text=""
                 android:textSize="16sp"
                 />
             <TextView
@@ -35,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="发帖时间"
+                android:text=""
                 android:textSize="14sp"
                 android:textColor="@color/lighter_gray"
                 />
@@ -60,19 +59,24 @@
                 />
             </LinearLayout>
         <LinearLayout
+            android:id="@+id/frag_forum_item03_replycount_lin"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:background="@mipmap/default_img"
+                android:id="@+id/frag_forum_item03_replycount_img"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginRight="5dp"
+                android:background="@mipmap/ic_reply_count"
                 />
             <TextView
                 android:id="@+id/frag_forum_item03_replycount_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="26"
+                android:text=""
                 />
             </LinearLayout>
     </LinearLayout>
@@ -86,7 +90,7 @@
             android:id="@+id/frag_forum_item03_title_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="我来水经验了我来水经验了我来水经验了我来水经验了"
+            android:text=""
             android:textSize="18sp"
             android:textColor="@color/black"
             />
@@ -95,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="我来水经验了"
+            android:text=""
             android:textSize="18sp"
             />
         </LinearLayout>

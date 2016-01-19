@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListe
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.sizhuo.ydxf.entity.ForumData;
 import com.sizhuo.ydxf.entity.PostDetailData;
+import com.sizhuo.ydxf.entity._PostDetailData;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ import java.util.List;
 public class PhotoWatch extends Activity {
     private TextView countTxt, cutTxt;//图片数量，当前位置
     private ViewPager viewPager;
-    private PostDetailData postDetailData;//图片数据
+    private _PostDetailData postDetailData;//数据
     private int position = 0;//所选帖子数据，默认为第一条
     private int index = 0;//所选图片位置，默认为第一张
     private PhotoView photoView;
@@ -42,7 +44,7 @@ public class PhotoWatch extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photowactch);
-        postDetailData = (PostDetailData) this.getIntent().getSerializableExtra("data");
+        postDetailData = (_PostDetailData) this.getIntent().getSerializableExtra("data");
         index = this.getIntent().getIntExtra("index", 0);
         initViews();
         PagerAdapter pagerAdapter = new PagerAdapter() {
@@ -52,10 +54,7 @@ public class PhotoWatch extends Activity {
                 photoView.enable();
                 photoView.setScaleType(ImageView.ScaleType.CENTER);
 //                photoView.set
-                if(postDetailData.getType().equals("1")){
-                ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgUrl(),photoView);
-                }else if(postDetailData.getType().equals("2")){
-                    Log.d("xinwen",postDetailData.getImgextra().size()+"-----------------");
+                if(!TextUtils.isEmpty(postDetailData.getImgextra().get(position).getUrl())){
                     ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgextra().get(position).getUrl(),photoView);
                 }
                 photoView.setOnClickListener(new View.OnClickListener() {
@@ -75,13 +74,20 @@ public class PhotoWatch extends Activity {
 
             @Override
             public int getCount() {
-                if(postDetailData.getType().equals("1")){
-                    return 1;
-                }else if(postDetailData.getType().equals("2")){
-                    return 3;
+                if(postDetailData.getImgextra()!=null){
+                    if(postDetailData.getImgextra().size()==1){
+                        //单图
+                        return 1;
+                    }
+                    if(postDetailData.getImgextra().size()==3){
+                        //多图
+                        return 3;
+                    }
                 }else{
+                    //无图
                     return 0;
                 }
+                return 0;
             }
 
             @Override

@@ -33,6 +33,7 @@ public class MyComment extends AppCompatActivity {
     private ZrcListView listView;
     private List<MyCommentData> list = new ArrayList<>();
     private MyCommentAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

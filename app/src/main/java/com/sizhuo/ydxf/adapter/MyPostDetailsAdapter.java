@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.entity.ReplyData;
+import com.sizhuo.ydxf.entity._ReplyData;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
 import java.util.List;
@@ -23,10 +24,10 @@ import java.util.List;
  * @version 1.0
  */
 public class MyPostDetailsAdapter extends BaseAdapter {
-    private List<ReplyData> list;
+    private List<_ReplyData> list;
     private Context context;
 
-    public MyPostDetailsAdapter(List<ReplyData> list, Context context) {
+    public MyPostDetailsAdapter(List<_ReplyData> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -62,12 +63,12 @@ public class MyPostDetailsAdapter extends BaseAdapter {
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
-        ReplyData replyData = list.get(position);
-        ImageLoaderHelper.getIstance().loadImg(replyData.getIcon(), holder.img);
-        holder.nameTv.setText(replyData.getName());
+        _ReplyData replyData = list.get(position);
+        ImageLoaderHelper.getIstance().loadImg(replyData.getPortrait(), holder.img);
+        holder.nameTv.setText(replyData.getNickName());
         holder.floorTv.setText((position+1)+"楼");
         holder.contentTv.setText(replyData.getContent());
-        holder.dateTv.setText(replyData.getDate());
+        holder.dateTv.setText(replyData.getpTime());
         return convertView;
     }
 
@@ -79,7 +80,7 @@ public class MyPostDetailsAdapter extends BaseAdapter {
         TextView dateTv;
     }
 
-    public void notifyDataSetChanged(List<ReplyData> list) {
+    public void notifyDataSetChanged(List<_ReplyData> list) {
         this.list = list;
         notifyDataSetChanged();
     }

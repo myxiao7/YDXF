@@ -29,13 +29,38 @@ public class Const {
     /**
      * Module01
      */
-    public static final String M01 = "infos.html";
+    public static final String M01 = URL2 + "selectNews/1/";
     /**
      * forum
      */
-    public static final String MFORUM = URL+"forum.html";
+    public static final String POSTREPLY = URL2+"insertReply";
     /**
-     * 注册
+     * 帖子评价
+     */
+    public static final String MFORUM = URL2+"selectCard/1/";
+    /**
+     * 收藏新闻
+     */
+    public static final String NEWSLOVE = URL2+"insertCollection";
+    /**
+     * 我的收藏
+     */
+    public static final String MYCOLLECTION = URL2+"selectNewsCollection";
+    /**
+     * 我的评论
+     */
+    public static final String MYCOMMENT = URL2+"selectMyNewsComment";
+    /**
+     * 我的帖子
+     */
+    public static final String MYPOST = URL2+"selectMyCard";
+    /**
+     * 我的消息
+     */
+    public static final String MYNEWS = URL2+"selectNewsCollection";
+
+    /**
+     * 登录
      */
     public static final String LOGIN = URL2 + "login";
     /**

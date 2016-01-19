@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,15 +16,32 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.google.gson.JsonObject;
 import com.sizhuo.ydxf.NewsDetails;
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.entity.MyCollectionDate;
+import com.sizhuo.ydxf.entity._NewsData;
+import com.sizhuo.ydxf.entity._SliderData;
+import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 项目名称: YDXF
@@ -36,18 +54,23 @@ import java.util.List;
 public class MyCollection extends AppCompatActivity{
     private Toolbar toolbar;
     private ZrcListView listView;
-    private List<MyCollectionDate> list = new ArrayList<>();
+    private List<_NewsData> list = new ArrayList<>();
     private MyCollectionAdapter adapter;
     private Boolean isEdit = false;//是否处于编辑模式下
+
+    private String userName = "";
+    private String userPwd = "";
+
+    //网络请求
+    private RequestQueue queue;
+    private JsonObjectRequest jsonObjectRequest;
+    private final String TAG01 = "jsonObjectRequest";//请求数据TAG
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mycollection);
         initViews();
-        for (int i = 0; i < 4  ; i++) {
-        MyCollectionDate date = new MyCollectionDate("我的第"+i+"条收藏","2015-12-30", "26");
-            list.add(date);
-        }
+        queue = Volley.newRequestQueue(this);
         adapter = new MyCollectionAdapter(list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new ZrcListView.OnItemClickListener() {
@@ -57,7 +80,35 @@ public class MyCollection extends AppCompatActivity{
                 MyCollection.this.startActivity(intent);
             }
         });
+        Map<String, String> map = new HashMap<>();
+        map.put("userName",userName);
+        map.put("userPwd",userPwd);
+        map.put("index","1");
+        JSONObject object = new JSONObject(map);
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.MYCOLLECTION, object, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Log.d("我的", "收藏"+jsonObject.toString()+"");
+                try {
+                    //获取服务器code
+                    int code = jsonObject.getInt("code");
+                    if(code == 200){
 
+                    }else{
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Log.d("xinwen",volleyError.toString()+volleyError);
+            }
+        });
+        queue.add(jsonObjectRequest);
+        jsonObjectRequest.setTag(TAG01);
     }
 
     private void initViews() {
@@ -66,6 +117,9 @@ public class MyCollection extends AppCompatActivity{
         toolbar.setTitle("新闻收藏");
         setSupportActionBar(toolbar);
         listView = (ZrcListView) findViewById(R.id.mycollection_list);
+        Intent intent = this.getIntent();
+        userName = intent.getStringExtra("userName");
+        userPwd = intent.getStringExtra("userPwd");
 
     }
 
@@ -97,9 +151,9 @@ public class MyCollection extends AppCompatActivity{
     }
 
     class MyCollectionAdapter extends BaseAdapter{
-        private List<MyCollectionDate> list;
+        private List<_NewsData> list;
         private HashMap<Integer,Integer> isVisiableMap = new HashMap<>();//用于存储删除按钮是否现实
-        public MyCollectionAdapter(List<MyCollectionDate> list) {
+        public MyCollectionAdapter(List<_NewsData> list) {
             this.list = list;
             if(isEdit){
                 //编辑模式下，显示删除按钮
@@ -151,10 +205,11 @@ public class MyCollection extends AppCompatActivity{
             }else{
                 convertView.setTag(holder);
             }
-            final MyCollectionDate date = list.get(position);
+            final _NewsData date = list.get(position);
             holder.titleTv.setText(date.getTitle());
-            holder.dateTv.setText(date.getDate());
-            holder.replyCountTv.setText(date.getReplyCount());
+            holder.dateTv.setText(date.getPtime());
+            //
+            holder.replyCountTv.setText(date.getDocid());
             if(isVisiableMap.get(position)==View.VISIBLE){
                 holder.delBtn.setVisibility(View.VISIBLE);
             }else{

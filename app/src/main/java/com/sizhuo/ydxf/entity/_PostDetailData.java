@@ -18,6 +18,14 @@ public class _PostDetailData implements Serializable{
      */
     private String id;
     /**
+     * 头像
+     */
+    private String portrait;
+    /**
+     * 昵称
+     */
+    private String nickName;
+    /**
      * 标题
      */
     private String title;
@@ -63,6 +71,22 @@ public class _PostDetailData implements Serializable{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPortrait() {
+        return portrait;
+    }
+
+    public void setPortrait(String portrait) {
+        this.portrait = portrait;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getTitle() {

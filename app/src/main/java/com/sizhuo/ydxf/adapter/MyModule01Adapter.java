@@ -1,6 +1,7 @@
 package com.sizhuo.ydxf.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,16 +105,24 @@ public class MyModule01Adapter extends BaseAdapter {
         _NewsData newsData = list.get(position);
         switch (type) {
             case TYPE_ONE:
-                ImageLoaderHelper.getIstance().loadImg(newsData.getImgsrc(),holder01.imageView);
+                if(!TextUtils.isEmpty(newsData.getImgsrc())){
+                    ImageLoaderHelper.getIstance().loadImg(newsData.getImgsrc(),holder01.imageView);
+                }
                 holder01.titleTv.setText(newsData.getTitle());
                 holder01.desTv.setText(newsData.getDigest());
                 holder01.dateTv.setText(newsData.getPtime());
                 break;
             case TYPE_TWO:
                 List<imgextra> imgExtrases = newsData.getImgextra();
-                ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(0).getUrl(), holder02.imageView01);
-                ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(1).getUrl(),holder02.imageView02);
-                ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(2).getUrl(),holder02.imageView03);
+                if(!TextUtils.isEmpty(imgExtrases.get(0).getUrl())){
+                    ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(0).getUrl(), holder02.imageView01);
+                }
+                if(!TextUtils.isEmpty(imgExtrases.get(1).getUrl())){
+                    ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(1).getUrl(),holder02.imageView02);
+                }
+                if(!TextUtils.isEmpty(imgExtrases.get(2).getUrl())){
+                    ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(2).getUrl(),holder02.imageView03);
+                }
                 holder02.titleTv.setText(newsData.getTitle());
                 holder02.dateTv.setText(newsData.getPtime());
                 break;
@@ -131,7 +140,7 @@ public class MyModule01Adapter extends BaseAdapter {
     public int getItemViewType(int position) {
         if (list.get(position).getType().equals("1")) {
             return TYPE_ONE;
-        } else if (list.get(position).getType().equals("2")) {
+        } else if (list.get(position).getType().equals("3")) {
             return TYPE_TWO;
         } else {
             return TYPE_THREE;

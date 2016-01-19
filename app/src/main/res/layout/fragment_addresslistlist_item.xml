@@ -33,7 +33,7 @@
                     android:id="@+id/frag_addresslist_list_item_img"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@mipmap/ic_choose_pic_normal" />
+                     />
 
                 <LinearLayout
                     android:layout_width="0dp"

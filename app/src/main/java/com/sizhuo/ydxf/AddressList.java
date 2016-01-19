@@ -63,7 +63,7 @@ public class AddressList extends AppCompatActivity{
             }
         });
 
-        jsonObjectRequest = new JsonObjectRequest(Const.ORGANIZATION, null, new Response.Listener<JSONObject>() {
+        jsonObjectRequest = new JsonObjectRequest(Const.ADDRESSLIST, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
 //                Log.d("xinwen", jsonObject.toString()+"");

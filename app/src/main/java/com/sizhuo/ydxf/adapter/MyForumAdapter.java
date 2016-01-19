@@ -2,22 +2,27 @@ package com.sizhuo.ydxf.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sizhuo.ydxf.PhotoWatch;
 import com.sizhuo.ydxf.R;
 import com.sizhuo.ydxf.entity.ForumData;
 import com.sizhuo.ydxf.entity.PostDetailData;
+import com.sizhuo.ydxf.entity._PostDetailData;
 import com.sizhuo.ydxf.entity.imgextra;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 项目名称: YDXF
@@ -28,15 +33,25 @@ import java.util.List;
  * @version 1.0
  */
 public class MyForumAdapter extends BaseAdapter{
-    private List<PostDetailData> list;
+    private List<_PostDetailData> list;
     private Context context;
+    private Map<Integer,Integer> replyMap = new HashMap<>();//记录留言技计数位置
     private final int TYPE_ONE = 0, TYPE_TWO = 1, TYPE_THREE = 2, TYPE_COUNT = 3;
 
-    public MyForumAdapter(List<PostDetailData> list,Context context) {
+    public MyForumAdapter(List<_PostDetailData> list,Context context) {
         this.list = list;
         this.context = context;
     }
 
+    /**
+     *  保存留言计数的位置
+     * @param visi
+     */
+    public void configReplyMap(Integer visi){
+        for (int i = 0; i < list.size(); i++) {
+            replyMap.put(i,visi);
+        }
+    }
     @Override
     public int getCount() {
         return list.size();
@@ -68,6 +83,7 @@ public class MyForumAdapter extends BaseAdapter{
                     holder01.idTv = (TextView) convertView.findViewById(R.id.frag_forum_item01_id_tv);
                     holder01.dataTv = (TextView) convertView.findViewById(R.id.frag_forum_item01_date_tv);
                     holder01.likeTv = (TextView) convertView.findViewById(R.id.frag_forum_item01_likecount_tv);
+                    holder01.replyLin = (LinearLayout) convertView.findViewById(R.id.frag_forum_item01_replycount_lin);
                     holder01.replyTv = (TextView) convertView.findViewById(R.id.frag_forum_item01_replycount_tv);
                     holder01.titleTv = (TextView) convertView.findViewById(R.id.frag_forum_item01_title_tv);
                     holder01.desTv = (TextView) convertView.findViewById(R.id.frag_forum_item01_des_tv);
@@ -82,6 +98,7 @@ public class MyForumAdapter extends BaseAdapter{
                     holder02.idTv = (TextView) convertView.findViewById(R.id.frag_forum_item02_id_tv);
                     holder02.dataTv = (TextView) convertView.findViewById(R.id.frag_forum_item02_date_tv);
                     holder02.likeTv = (TextView) convertView.findViewById(R.id.frag_forum_item02_likecount_tv);
+                    holder02.replyLin = (LinearLayout) convertView.findViewById(R.id.frag_forum_item02_replycount_lin);
                     holder02.replyTv = (TextView) convertView.findViewById(R.id.frag_forum_item02_replycount_tv);
                     holder02.titleTv = (TextView) convertView.findViewById(R.id.frag_forum_item02_title_tv);
                     holder02.desTv = (TextView) convertView.findViewById(R.id.frag_forum_item02_des_tv);
@@ -98,6 +115,7 @@ public class MyForumAdapter extends BaseAdapter{
                     holder03.idTv = (TextView) convertView.findViewById(R.id.frag_forum_item03_id_tv);
                     holder03.dataTv = (TextView) convertView.findViewById(R.id.frag_forum_item03_date_tv);
                     holder03.likeTv = (TextView) convertView.findViewById(R.id.frag_forum_item03_likecount_tv);
+                    holder03.replyLin = (LinearLayout) convertView.findViewById(R.id.frag_forum_item03_replycount_lin);
                     holder03.replyTv = (TextView) convertView.findViewById(R.id.frag_forum_item03_replycount_tv);
                     holder03.titleTv = (TextView) convertView.findViewById(R.id.frag_forum_item03_title_tv);
                     holder03.desTv = (TextView) convertView.findViewById(R.id.frag_forum_item03_des_tv);
@@ -120,45 +138,75 @@ public class MyForumAdapter extends BaseAdapter{
                     break;
             }
         }
-        PostDetailData postDetailData = list.get(position);
+        _PostDetailData postDetailData = list.get(position);
         switch (type){
             case TYPE_ONE:
-                ImageLoaderHelper.getIstance().loadImg(postDetailData.getIconUrl(), holder01.iconImg);
-                holder01.idTv.setText(postDetailData.getId());
-                holder01.dataTv.setText(postDetailData.getDate());
-                holder01.likeTv.setText(postDetailData.getLikeCount());
+                if(!TextUtils.isEmpty(postDetailData.getImgextra().get(0).getUrl())){
+                    ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgextra().get(0).getUrl(), holder01.img);
+                    holder01.img.setOnClickListener(new WatchPhoto(position, 0));
+                }
+                if(!TextUtils.isEmpty(postDetailData.getPortrait())){
+                    ImageLoaderHelper.getIstance().loadImg(postDetailData.getPortrait(), holder01.iconImg);
+                }
+                holder01.idTv.setText(postDetailData.getNickName());
+                holder01.dataTv.setText(postDetailData.getPtime());
+                if(TextUtils.isEmpty(postDetailData.getReplyCount())){
+                    replyMap.put(position, View.GONE);
+                }else{
+                    replyMap.put(position, View.VISIBLE);
+                }
+                holder01.replyLin.setVisibility(replyMap.get(position));
                 holder01.replyTv.setText(postDetailData.getReplyCount());
                 holder01.titleTv.setText(postDetailData.getTitle());
-                holder01.desTv.setText(postDetailData.getDes());
-                ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgUrl(), holder01.img);
-                holder01.img.setOnClickListener(new WatchPhoto(position,0));
+                holder01.desTv.setText(postDetailData.getDigest());
                 break;
 
             case TYPE_TWO:
                 List<imgextra> imgExtrases = postDetailData.getImgextra();
-                ImageLoaderHelper.getIstance().loadImg(postDetailData.getIconUrl(), holder02.iconImg);
-                holder02.idTv.setText(postDetailData.getId());
-                holder02.dataTv.setText(postDetailData.getDate());
-                holder02.likeTv.setText(postDetailData.getLikeCount());
+                if(!TextUtils.isEmpty(postDetailData.getPortrait())){
+                    ImageLoaderHelper.getIstance().loadImg(postDetailData.getPortrait(), holder02.iconImg);
+                }
+                holder02.idTv.setText(postDetailData.getNickName());
+                holder02.dataTv.setText(postDetailData.getPtime());
+                if(TextUtils.isEmpty(postDetailData.getReplyCount())){
+                    replyMap.put(position, View.GONE);
+                }else{
+                    replyMap.put(position, View.VISIBLE);
+                }
+                holder02.replyLin.setVisibility(replyMap.get(position));
                 holder02.replyTv.setText(postDetailData.getReplyCount());
                 holder02.titleTv.setText(postDetailData.getTitle());
-                holder02.desTv.setText(postDetailData.getDes());
-                ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(0).getUrl(), holder02.img01);
-                ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(1).getUrl(), holder02.img02);
-                ImageLoaderHelper.getIstance().loadImg(imgExtrases.get(2).getUrl(), holder02.img03);
-                holder02.img01.setOnClickListener(new WatchPhoto(position,0));
-                holder02.img02.setOnClickListener(new WatchPhoto(position,1));
-                holder02.img03.setOnClickListener(new WatchPhoto(position,2));
+                holder02.desTv.setText(postDetailData.getDigest());
+
+                if(!TextUtils.isEmpty(postDetailData.getImgextra().get(0).getUrl())){
+                    ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgextra().get(0).getUrl(), holder02.img01);
+                    holder02.img01.setOnClickListener(new WatchPhoto(position,0));
+                }
+                if(!TextUtils.isEmpty(postDetailData.getImgextra().get(1).getUrl())){
+                    ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgextra().get(1).getUrl(), holder02.img02);
+                    holder02.img02.setOnClickListener(new WatchPhoto(position, 1));
+                }
+                if(!TextUtils.isEmpty(postDetailData.getImgextra().get(2).getUrl())){
+                    ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgextra().get(2).getUrl(), holder02.img03);
+                    holder02.img03.setOnClickListener(new WatchPhoto(position,2));
+                }
                 break;
 
             case TYPE_THREE:
-                ImageLoaderHelper.getIstance().loadImg(postDetailData.getIconUrl(), holder03.iconImg);
-                holder03.idTv.setText(postDetailData.getId());
-                holder03.dataTv.setText(postDetailData.getDate());
-                holder03.likeTv.setText(postDetailData.getLikeCount());
+                if(!TextUtils.isEmpty(postDetailData.getPortrait())){
+                    ImageLoaderHelper.getIstance().loadImg(postDetailData.getPortrait(), holder03.iconImg);
+                }
+                holder03.idTv.setText(postDetailData.getNickName());
+                holder03.dataTv.setText(postDetailData.getPtime());
+                if(TextUtils.isEmpty(postDetailData.getReplyCount())){
+                    replyMap.put(position, View.GONE);
+                }else{
+                    replyMap.put(position, View.VISIBLE);
+                }
+                holder03.replyLin.setVisibility(replyMap.get(position));
                 holder03.replyTv.setText(postDetailData.getReplyCount());
                 holder03.titleTv.setText(postDetailData.getTitle());
-                holder03.desTv.setText(postDetailData.getDes());
+                holder03.desTv.setText(postDetailData.getDigest());
                 break;
         }
         return convertView;
@@ -166,26 +214,26 @@ public class MyForumAdapter extends BaseAdapter{
 
     @Override
     public int getItemViewType(int position) {
-        //单图
-       if(list.get(position).getType().equals("1")){
-           return TYPE_ONE;
-           //多图
-       }else if (list.get(position).getType().equals("2")) {
-           return TYPE_TWO;
+
+       if(list.get(position).getImgextra()!=null){
+           if(list.get(position).getImgextra().size()==1){
+               //单图
+               return TYPE_ONE;
+           }
+            if(list.get(position).getImgextra().size()==3){
+                //多图
+                return TYPE_TWO;
+           }
+       }else{
            //无图
-       } else {
            return TYPE_THREE;
        }
+        return TYPE_THREE;
     }
 
     @Override
     public int getViewTypeCount() {
         return TYPE_COUNT;
-    }
-
-    public void notifyDataSetChanged(List<PostDetailData> list) {
-        this.list = list;
-        notifyDataSetChanged();
     }
 
 
@@ -195,6 +243,7 @@ public class MyForumAdapter extends BaseAdapter{
         TextView idTv;//ID
         TextView dataTv;//日期
         TextView likeTv;//赞
+        LinearLayout replyLin;//回复..
         TextView replyTv;//回复
         TextView titleTv;//标题
         TextView desTv;//描述
@@ -206,6 +255,7 @@ public class MyForumAdapter extends BaseAdapter{
         TextView idTv;//ID
         TextView dataTv;//日期
         TextView likeTv;//赞
+        LinearLayout replyLin;//回复..
         TextView replyTv;//回复
         TextView titleTv;//标题
         TextView desTv;//描述
@@ -219,6 +269,7 @@ public class MyForumAdapter extends BaseAdapter{
         TextView idTv;//ID
         TextView dataTv;//日期
         TextView likeTv;//赞
+        LinearLayout replyLin;//回复..
         TextView replyTv;//回复
         TextView titleTv;//标题
         TextView desTv;//描述
@@ -261,5 +312,10 @@ public class MyForumAdapter extends BaseAdapter{
             intent.putExtra("index",index);
             context.startActivity(intent);
         }
+    }
+
+    public void notifyDataSetChanged(List<_PostDetailData> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 }

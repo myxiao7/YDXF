@@ -15,6 +15,7 @@ import com.sizhuo.ydxf.adapter.MyPostDetailsAdapter;
 import com.sizhuo.ydxf.application.MyApplication;
 import com.sizhuo.ydxf.entity.PostDetailData;
 import com.sizhuo.ydxf.entity.ReplyData;
+import com.sizhuo.ydxf.entity._ReplyData;
 import com.sizhuo.ydxf.entity.db.User;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
 
@@ -36,7 +37,7 @@ public class NewsComment extends AppCompatActivity {
     private Toolbar toolbar;
     private ZrcListView listView;
     private MyPostDetailsAdapter adapter;
-    private List<ReplyData> list = new ArrayList<>();//评论数据
+    private List<_ReplyData> list = new ArrayList<>();//评论数据
     private EditText comEdit;//评论内容
     private Button comBtn;//提交评论
 
@@ -69,14 +70,6 @@ public class NewsComment extends AppCompatActivity {
         setContentView(R.layout.activity_newscomment);
         //初始化控件
         initViews();
-        ReplyData replyData = new ReplyData("","my灬xiao7","沙发","2015-1-13");
-        ReplyData replyData2 = new ReplyData("","admin","呵呵","2015-1-13");
-        ReplyData replyData3 = new ReplyData("","guest","沙发","2015-1-13");
-        ReplyData replyData4 = new ReplyData("","test","沙发","2015-1-13");
-        list.add(replyData);
-        list.add(replyData2);
-        list.add(replyData3);
-        list.add(replyData4);
         adapter = new MyPostDetailsAdapter(list, this);
         listView.setAdapter(adapter);
         comBtn.setOnClickListener(new View.OnClickListener() {

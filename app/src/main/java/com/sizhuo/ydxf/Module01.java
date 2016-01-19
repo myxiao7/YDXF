@@ -1,5 +1,6 @@
 package com.sizhuo.ydxf;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -54,6 +55,7 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
     private MyModule01Adapter myModule01Adapter;
     private final int REFRESH_COMPLETE = 0X100;//刷新完成
     private final int LOADMORE_COMPLETE = 0X101;//加载完成
+
     private RequestQueue queue;
     private JsonObjectRequest jsonObjectRequest;
     private final String TAG01 = "jsonObjectRequest";//请求数据TAG
@@ -67,13 +69,22 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
         initViews();
         queue = Volley.newRequestQueue(this);
         loadData();
+        listView.setOnItemClickListener(new ZrcListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(ZrcListView parent, View view, int position, long id) {
+                Intent intent = new Intent(Module01.this, NewsDetails.class);
+                Toast.makeText(Module01.this,""+position+"----"+list.get(position-1).getDigest(), Toast.LENGTH_SHORT).show();
+                intent.putExtra("data",list.get(position-1));
+                startActivity(intent);
+            }
+        });
     }
 
     /**
      * 获取数据
      */
     private void loadData() {
-        jsonObjectRequest = new JsonObjectRequest(Const.URL+Const.M01, null, new Response.Listener<JSONObject>() {
+        jsonObjectRequest = new JsonObjectRequest(Const.M01 + 1, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
 //                Log.d("xinwen", jsonObject.toString()+"");
@@ -106,23 +117,6 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
 
                             sliderLayout.addSlider(textSliderView);
                         }
-                        /*for(String name : url_maps.keySet()){
-                            TextSliderView textSliderView = new TextSliderView(Module01.this);
-                            // initialize a SliderLayout
-                            textSliderView
-                                    .description(name)
-                                    .image(url_maps.get(name))
-                                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                                    .setOnSliderClickListener(Module01.this);
-                            ;
-
-                            //add your extra information`
-                            textSliderView.bundle(new Bundle());
-                            textSliderView.getBundle()
-                                    .putString("extra",name);
-
-                            sliderLayout.addSlider(textSliderView);
-                        }*/
                         //获取新闻
                         list = JSON.parseArray(data.getString("news").toString(), _NewsData.class);
                        /* Log.d("xinwen", list.size()+"-----111");
@@ -154,14 +148,15 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
         toolbar = (Toolbar) findViewById(R.id.module01_toolbar);
         toolbar.setTitle("大事小情");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Module01.this.finish();
+            }
+        });
         View view = LayoutInflater.from(this).inflate(R.layout.module01_list_header,null);
-        sliderLayout = (SliderLayout) view.findViewById(R.id.module01_list_item01_slider);
-        /*url_maps.put("测试01", "http://192.168.1.114:8080/xinwen/img/item01.jpg");
-        url_maps.put("测试02", "http://192.168.1.114:8080/xinwen/img/item02.jpg");
-        url_maps.put("测试03", "http://192.168.1.114:8080/xinwen/img/item03.jpg");
-        url_maps.put("测试04", "http://192.168.1.114:8080/xinwen/img/item04.jpg");
-        url_maps.put("小学足球联赛开幕 OMG 1:0 VG", "http://192.168.1.114:8080/xinwen/img/item05.jpg");*/
 
+        sliderLayout = (SliderLayout) view.findViewById(R.id.module01_list_item01_slider);
         sliderLayout.setPresetTransformer(SliderLayout.Transformer.Default);
         sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
         sliderLayout.setCustomAnimation(new DescriptionAnimation());

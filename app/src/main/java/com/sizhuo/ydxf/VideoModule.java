@@ -18,7 +18,6 @@ import com.sizhuo.ydxf.view.VRefresh;
  */
 public class VideoModule extends AppCompatActivity{
     private Toolbar toolbar;
-    private VRefresh vRefresh;//下拉刷新
     private ListView listView;//下拉刷新
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +27,6 @@ public class VideoModule extends AppCompatActivity{
         toolbar = (Toolbar) findViewById(R.id.videomodule_toolbar);
         toolbar.setTitle("党建电视节目");
         setSupportActionBar(toolbar);
-        vRefresh = (VRefresh) findViewById(R.id.videomodule_vrefresh);
         listView = (ListView) findViewById(R.id.videomodule_list);
 
     }

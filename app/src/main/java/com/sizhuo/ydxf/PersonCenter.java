@@ -175,18 +175,26 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
             switch (posi){
                 case 0:
                     Intent intent1 = new Intent(PersonCenter.this, MyCollection.class);
+                    intent1.putExtra("userName",user.getUserName());
+                    intent1.putExtra("userPwd",user.getUserPwd());
                     startActivity(intent1);
                     break;
                 case 1:
                     Intent intent2 = new Intent(PersonCenter.this, MyComment.class);
+                    intent2.putExtra("userName",user.getUserName());
+                    intent2.putExtra("userPwd",user.getUserPwd());
                     startActivity(intent2);
                     break;
                 case 2:
                     Intent intent3 = new Intent(PersonCenter.this, MyPost.class);
+                    intent3.putExtra("userName",user.getUserName());
+                    intent3.putExtra("userPwd",user.getUserPwd());
                     startActivity(intent3);
                     break;
                 case 3:
                     Intent intent4= new Intent(PersonCenter.this, MyNews.class);
+                    intent4.putExtra("userName",user.getUserName());
+                    intent4.putExtra("userPwd",user.getUserPwd());
                     startActivity(intent4);
                     break;
             }
