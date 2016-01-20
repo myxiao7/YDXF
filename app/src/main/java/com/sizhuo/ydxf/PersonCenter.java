@@ -64,6 +64,12 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
         toolbar = (Toolbar) findViewById(R.id.personcenter_toolbar);
         toolbar.setTitle("个人中心");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PersonCenter.this.finish();
+            }
+        });
         topDefBtn = (RelativeLayout) findViewById(R.id.personcenter_def_top_re);
         topBtn = (RelativeLayout) findViewById(R.id.personcenter_top_re);
         menuBtn01 = (RelativeLayout) findViewById(R.id.personcenter_menu01_re);

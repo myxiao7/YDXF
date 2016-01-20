@@ -64,6 +64,12 @@ public class Setting extends AppCompatActivity implements View.OnClickListener {
         toolbar = (Toolbar) findViewById(R.id.setting_toolbar);
         toolbar.setTitle("设置");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Setting.this.finish();
+            }
+        });
         LoginBtn = (RelativeLayout) findViewById(R.id.setting_info_def_re);
         infoBtn = (RelativeLayout) findViewById(R.id.setting_info_re);
         icon = (CircleImageView) findViewById(R.id.setting_info_icon_img);

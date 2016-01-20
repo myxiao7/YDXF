@@ -74,6 +74,7 @@ public class BindUser extends AppCompatActivity implements View.OnClickListener 
         setContentView(R.layout.activity_binduser);
         //初始化控件
         initViews();
+
         queue = Volley.newRequestQueue(this);
         dbManager = new MyApplication().getDbManager();
 
@@ -90,6 +91,12 @@ public class BindUser extends AppCompatActivity implements View.OnClickListener 
         toolBar = (Toolbar) findViewById(R.id.bind_toolbar);
         toolBar.setTitle("绑定");
         setSupportActionBar(toolBar);
+        toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BindUser.this.finish();
+            }
+        });
         nameLayout = (TextInputLayout) findViewById(R.id.bind_textinput_name);
         pwdLayout = (TextInputLayout) findViewById(R.id.bind_textinput_pwd);
         nameEdit = (EditText) findViewById(R.id.bind_name_txt);

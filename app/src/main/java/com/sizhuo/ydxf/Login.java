@@ -110,6 +110,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         toolBar = (Toolbar) findViewById(R.id.login_toolbar);
         toolBar.setTitle("登录");
         setSupportActionBar(toolBar);
+        toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Login.this.finish();
+            }
+        });
         nameLayout = (TextInputLayout) findViewById(R.id.login_textinput_name);
         pwdLayout = (TextInputLayout) findViewById(R.id.login_textinput_pwd);
         nameEdit = (EditText) findViewById(R.id.login_name_txt);
