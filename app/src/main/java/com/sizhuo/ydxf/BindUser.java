@@ -2,10 +2,14 @@ package com.sizhuo.ydxf;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,6 +56,8 @@ public class BindUser extends AppCompatActivity implements View.OnClickListener 
     private String sex, openid, nick, icon, shareType;//快捷登录用户信息
     private Button bindBtn;//绑定按钮
 
+    private static final int REGISTER_REQUESTCODE = 0X201;
+
     //网络请求相关
     private RequestQueue queue;
     private JsonObjectRequest jsonObjectRequest;
@@ -60,7 +66,7 @@ public class BindUser extends AppCompatActivity implements View.OnClickListener 
     private DbManager dbManager;
 //    private DbManager.DaoConfig daoConfig;
 
-    ZProgressHUD progressHUD;
+    private ZProgressHUD progressHUD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +76,7 @@ public class BindUser extends AppCompatActivity implements View.OnClickListener 
         initViews();
         queue = Volley.newRequestQueue(this);
         dbManager = new MyApplication().getDbManager();
-        progressHUD = ZProgressHUD.getInstance(this);
-        progressHUD.setSpinnerType(ZProgressHUD.SIMPLE_ROUND_SPINNER);
+
         initEvents();
 
     }
@@ -108,7 +113,10 @@ public class BindUser extends AppCompatActivity implements View.OnClickListener 
             case R.id.bind_bind_btn:
                 nameStr = nameEdit.getText().toString();
                 pwdStr = pwdEdit.getText().toString();
-                bind(nameStr,pwdStr,shareType,openid,icon,nick,sex);
+                progressHUD = ZProgressHUD.getInstance(this);
+                progressHUD.setSpinnerType(ZProgressHUD.SIMPLE_ROUND_SPINNER);
+                progressHUD.show();
+                bind(nameStr, pwdStr, shareType, openid, icon, nick, sex);
                 break;
         }
     }
@@ -130,7 +138,7 @@ public class BindUser extends AppCompatActivity implements View.OnClickListener 
         map.put("nickName",nickName);
         map.put("sex",sex);
         map.put("portrait",portrait);
-        map.put(type,openId);
+        map.put(type, openId);
 
         JSONObject jsonObject = new JSONObject(map);
         Log.d("log.d", "jsonObject" + jsonObject.toString());
@@ -146,14 +154,16 @@ public class BindUser extends AppCompatActivity implements View.OnClickListener 
                         dbManager.delete(User.class);
                         //保存用户信息
                         User user = JSON.parseObject(jsonObject.getString("data").toString(), User.class);
-                        user.setUserPwd(userPwd);
+                        Log.d("log.d","11111111111111111"+jsonObject.getString("data").toString());
                         dbManager.save(user);
                         Toast.makeText(BindUser.this, "suessful", Toast.LENGTH_SHORT).show();
                         progressHUD.dismissWithSuccess("绑定成功");
                         BindUser.this.finish();
-                    }else{
+                    }else if(code.equals("400")){
                         Toast.makeText(BindUser.this, "failt", Toast.LENGTH_SHORT).show();
-                        progressHUD.dismissWithSuccess("绑定失败");
+                        progressHUD.dismissWithFailure("绑定失败,用户名密码不匹配");
+                    }else{
+                        progressHUD.dismissWithFailure("绑定失败,网络异常");
                     }
                 } catch (DbException e) {
                     e.printStackTrace();
@@ -165,6 +175,7 @@ public class BindUser extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 Log.d("log.d",volleyError.toString());
+                progressHUD.dismissWithFailure("绑定失败,网络错误");
             }
         }){
             @Override
@@ -174,10 +185,42 @@ public class BindUser extends AppCompatActivity implements View.OnClickListener 
                 return headers;
             }
         };
-        queue.add(jsonObjectRequest);
-        jsonObjectRequest.setTag(REQUEST_TAB);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                queue.add(jsonObjectRequest);
+                jsonObjectRequest.setTag(REQUEST_TAB);
+            }
+        }, 1000);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REGISTER_REQUESTCODE&& resultCode == RESULT_OK){
+            nameEdit.setText(data.getStringExtra("regiName"));
+            pwdEdit.setText(data.getStringExtra("regiPwd"));
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.login_menu, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.login_menu_item01:
+                Intent intent = new Intent(BindUser.this, Register.class);
+                startActivityForResult(intent, REGISTER_REQUESTCODE);
+                break;
+        }
+        return true;
+    }
     @Override
     protected void onPause() {
         super.onPause();

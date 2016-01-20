@@ -13,6 +13,8 @@ import java.util.List;
  */
 public class _NewsData implements Serializable{
     private static final long serialVersionUID = -228286441826334138L;
+
+
     /**
      * 标题
      */

@@ -81,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:text="My灬xiao7"
+                android:text="用户12312313213"
                 android:textSize="20sp"
                 android:textColor="@color/colorWhite"
                 />

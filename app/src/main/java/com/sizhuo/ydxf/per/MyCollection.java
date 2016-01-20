@@ -80,20 +80,27 @@ public class MyCollection extends AppCompatActivity{
                 MyCollection.this.startActivity(intent);
             }
         });
+        //加载数据
+        loadData();
+    }
+
+    private void loadData() {
         Map<String, String> map = new HashMap<>();
         map.put("userName",userName);
         map.put("userPwd",userPwd);
         map.put("index","1");
         JSONObject object = new JSONObject(map);
+        Log.d("log.d", object.toString());
         jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.MYCOLLECTION, object, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                Log.d("我的", "收藏"+jsonObject.toString()+"");
+                Log.d("log.d", "收藏"+jsonObject.toString()+"");
                 try {
                     //获取服务器code
                     int code = jsonObject.getInt("code");
                     if(code == 200){
-
+                        list = JSON.parseArray(jsonObject.getString("data"), _NewsData.class);
+                        adapter.notifyDataSetChanged(list);
                     }else{
 
                     }
@@ -116,6 +123,12 @@ public class MyCollection extends AppCompatActivity{
         toolbar = (Toolbar) findViewById(R.id.mycollection_toolbar);
         toolbar.setTitle("新闻收藏");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyCollection.this.finish();
+            }
+        });
         listView = (ZrcListView) findViewById(R.id.mycollection_list);
         Intent intent = this.getIntent();
         userName = intent.getStringExtra("userName");
@@ -233,5 +246,15 @@ public class MyCollection extends AppCompatActivity{
             public TextView replyCountTv;
             public TextView delBtn;
         }
+
+        public void notifyDataSetChanged(List<_NewsData> list) {
+            this.list = list;
+            notifyDataSetChanged();
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        queue.cancelAll(TAG01);
     }
 }

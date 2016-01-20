@@ -120,6 +120,7 @@ public class Setting extends AppCompatActivity implements View.OnClickListener {
             case R.id.setting_logout_btn:
                 try {
                     if(user!=null){
+                        //清空用户信息和本地收藏
                         dbManager.delete(User.class);
                         Intent data = new Intent();
                         data.putExtra("loginFlag",false);

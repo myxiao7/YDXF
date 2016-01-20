@@ -168,7 +168,12 @@
             android:configChanges="keyboardHidden|orientation"
             android:windowSoftInputMode="adjustResize"
             android:exported="false" >
+            <service
+                android:name="com.sina.weibo.sdk.net.DownloadService"
+                android:exported="false">
+            </service>
         </activity>
+
         <!--人人-->
         <activity
             android:name="com.renn.rennsdk.oauth.OAuthActivity"

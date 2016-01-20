@@ -1,8 +1,10 @@
 package com.sizhuo.ydxf;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,7 +27,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.util.StatusBar;
+import com.sizhuo.ydxf.view.ZProgressHUD;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -51,6 +55,8 @@ public class Register extends AppCompatActivity {
     private RequestQueue queue;
     private JsonObjectRequest jsonObjectRequest;
     private final String REQUEST_TAB = "REGISTER_REQUEST";
+    private ProgressDialog dialog;
+    private ZProgressHUD progressHUD;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,13 +64,14 @@ public class Register extends AppCompatActivity {
         //初始化控件
         initViews();
         queue = Volley.newRequestQueue(this);
-        //创建电话管理
+     /*   //创建电话管理
 
        TelephonyManager tm = (TelephonyManager) this
                .getSystemService(Context.TELEPHONY_SERVICE);
         //获取手机号码
         phoneId = tm.getLine1Number();
-        Log.d("log.d", "num" + phoneId);
+        Log.d("log.d", "num" + phoneId);*/
+
         //输入验证
         inputValidate();
         registerBtn.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +112,9 @@ public class Register extends AppCompatActivity {
                 } else {
                     pwdLayout2.setErrorEnabled(false);
                 }
-                Toast.makeText(Register.this, "正在注册", Toast.LENGTH_SHORT).show();
+                progressHUD = new ZProgressHUD(Register.this);
+                progressHUD.setSpinnerType(ZProgressHUD.SIMPLE_ROUND_SPINNER);
+                progressHUD.show();
                 //注册
                 register(nameStr, pwdStr2);
             }
@@ -211,17 +220,34 @@ public class Register extends AppCompatActivity {
         jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.REGISTER, jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                Log.d("log.d","result------"+jsonObject.toString());
-                Intent intent = new Intent();
-                intent.putExtra("regiName",userName);
-                intent.putExtra("regiPwd",userPwd);
-                setResult(RESULT_OK, intent);
-                Register.this.finish();
+                Log.d("log.d", "result------" + jsonObject.toString());
+                try {
+                    int code = jsonObject.getInt("code");
+                    if(code==200) {
+                        Intent intent = new Intent();
+                        intent.putExtra("regiName",userName);
+                        intent.putExtra("regiPwd", userPwd);
+                        setResult(RESULT_OK, intent);
+                        Register.this.finish();
+//                        Toast.makeText(Register.this,"注册成功",Toast.LENGTH_SHORT).show();
+                        progressHUD.dismissWithSuccess("注册成功");
+                    }else if(code == 400){
+//                        Toast.makeText(Register.this,"用户名重复",Toast.LENGTH_SHORT).show();
+                        progressHUD.dismissWithFailure("用户名重复");
+                    }else{
+//                        Toast.makeText(Register.this,"服务器异常",Toast.LENGTH_SHORT).show();
+                        progressHUD.dismissWithFailure("服务器异常");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Log.d("log.d",volleyError.toString());
+                Log.d("log.d", volleyError.toString());
+                Toast.makeText(Register.this,"网络服务器异常",Toast.LENGTH_SHORT).show();
+                progressHUD.dismissWithFailure("网络服务器异常");
             }
         }){
             @Override
@@ -231,10 +257,22 @@ public class Register extends AppCompatActivity {
                 return headers;
             }
         };
-        queue.add(jsonObjectRequest);
-        jsonObjectRequest.setTag(REQUEST_TAB);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                queue.add(jsonObjectRequest);
+                jsonObjectRequest.setTag(REQUEST_TAB);
+            }
+        },1000);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(progressHUD!=null){
+            progressHUD.dismiss();
+        }
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

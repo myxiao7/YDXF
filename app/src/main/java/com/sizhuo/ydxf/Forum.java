@@ -129,6 +129,12 @@ public class Forum extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.forum_toolbar);
         toolbar.setTitle("论坛");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Forum.this.finish();
+            }
+        });
         listView = (ZrcListView)findViewById(R.id.forum_listview);
         initListView();
     }

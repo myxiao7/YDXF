@@ -32,19 +32,21 @@ import com.android.volley.toolbox.Volley;
 import com.sizhuo.ydxf.application.MyApplication;
 import com.sizhuo.ydxf.entity._NewsData;
 import com.sizhuo.ydxf.entity._ReplyData;
+import com.sizhuo.ydxf.entity.db.News;
 import com.sizhuo.ydxf.entity.db.User;
 import com.sizhuo.ydxf.util.Const;
-import com.sizhuo.ydxf.util.ImageLoaderHelper;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.DbManager;
+import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.ex.DbException;
 
 import java.io.Serializable;
@@ -74,6 +76,8 @@ public class NewsDetails extends AppCompatActivity{
     private DbManager dbManager;//数据库操作
     private User user;
     private Boolean loginFlag = false;
+    private News cruNews;
+    private Boolean loveFlag = false;
 
     //网络相关
     private RequestQueue queue;
@@ -101,6 +105,22 @@ public class NewsDetails extends AppCompatActivity{
         try {
             user = dbManager.findFirst(User.class);
             if(user!=null){
+                //查找当前用户 当前新闻 是否被收藏
+                cruNews = dbManager.selector(News.class).where("username","=",user.getUserName()).and("docid","=",newsData.getDocid()).findFirst();
+                if(cruNews!=null){
+                    loveFlag = true;
+                    Log.d("log.d","已收藏");
+                }else{
+                    loveFlag = false;
+                    cruNews = new News();
+                    cruNews.setUsername(user.getUserName());
+                    cruNews.setDocid(newsData.getDocid());
+                    cruNews.setTitle(newsData.getTitle());
+                    cruNews.setUrl(newsData.getUrl());
+                    cruNews.setPtime(newsData.getPtime());
+                    cruNews.setReply(newsData.getReply());
+                    Log.d("log.d","未收藏");
+                }
                 loginFlag = true;
                 Toast.makeText(NewsDetails.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
             }else{
@@ -127,7 +147,6 @@ public class NewsDetails extends AppCompatActivity{
         webView.setWebChromeClient(new WebChromeClient());
         webView.loadUrl(newsData.getUrl());
 
-        loadData();
 
         replyEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -266,28 +285,27 @@ public class NewsDetails extends AppCompatActivity{
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            Toast.makeText(NewsDetails.this, platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
+            Toast.makeText(NewsDetails.this, platform + " 分享成功", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            Toast.makeText(NewsDetails.this,platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
+            Toast.makeText(NewsDetails.this,platform + " 分享失败", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(NewsDetails.this, platform +" 分享取消啦", Toast.LENGTH_SHORT).show();
+            Toast.makeText(NewsDetails.this, platform +" 分享取消", Toast.LENGTH_SHORT).show();
         }
     };
 
     private ShareBoardlistener shareBoardlistener = new ShareBoardlistener() {
-
         @Override
         public void onclick(SnsPlatform snsPlatform,SHARE_MEDIA share_media) {
             new ShareAction(NewsDetails.this).setPlatform(share_media).setCallback(umShareListener)
-                    .withText("业达先锋")
-                    .withTitle("为什么需要新闻许可证明")
-                    .withTargetUrl("http://www.baidu.com")
+                    .withText(newsData.getDigest()+" "+"https://www.baidu.com")
+                    .withTitle(newsData.getTitle())
+                    .withMedia(new UMImage(NewsDetails.this,"https://www.baidu.com/img/bd_logo1.png"))
                             .share();
         }
     };
@@ -328,19 +346,23 @@ public class NewsDetails extends AppCompatActivity{
         newsData = (_NewsData) intent.getSerializableExtra("data");
         //评价详情
         replyData = newsData.getReply();
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.news_menu, menu);
-        if(false){
+        if(loveFlag==true){
             menu.getItem(1).setTitle("已收藏");
             menu.getItem(1).setIcon(R.mipmap.ic_love_yet);
+            Toast.makeText(NewsDetails.this, "已收藏", Toast.LENGTH_SHORT).show();
         }else{
             menu.getItem(1).setTitle("未收藏");
             menu.getItem(1).setIcon(R.mipmap.ic_love_not);
+            Toast.makeText(NewsDetails.this, "未收藏", Toast.LENGTH_SHORT).show();
         }
+        Log.d("log.d","menu..........");
         return true;
     }
 
@@ -349,44 +371,10 @@ public class NewsDetails extends AppCompatActivity{
         switch (item.getItemId()) {
             case R.id.news_menu_like:
                 if(loginFlag==true){
-                    if(item.getTitle().equals("未收藏")){
-                        Map<String, String> map = new HashMap<String, String>();
-                        map.put("userName", user.getUserName());
-                        map.put("userPwd", user.getUserPwd());
-                        map.put("news", newsData.getDocid());
-                        JSONObject jsonObject = new JSONObject(map);
-                        Log.d("xinwen", jsonObject.toString());
-                        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.NEWSLOVE, jsonObject, new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject jsonObject) {
-                                Log.d("xinwen", jsonObject.toString());
-                                try {
-                                    //获取服务器code
-                                    int code = jsonObject.getInt("code");
-                                    if (code == 200) {
-                                        item.setIcon(R.mipmap.ic_love_yet);
-                                        item.setTitle("已收藏");
-                                        Toast.makeText(NewsDetails.this, "已收藏", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(NewsDetails.this, "失败，可能是人品问题", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-//                Log.d("xinwen", volleyError.getMessage());
-                            }
-                        });
-                        jsonObjectRequest.setTag(TAG01);
-                        queue.add(jsonObjectRequest);
+                    if(loveFlag==false){
+                        insertLove(item,"yet", "收藏成功");
                     }else{
-                        item.setIcon(R.mipmap.ic_love_not);
-                        item.setTitle("未收藏");
-                        Toast.makeText(NewsDetails.this,"收藏取消",Toast.LENGTH_SHORT).show();
+                        insertLove(item,"not", "取消收藏");
                     }
                 }else{
                     Intent intent = new Intent(NewsDetails.this, Login.class);
@@ -407,6 +395,57 @@ public class NewsDetails extends AppCompatActivity{
                 break;
         }
         return true;
+    }
+
+    private void insertLove(final MenuItem item, final String flag, final String str) {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("userName", user.getUserName());
+        map.put("userPwd", user.getUserPwd());
+        map.put("news", newsData.getDocid());
+        map.put("flag", flag);
+        JSONObject jsonObject = new JSONObject(map);
+        Log.d("xinwen", jsonObject.toString());
+        jsonObjectRequest3 = new JsonObjectRequest(Request.Method.POST, Const.NEWSLOVE, jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Log.d("xinwen", jsonObject.toString());
+                try {
+                    //获取服务器code
+                    int code = jsonObject.getInt("code");
+                    if (code == 200) {
+                        if(flag.equals("yet")){
+                            item.setIcon(R.mipmap.ic_love_yet);
+                            item.setTitle("已收藏");
+                            loveFlag = true;
+                            Log.d("log.d", "---------------"+cruNews.getDocid());
+                            dbManager.save(cruNews);
+                            Log.d("log.d", "DB+保存收藏新闻到本地");
+                        }else if(flag.equals("not")){
+                            dbManager.delete(News.class, WhereBuilder.b("username","=",user.getUserName()).and("docid","=",newsData.getDocid()));
+                            item.setIcon(R.mipmap.ic_love_not);
+                            item.setTitle("未收藏");
+                            loveFlag = false;
+                            Log.d("log.d", "DB+删除收藏新闻在本地");
+                        }
+                        Toast.makeText(NewsDetails.this, flag+"同步结果："+str, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(NewsDetails.this, "失败，可能是人品问题", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+//                Log.d("xinwen", volleyError.getMessage());
+            }
+        });
+        jsonObjectRequest3.setTag(TAG03);
+        queue.add(jsonObjectRequest3);
     }
 
     @Override

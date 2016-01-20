@@ -1,7 +1,9 @@
 package com.sizhuo.ydxf;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -80,8 +82,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private DbManager dbManager;
 //    private DbManager.DaoConfig daoConfig;
 
-    ZProgressHUD progressHUD;
+    private ZProgressHUD progressHUD;
 
+    private ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,8 +93,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         initViews();
         queue = Volley.newRequestQueue(this);
         dbManager = new MyApplication().getDbManager();
-        progressHUD = new ZProgressHUD(this);
-        progressHUD.setSpinnerType(ZProgressHUD.SIMPLE_ROUND_SPINNER  );
+
         initEvents();
 
     }
@@ -119,11 +121,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         weiboBtn = (ImageView) findViewById(R.id.login_weibo_btn);
 
         mShareAPI = UMShareAPI.get(this);
-
     }
 
     public void initAuth(SHARE_MEDIA platforms) {
-
         SHARE_MEDIA platform = platforms;
         mShareAPI.doOauthVerify(this, platform, new UMAuthListener() {
             @Override
@@ -131,11 +131,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 mShareAPI.getPlatformInfo(Login.this, platform, new UMAuthListener() {
                     @Override
                     public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> data) {
-
                         if (data != null) {
 //                    Toast.makeText(getApplicationContext(), data.toString(), Toast.LENGTH_SHORT).show();
                             Log.d("sso", "getPlatformInfo----------" + data.toString());
-
                             if (SHARE_MEDIA.QQ.equals(share_media)) {
                                 shareType = "qqOpenid";
                             } else if (SHARE_MEDIA.WEIXIN.equals(share_media)) {
@@ -149,16 +147,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             }
                             //QQ,WEINXIN,SINA
                             Log.d("sso", "share_media" + icon);
-                            Toast.makeText(getApplicationContext(), "授权成功，正在登陆" + shareType + openid, Toast.LENGTH_SHORT).show();
                             if (!TextUtils.isEmpty(openid)) {
-                                progressHUD.show();
 //                    Toast.makeText(getApplicationContext(), "授权成功，正在登陆"+shareType+openid, Toast.LENGTH_SHORT).show();
-                                new Timer().schedule(new TimerTask() {
-                                    @Override
-                                    public void run() {
-                                        fastLogin(shareType, openid);
-                                    }
-                                }, 1200);
+                                dialog = ProgressDialog.show(Login.this,
+                                        null, "请稍后...", true, true);
+                                fastLogin(shareType, openid);
                             }
                         }
                     }
@@ -166,28 +159,28 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     @Override
                     public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
                         Toast.makeText(getApplicationContext(), "get fail", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
 
                     @Override
                     public void onCancel(SHARE_MEDIA share_media, int i) {
                         Toast.makeText(getApplicationContext(), "get cancel", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
                 });
                 Log.d("sso", "doOauthVerify----------" + data.toString());
-
-
             }
 
             @Override
             public void onError(SHARE_MEDIA platform, int action, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Authorize fail", Toast.LENGTH_SHORT).show();
-                progressHUD.dismiss();
+                dialog.dismiss();
             }
 
             @Override
             public void onCancel(SHARE_MEDIA platform, int action) {
                 Toast.makeText(getApplicationContext(), "Authorize cancel", Toast.LENGTH_SHORT).show();
-                progressHUD.dismiss();
+                dialog.dismiss();
             }
         });
 
@@ -229,23 +222,36 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             case R.id.login_login_btn:
                 nameStr = nameEdit.getText().toString();
                 pwdStr = pwdEdit.getText().toString();
-                login(nameStr, pwdStr);
+                if(TextUtils.isEmpty(nameStr)){
+                    Toast.makeText(Login.this,"请填写用户名",Toast.LENGTH_SHORT).show();
+                   return;
+                }
+                if(TextUtils.isEmpty(nameStr)){
+                    Toast.makeText(Login.this,"请填写密码",Toast.LENGTH_SHORT).show();
+                   return;
+                }
+                progressHUD = ZProgressHUD.getInstance(this);
+                progressHUD.setSpinnerType(ZProgressHUD.SIMPLE_ROUND_SPINNER);
                 progressHUD.show();
+                login(nameStr, pwdStr);
                 break;
             case R.id.login_wechat_btn:
-                Toast.makeText(Login.this,"微信",Toast.LENGTH_SHORT).show();
                 //授权
                 initAuth(SHARE_MEDIA.WEIXIN);
+                Toast.makeText(Login.this,"微信",Toast.LENGTH_SHORT).show();
+                dialog = ProgressDialog.show(Login.this,
+                        null, "请稍后...", true, true);
+                dialog.show();
                 break;
             case R.id.login_qq_btn:
                 Toast.makeText(Login.this,"QQ",Toast.LENGTH_SHORT).show();
                 //授权
-                initAuth(SHARE_MEDIA.QQ);
+//                initAuth(SHARE_MEDIA.QQ);
                 break;
             case R.id.login_weibo_btn:
                 Toast.makeText(Login.this,"微博",Toast.LENGTH_SHORT).show();
                 //授权
-                initAuth(SHARE_MEDIA.SINA);
+//                initAuth(SHARE_MEDIA.SINA);
                 break;
         }
     }
@@ -282,7 +288,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         Toast.makeText(Login.this, "请先绑定账户", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Login.this, BindUser.class);
                         Bundle bundle = new Bundle();
-
                         bundle.putString("type",shareType);
                         bundle.putString("openid",openid);
                         bundle.putString("icon",icon);
@@ -291,6 +296,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
+                    dialog.dismiss();
                     Login.this.finish();
                 } catch (DbException e) {
                     e.printStackTrace();
@@ -302,6 +308,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 Log.d("log.d",volleyError.toString());
+                Toast.makeText(Login.this, "网络异常", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
             }
         }){
             @Override
@@ -311,8 +319,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 return headers;
             }
         };
-        queue.add(jsonObjectRequest);
-        jsonObjectRequest.setTag(REQUEST_TAB);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                queue.add(jsonObjectRequest);
+                jsonObjectRequest.setTag(REQUEST_TAB);
+            }
+        }, 1000);
     }
 
     private void login(final String userName,final String userPwd) {
@@ -336,14 +349,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             dbManager.delete(User.class);
                             //保存用户信息
                             User user = JSON.parseObject(jsonObject.getString("data").toString(),User.class);
-                            user.setUserPwd(userPwd);
                             dbManager.save(user);
                             Toast.makeText(Login.this, "suessful", Toast.LENGTH_SHORT).show();
                             progressHUD.dismissWithSuccess("登录成功");
                             Login.this.finish();
                         }else{
                             Toast.makeText(Login.this, "failt", Toast.LENGTH_SHORT).show();
-                            progressHUD.dismissWithSuccess("登录失败");
+                            progressHUD.dismissWithFailure("登录失败");
                         }
                     } catch (DbException e) {
                         e.printStackTrace();
@@ -364,8 +376,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 return headers;
             }
         };
-        queue.add(jsonObjectRequest);
-        jsonObjectRequest.setTag(REQUEST_TAB);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                queue.add(jsonObjectRequest);
+                jsonObjectRequest.setTag(REQUEST_TAB);
+            }
+        }, 1000);
     }
 
     @Override
@@ -373,6 +390,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         super.onPause();
         if(progressHUD!=null){
             progressHUD.dismiss();
+        }
+        if(dialog!=null){
+            dialog.dismiss();
         }
     }
 
