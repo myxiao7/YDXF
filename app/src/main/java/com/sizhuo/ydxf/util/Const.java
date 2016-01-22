@@ -39,6 +39,10 @@ public class Const {
      */
     public static final String MFORUM = URL2+"selectCard/1/";
     /**
+     * 发帖
+     */
+    public static final String PUBLISH = URL2+"insertCard";
+    /**
      * 获取新闻评价
      */
     public static final String SELNEWSCOMMENT = URL2+"selectNewsComment/";

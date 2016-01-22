@@ -220,6 +220,10 @@ public class MyForumAdapter extends BaseAdapter{
                //单图
                return TYPE_ONE;
            }
+           if(list.get(position).getImgextra().size()==2){
+               //2图
+               return TYPE_ONE;
+           }
             if(list.get(position).getImgextra().size()==3){
                 //多图
                 return TYPE_TWO;

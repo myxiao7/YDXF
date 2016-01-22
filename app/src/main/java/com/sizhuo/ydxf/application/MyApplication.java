@@ -63,7 +63,7 @@ public class MyApplication extends Application{
                 .setEnableRotate(true)
                 .setCropSquare(true)
                 .setEnablePreview(true)
-                .setMutiSelectMaxSize(9)
+                .setMutiSelectMaxSize(3)
         .build();
         //配置imageloader
         UILImageLoader imageloader = new UILImageLoader();

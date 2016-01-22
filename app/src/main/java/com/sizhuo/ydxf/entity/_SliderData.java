@@ -13,6 +13,10 @@ public class _SliderData {
      * 轮播标题
      */
     private String title;
+    /**
+     * 轮播简介
+     */
+    private String digest;
      /**
      * 轮播缩略图
      */
@@ -56,6 +60,14 @@ public class _SliderData {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getDigest() {
+        return digest;
+    }
+
+    public void setDigest(String digest) {
+        this.digest = digest;
     }
 
     public _SliderData(String title, String imgsrc, String docid, String url) {

@@ -264,6 +264,15 @@ public class PostDetails extends AppCompatActivity{
                 img02.setVisibility(View.GONE);
                 img03.setVisibility(View.GONE);
             }
+            if(postDetailData.getImgextra().size()==2){
+                if(!TextUtils.isEmpty(postDetailData.getImgextra().get(0).getUrl())){
+                    ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgextra().get(0).getUrl(), img01);
+                }
+                if(!TextUtils.isEmpty(postDetailData.getImgextra().get(1).getUrl())){
+                    ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgextra().get(1).getUrl(), img02);
+                }
+                img03.setVisibility(View.GONE);
+            }
             if(postDetailData.getImgextra().size()==3){
                 if(!TextUtils.isEmpty(postDetailData.getImgextra().get(0).getUrl())){
                     ImageLoaderHelper.getIstance().loadImg(postDetailData.getImgextra().get(0).getUrl(), img01);

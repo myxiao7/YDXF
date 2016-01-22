@@ -172,44 +172,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     .setOnSliderClickListener(MainActivity.this);
 
                             //add your extra information`
+                            _NewsData slidNews = new _NewsData();
+                            slidNews.setDocid(sliderDatas.get(i).getDocid());
+                            slidNews.setDigest(sliderDatas.get(i).getDigest());
+                            slidNews.setUrl(sliderDatas.get(i).getUrl());
                             textSliderView.bundle(new Bundle());
                             textSliderView.getBundle()
-                                    .putString("extra", sliderDatas.get(i).getUrl());
+                                    .putSerializable("extra", slidNews);
 
                             mSlider.addSlider(textSliderView);
                         }
 
                         if(newsList.get(0)!=null){
-                            if(TextUtils.isEmpty(newsList.get(0).getImgsrc())){
+                            if(!TextUtils.isEmpty(newsList.get(0).getImgsrc())){
                                 ImageLoaderHelper.getIstance().loadImg(newsList.get(0).getImgsrc(),imageView01);
                             }
                             titleTv01.setText(newsList.get(0).getTitle());
                             conTv01.setText(newsList.get(0).getDigest());
                             dataTv01.setText(newsList.get(0).getPtime());
+                            itemLin01.setOnClickListener(MainActivity.this);
                         }
                         if(newsList.get(1)!=null){
-                            if(TextUtils.isEmpty(newsList.get(1).getImgsrc())){
+                            if(!TextUtils.isEmpty(newsList.get(1).getImgsrc())){
                                 ImageLoaderHelper.getIstance().loadImg(newsList.get(1).getImgsrc(),imageView02);
                             }
                             titleTv02.setText(newsList.get(1).getTitle());
                             conTv02.setText(newsList.get(1).getDigest());
                             dataTv02.setText(newsList.get(1).getPtime());
+                            itemLin02.setOnClickListener(MainActivity.this);
                         }
                         if(forumList.get(0)!=null){
-                            if(TextUtils.isEmpty(forumList.get(0).getImgsrc())){
+                            if(!TextUtils.isEmpty(forumList.get(0).getImgsrc())){
                                 ImageLoaderHelper.getIstance().loadImg(forumList.get(0).getImgsrc(),imageView03);
                             }
                             titleTv03.setText(forumList.get(0).getTitle());
                             conTv03.setText(forumList.get(0).getDigest());
                             dataTv03.setText(forumList.get(0).getPtime());
+                            itemLin03.setOnClickListener(MainActivity.this);
                         }
                         if(forumList.get(1)!=null){
-                            if(TextUtils.isEmpty(forumList.get(1).getImgsrc())){
+                            if(!TextUtils.isEmpty(forumList.get(1).getImgsrc())){
                                 ImageLoaderHelper.getIstance().loadImg(forumList.get(1).getImgsrc(),imageView04);
                             }
                             titleTv04.setText(forumList.get(1).getTitle());
                             conTv04.setText(forumList.get(1).getDigest());
                             dataTv04.setText(forumList.get(1).getPtime());
+                            itemLin04.setOnClickListener(MainActivity.this);
                         }
 
                         myBottomGridAdapter.notifyDataSetChanged(gridList);
@@ -281,9 +289,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         conTv04 = (TextView) findViewById(R.id.main_list_item01_04_des_tv);
         dataTv04 = (TextView) findViewById(R.id.main_list_item01_04_date_tv);
 
-        menuLin01 = (LinearLayout) findViewById(R.id.main_list_item02_menu04_lin);
-        menuLin02 = (LinearLayout) findViewById(R.id.main_list_item02_menu04_lin);
-        menuLin03 = (LinearLayout) findViewById(R.id.main_list_item02_menu04_lin);
+        menuLin01 = (LinearLayout) findViewById(R.id.main_list_item02_menu01_lin);
+        menuLin02 = (LinearLayout) findViewById(R.id.main_list_item02_menu02_lin);
+        menuLin03 = (LinearLayout) findViewById(R.id.main_list_item02_menu03_lin);
         menuLin04 = (LinearLayout) findViewById(R.id.main_list_item02_menu04_lin);
 
         mapBtn = (ImageView) findViewById(R.id.main_list_item03_img);
@@ -299,13 +307,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initEvents() {
         itemReMore01.setOnClickListener(this);
-        itemLin01.setOnClickListener(this);
+//        itemLin01.setOnClickListener(this);
         itemReMore02.setOnClickListener(this);
-        itemLin02.setOnClickListener(this);
+//        itemLin02.setOnClickListener(this);
         itemReMore03.setOnClickListener(this);
-        itemLin03.setOnClickListener(this);
+//        itemLin03.setOnClickListener(this);
         itemReMore04.setOnClickListener(this);
-        itemLin04.setOnClickListener(this);
+//        itemLin04.setOnClickListener(this);
 
         menuLin01.setOnClickListener(this);
         menuLin02.setOnClickListener(this);
@@ -359,15 +367,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
              case R.id.main_list_item02_menu01_lin:
-                Intent intent5 = new Intent(MainActivity.this, VideoModule.class);
+                Intent intent5 = new Intent(MainActivity.this, Module01.class);
                 startActivity(intent5);
                 break;
              case R.id.main_list_item02_menu02_lin:
-                Intent intent6 = new Intent(MainActivity.this, VideoModule.class);
+                Intent intent6 = new Intent(MainActivity.this, Module01.class);
                 startActivity(intent6);
                 break;
              case R.id.main_list_item02_menu03_lin:
-                Intent intent7 = new Intent(MainActivity.this, VideoModule.class);
+                Intent intent7 = new Intent(MainActivity.this, Module01.class);
                 startActivity(intent7);
                 break;
              case R.id.main_list_item02_menu04_lin:
@@ -433,6 +441,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onSliderClick(BaseSliderView slider) {
-        Toast.makeText(this, slider.getBundle().get("extra") + "", Toast.LENGTH_SHORT).show();
+        //传递轮播数据
+        Intent intent12 = new Intent(MainActivity.this, NewsDetails.class);
+        intent12.putExtra("data", slider.getBundle().getSerializable("extra"));
+        startActivity(intent12);
     }
 }

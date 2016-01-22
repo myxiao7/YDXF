@@ -62,6 +62,7 @@ public class Forum extends AppCompatActivity {
     private DbManager dbManager;//数据库操作
     private User user;
     private Boolean loginFlag = false;
+    private int index = 1;
 
     @Override
     protected void onResume() {
@@ -137,6 +138,18 @@ public class Forum extends AppCompatActivity {
         });
         listView = (ZrcListView)findViewById(R.id.forum_listview);
         initListView();
+
+        // 加载更多事件回调（可选）
+        listView.setOnLoadMoreStartListener(new ZrcListView.OnStartListener() {
+            @Override
+            public void onStart() {
+               /* Message message = handler.obtainMessage();
+                message.what = LOADMORE_COMPLETE;
+                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新*/
+                index++;
+                loadMoreData(index);
+            }
+        });
     }
 
     /**
@@ -173,6 +186,45 @@ public class Forum extends AppCompatActivity {
         queue.add(jsonObjectRequest);
     }
 
+    /**
+     * 获取数据
+     */
+    private void loadMoreData(int index) {
+        jsonObjectRequest =  new JsonObjectRequest(Const.MFORUM + index, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Log.d("xinwen", jsonObject.toString());
+                try {
+                    //获取服务器code
+                    int code = jsonObject.getInt("code");
+                    if(code == 200){
+                        jsonObject.getString("data");
+                        list = JSON.parseArray(jsonObject.getString("data"), _PostDetailData.class);
+                        myForumAdapter.notifyDataSetChanged(list);
+                        listView.setLoadMoreSuccess();
+                    }else{
+                        listView.stopLoadMore();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+//                Log.d("xinwen", volleyError.getMessage());
+                listView.stopLoadMore();
+            }
+        });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                queue.add(jsonObjectRequest);
+                jsonObjectRequest.setTag(TAG01);
+            }
+        }, 1200);
+    }
     /**
      * 初始化listview的刷新样式
      */

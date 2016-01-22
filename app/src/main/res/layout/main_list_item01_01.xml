@@ -74,11 +74,11 @@
             >
             <ImageView
                 android:id="@+id/main_list_item01_01_img"
-                android:layout_width="125dp"
+                android:layout_width="100dp"
                 android:layout_height="85dp"
-                android:background="@mipmap/default_img"
                 android:clickable="false"
                 android:focusable="false"
+                android:scaleType="fitXY"
                 />
 
             <LinearLayout
@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:text="新闻标题"
                     android:textColor="@color/black"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     android:singleLine="true"
                     android:ellipsize="end"
                     />
@@ -117,6 +117,7 @@
                         android:textSize="16sp"
                         android:layout_gravity="bottom|right"
                         android:background="@color/colorWhite"
+                        android:visibility="gone"
                         />
                 </FrameLayout>
             </LinearLayout>

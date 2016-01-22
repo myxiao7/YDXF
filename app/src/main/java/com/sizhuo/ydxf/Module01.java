@@ -55,6 +55,7 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
     private MyModule01Adapter myModule01Adapter;
     private final int REFRESH_COMPLETE = 0X100;//刷新完成
     private final int LOADMORE_COMPLETE = 0X101;//加载完成
+    private int index = 1;
 
     private RequestQueue queue;
     private JsonObjectRequest jsonObjectRequest;
@@ -73,8 +74,8 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
             @Override
             public void onItemClick(ZrcListView parent, View view, int position, long id) {
                 Intent intent = new Intent(Module01.this, NewsDetails.class);
-                Toast.makeText(Module01.this,""+position+"----"+list.get(position-1).getDigest(), Toast.LENGTH_SHORT).show();
-                intent.putExtra("data",list.get(position-1));
+                Toast.makeText(Module01.this, "" + position + "----" + list.get(position - 1).getDigest(), Toast.LENGTH_SHORT).show();
+                intent.putExtra("data", list.get(position - 1));
                 startActivity(intent);
             }
         });
@@ -111,9 +112,14 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
                                     .setOnSliderClickListener(Module01.this);
 
                             //add your extra information`
+
+                            _NewsData slidNews = new _NewsData();
+                            slidNews.setDocid(sliderDatas.get(i).getDocid());
+                            slidNews.setDigest(sliderDatas.get(i).getDigest());
+                            slidNews.setUrl(sliderDatas.get(i).getUrl());
                             textSliderView.bundle(new Bundle());
                             textSliderView.getBundle()
-                                    .putString("extra", sliderDatas.get(i).getUrl());
+                                    .putSerializable("extra", slidNews);
 
                             sliderLayout.addSlider(textSliderView);
                         }
@@ -123,11 +129,12 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
                         Log.d("xinwen", list.get(3).getImgextra().toString()+"-----22222");
                         Log.d("xinwen", list.get(0).getTitle()+"------3333");*/
                         time02 = System.currentTimeMillis();
-                        Log.d("xinwen",time02-time+"s");
+                        Log.d("xinwen", time02 - time + "s");
                         myModule01Adapter.notifyDataSetChanged(list);
                         listView.setRefreshSuccess("更新完成"); // 通知加载成功
-                    }else{
 
+                    }else{
+                        Toast.makeText(Module01.this,"加载错误",Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -136,11 +143,63 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Log.d("xinwen",volleyError.toString()+volleyError);
+//                Log.d("xinwen",volleyError.toString()+volleyError);
+                Toast.makeText(Module01.this,"网络异常",Toast.LENGTH_SHORT).show();
             }
         });
         queue.add(jsonObjectRequest);
         jsonObjectRequest.setTag(TAG01);
+    }
+
+    /**
+     * 获取更多数据
+     */
+    private void loadMoreData(int index) {
+        jsonObjectRequest = new JsonObjectRequest(Const.M01 + index, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Log.d("xinwen", jsonObject.toString()+"");
+                try {
+                    //获取服务器code
+                    int code = jsonObject.getInt("code");
+                    if(code == 200){
+                        //获取数据成功
+                        Log.d("xinwen", "data:------" + jsonObject.getString("data"));
+                        //获取data所有数据
+                        com.alibaba.fastjson.JSONObject data = JSON.parseObject(jsonObject.getString("data"));
+                        //获取新闻
+                        List<_NewsData> list2 = JSON.parseArray(data.getString("news").toString(), _NewsData.class);
+                        for (_NewsData newdata: list2) {
+                            list.add(newdata);
+                        }
+                        myModule01Adapter.notifyDataSetChanged(list);
+                        listView.setLoadMoreSuccess();
+                    }else if(code == 400){
+                        Toast.makeText(Module01.this,"没有更多了",Toast.LENGTH_SHORT).show();
+                        listView.stopLoadMore();
+                    }else{
+                        Toast.makeText(Module01.this,"加载错误",Toast.LENGTH_SHORT).show();
+                        listView.stopLoadMore();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+//                Log.d("xinwen",volleyError.toString()+volleyError);
+                Toast.makeText(Module01.this,"网络异常",Toast.LENGTH_SHORT).show();
+                listView.stopLoadMore();
+            }
+        });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                queue.add(jsonObjectRequest);
+                jsonObjectRequest.setTag(TAG01);
+            }
+        }, 1200);
     }
 
     private void initViews() {
@@ -184,20 +243,24 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
         listView.setOnRefreshStartListener(new ZrcListView.OnStartListener() {
             @Override
             public void onStart() {
-                Message message = handler.obtainMessage();
+                /*Message message = handler.obtainMessage();
                 message.what = REFRESH_COMPLETE;
-                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
+                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新*/
+                loadData();
             }
         });
         // 加载更多事件回调（可选）
         listView.setOnLoadMoreStartListener(new ZrcListView.OnStartListener() {
             @Override
             public void onStart() {
-                Message message = handler.obtainMessage();
+                /*Message message = handler.obtainMessage();
                 message.what = LOADMORE_COMPLETE;
-                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新
+                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新*/
+                index++;
+                loadMoreData(index);
             }
         });
+        listView.startLoadMore();
 //        vRefresh.autoRefresh();//自动刷新一次
 //        vRefresh.setLoading(false);//停止刷新
 //        vRefresh.setRefreshing(false);//让刷新消失
@@ -231,6 +294,9 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
 
     @Override
     public void onSliderClick(BaseSliderView slider) {
-        Toast.makeText(this, slider.getBundle().get("extra") + "", Toast.LENGTH_SHORT).show();
+        //传递轮播数据
+        Intent intent = new Intent(Module01.this, NewsDetails.class);
+        intent.putExtra("data", slider.getBundle().getSerializable("extra"));
+        startActivity(intent);
     }
 }

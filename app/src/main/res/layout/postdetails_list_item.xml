@@ -1,34 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    >
     <!--评论 回复列表item项-->
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         >
         <ImageView
             android:id="@+id/postdetails_list_item_icon_img"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:background="@mipmap/default_img"
             android:layout_centerVertical="true"
             />
-
             <TextView
                 android:id="@+id/postdetails_list_item_name_tv"
-                android:layout_toRightOf="@id/postdetails_list_item_icon_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/postdetails_list_item_icon_img"
                 android:text="回复ID"
                 android:textSize="16sp"
-                android:layout_marginLeft="15dp"
-                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
                 />
+        <TextView
+            android:id="@+id/postdetails_list_item_date_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/postdetails_list_item_name_tv"
+            android:layout_alignLeft="@id/postdetails_list_item_name_tv"
+            android:text="2015-12-25"
+            android:textSize="14sp"
+            android:textColor="@color/lighter_gray"
+            />
         <TextView
             android:id="@+id/postdetails_list_item_floor_tv"
             android:layout_alignParentRight="true"
@@ -36,34 +46,18 @@
             android:layout_height="wrap_content"
             android:text="1楼"
             android:textSize="16sp"
-            android:layout_centerVertical="true"
             />
     </RelativeLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="5dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        >
-        <TextView
-            android:id="@+id/postdetails_list_item_content_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="沙发"
-            android:textSize="18sp"
-            />
-        <TextView
-            android:id="@+id/postdetails_list_item_date_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:layout_marginTop="5dp"
-            android:text="2015-12-25"
-            android:textSize="14sp"
-            android:textColor="@color/lighter_gray"
-            />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/postdetails_list_item_content_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="沙发"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                />
+
 </LinearLayout>

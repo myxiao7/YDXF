@@ -54,19 +54,16 @@
                     android:layout_height="36dp"
                     android:background="@mipmap/ic_choose_pic_normal"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
                     />
 
-                <ImageView
-                    android:id="@+id/publish_photo_img2"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@mipmap/ic_colock" />
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@mipmap/ic_colock" />
+                <com.sizhuo.ydxf.view.HorizontalListView
+                    android:id="@+id/public_horlistview"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+                </com.sizhuo.ydxf.view.HorizontalListView>
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
