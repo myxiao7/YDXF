@@ -53,19 +53,19 @@ public class Const {
     /**
      * 我的收藏
      */
-    public static final String MYCOLLECTION = URL2+"selectNewsCollection";
+    public static final String MYCOLLECTION = URL2+"selectNewsCollection/";
     /**
      * 我的评论
      */
-    public static final String MYCOMMENT = URL2+"selectMyNewsComment";
+    public static final String MYCOMMENT = URL2+"selectMyNewsComment/";
     /**
      * 我的帖子
      */
-    public static final String MYPOST = URL2+"selectMyCard";
+    public static final String MYPOST = URL2+"selectMyCard/";
     /**
      * 我的消息
      */
-    public static final String MYNEWS = URL2+"selectNewsCollection";
+    public static final String MYNEWS = URL2+"selectNewsCollection/";
 
     /**
      * 登录
@@ -75,5 +75,9 @@ public class Const {
      * 注册
      */
     public static final String REGISTER = URL2 + "insertUser";
+    /**
+     * 修改信息
+     */
+    public static final String UPDATEINFO = URL2 + "updateUser";
 
 }

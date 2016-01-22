@@ -106,10 +106,9 @@ public class MyPost extends AppCompatActivity {
         Map<String, String> map = new HashMap<>();
         map.put("userName", userName);
         map.put("userPwd", userPwd);
-        map.put("index","1");
         JSONObject object = new JSONObject(map);
         Log.d("log.d", object.toString());
-        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.MYPOST, object, new Response.Listener<JSONObject>() {
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.MYPOST+"1", object, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 Log.d("log.d", "收藏"+jsonObject.toString()+"");
@@ -208,7 +207,7 @@ public class MyPost extends AppCompatActivity {
                 holder.delBtn = (TextView) convertView.findViewById(R.id.mypost_list_item_del_btn);
                 convertView.setTag(holder);
             }else{
-                convertView.setTag(holder);
+                holder = (ViewHolder) convertView.getTag();
             }
             final _PostDetailData date = list.get(position);
             holder.titleTv.setText(date.getTitle());

@@ -106,7 +106,7 @@
         <activity android:name=".setting.PersonInfo"
             />
         <!--修改昵称-->
-        <activity android:name=".setting.ModifyNike"
+        <activity android:name=".setting.ModifyNikeName"
             />
         <!--修改密码-->
         <activity android:name=".setting.ModifyPwd"

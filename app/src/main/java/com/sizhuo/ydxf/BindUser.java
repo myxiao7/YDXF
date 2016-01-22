@@ -155,7 +155,7 @@ public class BindUser extends AppCompatActivity implements View.OnClickListener 
                 Log.d("log.d","result"+jsonObject.toString());
                 try {
                     String code = jsonObject.getString("code");
-                    //登陆成功，返回信息data
+                    //绑定成功，返回信息data
                     if(code.equals("200")) {
                         //清空表
                         dbManager.delete(User.class);

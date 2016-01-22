@@ -1,6 +1,8 @@
 package com.sizhuo.ydxf;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -24,17 +27,28 @@ import com.android.volley.toolbox.Volley;
 import com.bm.library.PhotoView;
 import com.sizhuo.ydxf.application.MyApplication;
 import com.sizhuo.ydxf.entity.PublicData;
+import com.sizhuo.ydxf.entity.db.User;
 import com.sizhuo.ydxf.entity.imgextra;
 import com.sizhuo.ydxf.util.MyJsonObjectRequest;
 import com.sizhuo.ydxf.util.StatusBar;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,13 +71,38 @@ import cn.finalteam.galleryfinal.model.PhotoInfo;
  */
 public class Publish extends AppCompatActivity implements View.OnClickListener {
     private Toolbar toolbar;
+    private EditText titleEdit, conEdit;
     private ImageView selectPhoto;
     private ImageView uploadPhoto;
     private final int REQUEST_CODE_GALLERY = 0X100;
     private final String REQUEST_TAG = "request";
+
     private List<imgextra> imgextras = new ArrayList<>();
     private Map<String, String> imgMap = new HashMap<>();
     private RequestQueue queue;
+
+    private DbManager dbManager;//数据库操作
+    private User user;
+    private Boolean loginFlag = false;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dbManager = new MyApplication().getDbManager();
+        //检查登录状态
+        try {
+            user = dbManager.findFirst(User.class);
+            if(user!=null){
+                loginFlag = true;
+                Toast.makeText(Publish.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
+            }else{
+                loginFlag = false;
+                Toast.makeText(Publish.this,"没有登录",Toast.LENGTH_SHORT).show();
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +111,8 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
         toolbar = (Toolbar) findViewById(R.id.publish_toolbar);
         toolbar.setTitle("发表帖子");
         setSupportActionBar(toolbar);
+        titleEdit = (EditText) findViewById(R.id.public_title_edit);
+        conEdit = (EditText) findViewById(R.id.public_content_edit);
         selectPhoto = (ImageView) findViewById(R.id.publish_photo_img);
         selectPhoto.setOnClickListener(this);
         selectPhoto = (ImageView) findViewById(R.id.publish_photo_img2);
@@ -87,18 +128,14 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
                 break;
             case R.id.publish_photo_img2:
                 Map<String,Object> map = new HashMap<>();
-                map.put("userName","admin");
-                map.put("userPwd","admin");
-                map.put("IP","111");
-                map.put("title", "title");
-                map.put("content", "content");
-                map.put("imgextra", new JSONObject(imgMap));
+                map.put("userName",user.getUserName());
+                map.put("userPwd",user.getUserPwd());
+                map.put("title", titleEdit.getText().toString());
+                map.put("content", conEdit.getText().toString());
+                map.put("imgextra", imgextras.toString());
                 JSONObject jsonObject = new JSONObject(map);
                 Log.d("xinwen",map.toString()+"++++++++");
-                PublicData publicData = new PublicData("admin","admin","admin","admin","admin",imgextras);
-                String str = JSON.toJSONString(publicData);
-                Log.d("xinwen",str.toString()+"---------------");
-                MyJsonObjectRequest request = new MyJsonObjectRequest(Request.Method.POST, "http://112.54.80.235:50406/IndustryPioneer.svc/insertCard", str, new Response.Listener<JSONObject>() {
+                MyJsonObjectRequest request = new MyJsonObjectRequest(Request.Method.POST, "http://112.54.80.235:50406/IndustryPioneer.svc/insertCard", "", new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
                         Log.d("xinwen",jsonObject.toString());
@@ -154,8 +191,12 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
             Toast.makeText(Publish.this, "选择了" + resultList.size() + "张图", Toast.LENGTH_SHORT).show();
             for (int i = 0; i < resultList.size(); i++) {
                 Log.d("xinwen", resultList.get(i).getPhotoPath());
-                imgextras.add(new imgextra(GetImageStr(resultList.get(i).getPhotoPath())));
-                imgMap.put("url",GetImageStr(resultList.get(i).getPhotoPath()));
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                }).start();
             }
             Log.d("xinwen",imgextras.size()+"+++++++++");
             Log.d("xinwen",imgextras.get(0).getUrl()+"+++++++++");
@@ -167,21 +208,4 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
         }
     };
 
-    public static String GetImageStr(String imgFilePath) {// 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
-        byte[] data = null;
-
-// 读取图片字节数组
-        try {
-            InputStream in = new FileInputStream(imgFilePath);
-            data = new byte[in.available()];
-            in.read(data);
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-// 对字节数组Base64编码
-        BASE64Encoder encoder = new BASE64Encoder();
-        return encoder.encode(data);// 返回Base64编码过的字节数组字符串
-    }
 }

@@ -3,6 +3,8 @@ package com.sizhuo.ydxf.per;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.android.volley.Request;
@@ -26,6 +29,8 @@ import com.sizhuo.ydxf.entity._MyComment;
 import com.sizhuo.ydxf.entity._NewsData;
 import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.util.StatusBar;
+import com.sizhuo.ydxf.view.zrclistview.SimpleFooter;
+import com.sizhuo.ydxf.view.zrclistview.SimpleHeader;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
 
 import org.json.JSONException;
@@ -57,6 +62,7 @@ public class MyComment extends AppCompatActivity {
     private RequestQueue queue;
     private JsonObjectRequest jsonObjectRequest;
     private final String TAG01 = "jsonObjectRequest";//请求数据TAG
+    int index = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +77,7 @@ public class MyComment extends AppCompatActivity {
             @Override
             public void onItemClick(ZrcListView parent, View view, int position, long id) {
                 Intent intent = new Intent(MyComment.this, NewsDetails.class);
-                intent.putExtra("data",list.get(position).getNews());
+                intent.putExtra("data", list.get(position).getNews());
                 MyComment.this.startActivity(intent);
             }
         });
@@ -83,10 +89,9 @@ public class MyComment extends AppCompatActivity {
         Map<String, String> map = new HashMap<>();
         map.put("userName", userName);
         map.put("userPwd", userPwd);
-        map.put("index", "1");
         JSONObject object = new JSONObject(map);
         Log.d("log.d", object.toString());
-        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.MYCOMMENT, object, new Response.Listener<JSONObject>() {
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.MYCOMMENT+"1", object, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 Log.d("log.d", "评论"+jsonObject.toString()+"");
@@ -96,6 +101,7 @@ public class MyComment extends AppCompatActivity {
                     if(code == 200){
                         list = JSON.parseArray(jsonObject.getString("data"), _MyComment.class);
                         adapter.notifyDataSetChanged(list);
+
                     }else{
 
                     }
@@ -113,6 +119,54 @@ public class MyComment extends AppCompatActivity {
         jsonObjectRequest.setTag(TAG01);
     }
 
+    private void loadMoreData(int index) {
+        Map<String, String> map = new HashMap<>();
+        map.put("userName", userName);
+        map.put("userPwd", userPwd);
+        JSONObject object = new JSONObject(map);
+        Log.d("log.d", object.toString());
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.MYCOMMENT+index, object, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Log.d("log.d", "评论"+jsonObject.toString()+"");
+                try {
+                    //获取服务器code
+                    int code = jsonObject.getInt("code");
+                    if(code == 200){
+                        List<_MyComment> list2  = JSON.parseArray(jsonObject.getString("data"), _MyComment.class);
+                        for (_MyComment data: list2) {
+                            list.add(data);
+                        }
+
+                        adapter.notifyDataSetChanged(list);
+                        listView.setLoadMoreSuccess();
+//                        listView.stopLoadMore();
+                    }else{
+                        listView.stopLoadMore();
+//                        Toast.makeText(MyComment.this,"没有更多了..",Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Log.d("xinwen",volleyError.toString()+volleyError);
+                listView.stopLoadMore();
+                Toast.makeText(MyComment.this,"网络失败..",Toast.LENGTH_SHORT).show();
+            }
+        });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                queue.add(jsonObjectRequest);
+                jsonObjectRequest.setTag(TAG01);
+            }
+        },1200);
+
+    }
+
     private void initViews() {
         new StatusBar(this).initStatusBar();
         toolbar = (Toolbar) findViewById(R.id.mycomment_toolbar);
@@ -124,7 +178,26 @@ public class MyComment extends AppCompatActivity {
                 MyComment.this.finish();
             }
         });
+
         listView = (ZrcListView) findViewById(R.id.mycomment_list);
+        // 设置加载更多的样式（可选）
+        SimpleFooter footer = new SimpleFooter(this);
+        footer.setCircleColor(0xff33bbee);
+        listView.setFootable(footer);
+        listView.startLoadMore();
+
+        // 加载更多事件回调（可选）
+        listView.setOnLoadMoreStartListener(new ZrcListView.OnStartListener() {
+            @Override
+            public void onStart() {
+               /* Message message = handler.obtainMessage();
+                message.what = LOADMORE_COMPLETE;
+                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新*/
+                index++;
+                loadMoreData(index);
+            }
+        });
+
         Intent intent = this.getIntent();
         userName = intent.getStringExtra("userName");
         userPwd = intent.getStringExtra("userPwd");
@@ -166,19 +239,19 @@ public class MyComment extends AppCompatActivity {
                 holder.titleTv = (TextView) convertView.findViewById(R.id.mycomment_list_item_title_tv);
                 convertView.setTag(holder);
             }else{
-                convertView.setTag(holder);
+                holder = (ViewHolder) convertView.getTag();
             }
             final _MyComment date = list.get(position);
-            holder.titleTv.setText("我的回复......");
-            holder.dateTv.setText(date.getNews().getPtime());
+            holder.contentTv.setText(list.get(position).getComment().getContent());
+            holder.dateTv.setText(list.get(position).getComment().getpTime());
             holder.titleTv.setText(date.getNews().getTitle());
-            holder.titleTv.setOnClickListener(new View.OnClickListener() {
+           /* holder.titleTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MyComment.this, NewsDetails.class);
                     MyComment.this.startActivity(intent);
                 }
-            });
+            });*/
             return convertView;
         }
 

@@ -77,6 +77,7 @@ public class MyCollection extends AppCompatActivity{
             @Override
             public void onItemClick(ZrcListView parent, View view, int position, long id) {
                 Intent intent = new Intent(MyCollection.this, NewsDetails.class);
+                intent.putExtra("data",list.get(position));
                 MyCollection.this.startActivity(intent);
             }
         });
@@ -88,10 +89,9 @@ public class MyCollection extends AppCompatActivity{
         Map<String, String> map = new HashMap<>();
         map.put("userName",userName);
         map.put("userPwd",userPwd);
-        map.put("index","1");
         JSONObject object = new JSONObject(map);
         Log.d("log.d", object.toString());
-        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.MYCOLLECTION, object, new Response.Listener<JSONObject>() {
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.MYCOLLECTION+"1", object, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 Log.d("log.d", "收藏"+jsonObject.toString()+"");
@@ -216,17 +216,19 @@ public class MyCollection extends AppCompatActivity{
                 holder.delBtn = (TextView) convertView.findViewById(R.id.mycollection_list_item_del_btn);
                 convertView.setTag(holder);
             }else{
-                convertView.setTag(holder);
+                holder = (ViewHolder) convertView.getTag();
             }
             final _NewsData date = list.get(position);
             holder.titleTv.setText(date.getTitle());
             holder.dateTv.setText(date.getPtime());
             //
             holder.replyCountTv.setText(date.getDocid());
-            if(isVisiableMap.get(position)==View.VISIBLE){
-                holder.delBtn.setVisibility(View.VISIBLE);
-            }else{
-                holder.delBtn.setVisibility(View.GONE);
+            if(isVisiableMap.get(position)!=null){
+                if(isVisiableMap.get(position)==View.VISIBLE){
+                    holder.delBtn.setVisibility(View.VISIBLE);
+                }else{
+                    holder.delBtn.setVisibility(View.GONE);
+                }
             }
             holder.delBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

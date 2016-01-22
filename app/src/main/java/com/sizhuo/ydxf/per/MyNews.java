@@ -87,10 +87,9 @@ public class MyNews extends AppCompatActivity {
         Map<String, String> map = new HashMap<>();
         map.put("userName", userName);
         map.put("userPwd", userPwd);
-        map.put("index", "1");
         JSONObject object = new JSONObject(map);
         Log.d("log.d", object.toString());
-        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.MYNEWS, object, new Response.Listener<JSONObject>() {
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.MYNEWS+"1", object, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 Log.d("log.d", "收藏"+jsonObject.toString()+"");
@@ -173,7 +172,7 @@ public class MyNews extends AppCompatActivity {
                 holder.titleTv = (TextView) convertView.findViewById(R.id.mynews_list_item_post_tv);
                 convertView.setTag(holder);
             }else{
-                convertView.setTag(holder);
+                holder = (ViewHolder) convertView.getTag();
             }
             final MyNewsData date = list.get(position);
             ImageLoaderHelper.getIstance().loadImg(date.getReplyIcon(), holder.icon);
