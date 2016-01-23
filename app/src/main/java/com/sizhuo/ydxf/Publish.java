@@ -1,5 +1,6 @@
 package com.sizhuo.ydxf;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +26,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonArray;
 import com.sizhuo.ydxf.application.MyApplication;
 import com.sizhuo.ydxf.entity.IconResult;
 import com.sizhuo.ydxf.entity.db.User;
@@ -87,7 +87,7 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
     private HorizontalListView horizontalListView;
     List<String> imgList = new ArrayList<>();//选择的图片
 
-//    private ProgressDialog dialog;
+    private ProgressDialog dialog;
     @Override
     protected void onResume() {
         super.onResume();
@@ -311,13 +311,13 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
             }else{
                 //
                 Log.d("log.d", imgs.size() + "图片没有上传完");
-//                dialog.dismiss();
+                dialog.dismiss();
             }
 
             /*Toast.makeText(PersonInfo.this,"上传成功",Toast.LENGTH_SHORT).show();*/
             Log.e("log.d", "post_running222222---------");
         }else{
-//            dialog.dismiss();
+            dialog.dismiss();
             Toast.makeText(Publish.this, "上传失败",Toast.LENGTH_SHORT).show();
         }
         outStream.close();
@@ -347,12 +347,13 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
                     //修改成功，返回信息data
                     if (code.equals("200")) {
                         Toast.makeText(Publish.this, "发帖成功", Toast.LENGTH_SHORT).show();
+                        Publish.this.finish();
                     } else if (code.equals("400")) {
                         Toast.makeText(Publish.this, "发帖失败", Toast.LENGTH_SHORT).show();
                     } else {
-
+                        Toast.makeText(Publish.this, "网络错误", Toast.LENGTH_SHORT).show();
                     }
-//                    dialog.dismiss();
+                    dialog.dismiss();
                 } catch (JSONException e2) {
                     e2.printStackTrace();
                 }
@@ -365,7 +366,7 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
                 byte[] htmlBodyBytes = volleyError.networkResponse.data;
                 Log.e("log.d", new String(htmlBodyBytes), volleyError);
                 Toast.makeText(Publish.this, "服务器异常", Toast.LENGTH_SHORT).show();
-//                dialog.dismiss();
+                dialog.dismiss();
             }
         }) {
             @Override
@@ -384,7 +385,7 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.forum_menu, menu);
+        inflater.inflate(R.menu.publish_menu, menu);
         return true;
     }
 
@@ -392,7 +393,7 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.forum_menu_item01:
+            case R.id.piblish_menu_item01:
                 if(loginFlag==true){
                     if(TextUtils.isEmpty(titleEdit.getText().toString().trim())){
                         Toast.makeText(Publish.this, "请填写标题", Toast.LENGTH_SHORT).show();
@@ -402,9 +403,9 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
                         Toast.makeText(Publish.this, "请填写内容", Toast.LENGTH_SHORT).show();
                         return false;
                     }
-//                    dialog = ProgressDialog.show(Publish.this,
-//                            null, "正在提交", true, true);
-//                    dialog.show();
+                    dialog = ProgressDialog.show(Publish.this,
+                            null, "正在提交", true, true);
+                    dialog.show();
                     if(imgList.size()>0){
                         //选择了图片
                         new Thread(new Runnable() {

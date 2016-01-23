@@ -1,6 +1,7 @@
 package com.sizhuo.ydxf.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +65,9 @@ public class MyPostDetailsAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         _ReplyData replyData = list.get(position);
-        ImageLoaderHelper.getIstance().loadImg(replyData.getPortrait(), holder.img);
+        if(!TextUtils.isEmpty(replyData.getPortrait())){
+            ImageLoaderHelper.getIstance().loadImg(replyData.getPortrait(), holder.img);
+        }
         holder.nameTv.setText(replyData.getNickName());
         holder.floorTv.setText((position+1)+"楼");
         holder.contentTv.setText(replyData.getContent());

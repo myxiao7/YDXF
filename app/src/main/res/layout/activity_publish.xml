@@ -31,7 +31,9 @@
                 android:id="@+id/public_title_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="标题" />
+                android:hint="标题"
+                android:padding="5dp"
+                />
 
             <EditText
                 android:id="@+id/public_content_edit"
@@ -39,7 +41,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:hint="内容" />
+                android:hint="内容"
+                android:padding="5dp"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"

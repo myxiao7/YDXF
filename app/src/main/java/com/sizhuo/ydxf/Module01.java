@@ -157,8 +157,8 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen",volleyError.toString()+volleyError);
-                Toast.makeText(Module01.this,"网络异常",Toast.LENGTH_SHORT).show();
                 listView.setRefreshFail("网络异常");
+                Toast.makeText(Module01.this, "网络异常",Toast.LENGTH_SHORT).show();
             }
         });
         new Handler().postDelayed(new Runnable() {

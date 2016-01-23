@@ -55,6 +55,10 @@ public class Const {
      */
     public static final String MFORUM = URL2+"selectCard/1/";
     /**
+     * 论坛
+     */
+    public static final String MFORUM2 = URL2+"selectCard/2/";
+    /**
      * 发帖
      */
     public static final String PUBLISH = URL2+"insertCard";

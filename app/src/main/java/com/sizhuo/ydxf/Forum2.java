@@ -3,7 +3,6 @@ package com.sizhuo.ydxf;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,11 +20,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.sizhuo.ydxf.adapter.MyForumAdapter;
 import com.sizhuo.ydxf.application.MyApplication;
-import com.sizhuo.ydxf.entity.PostDetailData;
-import com.sizhuo.ydxf.entity._NewsData;
 import com.sizhuo.ydxf.entity._PostDetailData;
 import com.sizhuo.ydxf.entity._ReplyData;
-import com.sizhuo.ydxf.entity._SliderData;
 import com.sizhuo.ydxf.entity.db.User;
 import com.sizhuo.ydxf.entity.imgextra;
 import com.sizhuo.ydxf.util.Const;
@@ -53,7 +49,7 @@ import java.util.List;
  *
  */
 
-public class Forum extends AppCompatActivity {
+public class Forum2 extends AppCompatActivity {
     private Toolbar toolbar;//标题栏
     private ZrcListView listView;
     private List<_PostDetailData> list = new ArrayList<>();
@@ -77,10 +73,10 @@ public class Forum extends AppCompatActivity {
             user = dbManager.findFirst(User.class);
             if(user!=null){
                 loginFlag = true;
-                Toast.makeText(Forum.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(Forum2.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
             }else{
                 loginFlag = false;
-                Toast.makeText(Forum.this,"没有登录",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Forum2.this,"没有登录",Toast.LENGTH_SHORT).show();
             }
         } catch (DbException e) {
             e.printStackTrace();
@@ -97,9 +93,9 @@ public class Forum extends AppCompatActivity {
         dbManager = new MyApplication().getDbManager();
         //加载缓存
         try {
-            if(dbManager.selector(_PostDetailData.class).where("moduleType","=","f01").findAll()!=null) {
-                if (dbManager.selector(_PostDetailData.class).where("moduleType", "=", "f01").findAll().size() > 0) {
-                    list = dbManager.selector(_PostDetailData.class).where("moduleType", "=", "f01").findAll();
+            if(dbManager.selector(_PostDetailData.class).where("moduleType","=","f02").findAll()!=null) {
+                if (dbManager.selector(_PostDetailData.class).where("moduleType", "=", "f02").findAll().size() > 0) {
+                    list = dbManager.selector(_PostDetailData.class).where("moduleType", "=", "f02").findAll();
                     for (int i = 0; i < list.size(); i++) {
                         //通过外键查找图片和回复缓存
                         List<imgextra> imgextras = dbManager.selector(imgextra.class).where("parentId","=",list.get(i).getId()).findAll();
@@ -107,9 +103,9 @@ public class Forum extends AppCompatActivity {
                         list.get(i).setImgextra(imgextras);
                         list.get(i).setReply(replyDatas);
                     }
-                    Toast.makeText(Forum.this, "加载了" + list.size() + "条缓存", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Forum2.this, "加载了" + list.size() + "条缓存", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(Forum.this, "没有缓存数据", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Forum2.this, "没有缓存数据", Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (DbException e) {
@@ -143,10 +139,10 @@ public class Forum extends AppCompatActivity {
             public void onItemClick(ZrcListView parent, View view, int position, long id) {
                 //获取选中帖子数据
                 _PostDetailData postDetailData = list.get(position);
-                Intent intent = new Intent(Forum.this, PostDetails.class);
+                Intent intent = new Intent(Forum2.this, PostDetails.class);
                 //传递选中帖子数据
                 intent.putExtra("data", postDetailData);
-                Forum.this.startActivity(intent);
+                Forum2.this.startActivity(intent);
             }
         });
     }
@@ -159,7 +155,7 @@ public class Forum extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Forum.this.finish();
+                Forum2.this.finish();
             }
         });
         listView = (ZrcListView)findViewById(R.id.forum_listview);
@@ -171,7 +167,7 @@ public class Forum extends AppCompatActivity {
      * 获取数据
      */
     private void loadData() {
-        jsonObjectRequest =  new JsonObjectRequest(Const.MFORUM + 1, null, new Response.Listener<JSONObject>() {
+        jsonObjectRequest =  new JsonObjectRequest(Const.MFORUM2 + 1, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 Log.d("xinwen", jsonObject.toString());
@@ -182,12 +178,12 @@ public class Forum extends AppCompatActivity {
                         jsonObject.getString("data");
                         list = JSON.parseArray(jsonObject.getString("data"), _PostDetailData.class);
                         //先清除缓存数据
-                            dbManager.delete(_PostDetailData.class, WhereBuilder.b("moduleType", "=", "f01"));
-                            dbManager.delete(imgextra.class, WhereBuilder.b("moduleType", "=", "f01"));
-                            dbManager.delete(_ReplyData.class, WhereBuilder.b("moduleType", "=", "f01"));
+                            dbManager.delete(_PostDetailData.class, WhereBuilder.b("moduleType", "=", "f02"));
+                            dbManager.delete(imgextra.class, WhereBuilder.b("moduleType", "=", "f02"));
+                            dbManager.delete(_ReplyData.class, WhereBuilder.b("moduleType", "=", "f02"));
                         //缓存
                             for (_PostDetailData postDetailData:list) {
-                                postDetailData.setModuleType("f01");
+                                postDetailData.setModuleType("f02");
                                 //图片URL
                                 List<imgextra> imgextras = postDetailData.getImgextra();
                                 //回复
@@ -196,13 +192,13 @@ public class Forum extends AppCompatActivity {
                                 //关联存储URL
                                 for (imgextra img:imgextras) {
                                     img.setParentId(postDetailData.getId());
-                                    img.setModuleType("f01");
+                                    img.setModuleType("f02");
                                     dbManager.saveBindingId(img);
                                 }
                                 //关联存储恢复数据
                                 for (_ReplyData replyData:replyDatas) {
                                     replyData.setParentId(postDetailData.getId());
-                                    replyData.setModuleType("f01");
+                                    replyData.setModuleType("f02");
                                     dbManager.saveBindingId(replyData);
                                 }
 
@@ -214,10 +210,10 @@ public class Forum extends AppCompatActivity {
                         }
                     }else if(code == 400){
                         listView.setRefreshFail("没有数据");
-                        Toast.makeText(Forum.this,"没有数据",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Forum2.this,"没有数据",Toast.LENGTH_SHORT).show();
                     }else{
                         listView.setRefreshFail("加载错误");
-                        Toast.makeText(Forum.this,"加载错误",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Forum2.this,"加载错误",Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -231,7 +227,7 @@ public class Forum extends AppCompatActivity {
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen", volleyError.getMessage());
                 listView.setRefreshFail("网络异常");
-                Toast.makeText(Forum.this,"网络异常",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Forum2.this,"网络异常",Toast.LENGTH_SHORT).show();
             }
         });
         new Handler().postDelayed(new Runnable() {
@@ -247,7 +243,7 @@ public class Forum extends AppCompatActivity {
      * 获取更多数据
      */
     private void loadMoreData(int index) {
-        jsonObjectRequest =  new JsonObjectRequest(Const.MFORUM + index, null, new Response.Listener<JSONObject>() {
+        jsonObjectRequest =  new JsonObjectRequest(Const.MFORUM2 + index, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 Log.d("xinwen", jsonObject.toString());
@@ -262,7 +258,7 @@ public class Forum extends AppCompatActivity {
                         for (_PostDetailData postDetailData:list2) {
                             list.add(postDetailData);
                             //缓存
-                            postDetailData.setModuleType("f01");
+                            postDetailData.setModuleType("f02");
                             //图片URL
                             List<imgextra> imgextras = postDetailData.getImgextra();
                             //回复
@@ -271,23 +267,23 @@ public class Forum extends AppCompatActivity {
                             //关联存储URL
                             for (imgextra img:imgextras) {
                                 img.setParentId(postDetailData.getId());
-                                img.setModuleType("f01");
+                                img.setModuleType("f02");
                                 dbManager.saveBindingId(img);
                             }
                             //关联存储恢复数据
                             for (_ReplyData replyData:replyDatas) {
                                 replyData.setParentId(postDetailData.getId());
-                                replyData.setModuleType("f01");
+                                replyData.setModuleType("f02");
                                 dbManager.saveBindingId(replyData);
                             }
                         }
                         myForumAdapter.notifyDataSetChanged(list);
                         listView.setLoadMoreSuccess();
                     }else if(code == 400){
-                        Toast.makeText(Forum.this,"没有更多了",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Forum2.this,"没有更多了",Toast.LENGTH_SHORT).show();
                         listView.stopLoadMore();
                     }else{
-                        Toast.makeText(Forum.this,"加载错误",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Forum2.this,"加载错误",Toast.LENGTH_SHORT).show();
                         listView.stopLoadMore();
                     }
                 } catch (JSONException e) {
@@ -302,7 +298,7 @@ public class Forum extends AppCompatActivity {
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen", volleyError.getMessage());
                 listView.stopLoadMore();
-                Toast.makeText(Forum.this,"网络异常",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Forum2.this,"网络异常",Toast.LENGTH_SHORT).show();
             }
         });
         new Handler().postDelayed(new Runnable() {
@@ -335,7 +331,7 @@ public class Forum extends AppCompatActivity {
     }
 
 
-    //toolbar菜单
+ /*   //toolbar菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -349,17 +345,17 @@ public class Forum extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.forum_menu_item01:
                 if(loginFlag==true){
-                    Toast.makeText(Forum.this,"发帖",Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Forum.this, Publish.class);
+                    Toast.makeText(Forum2.this,"发帖",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Forum2.this, Publish.class);
                     this.startActivity(intent);
                 }else{
-                    Intent intent = new Intent(Forum.this, Login.class);
-                    Forum.this.startActivity(intent);
+                    Intent intent = new Intent(Forum2.this, Login.class);
+                    Forum2.this.startActivity(intent);
                 }
 
                 break;
         }
         return true;
-    }
+    }*/
 
 }

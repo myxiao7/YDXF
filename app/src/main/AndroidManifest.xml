@@ -74,6 +74,8 @@
         <activity android:name=".VideoModule" />
         <!--论坛-->
         <activity android:name=".Forum"/>
+        <!--论坛-->
+        <activity android:name=".Forum2"/>
         <!--帖子详情-->
         <activity android:name=".PostDetails"
             android:windowSoftInputMode="stateHidden"

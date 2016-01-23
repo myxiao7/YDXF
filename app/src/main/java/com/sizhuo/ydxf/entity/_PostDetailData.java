@@ -1,5 +1,10 @@
 package com.sizhuo.ydxf.entity;
 
+import org.xutils.DbManager;
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+import org.xutils.ex.DbException;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,43 +16,60 @@ import java.util.List;
  *
  * @version 1.0
  */
+@Table(name = "_PostDetailData")
 public class _PostDetailData implements Serializable{
     private static final long serialVersionUID = 577054091361505244L;
+    @Column(name = "id", isId = true)
+    private int cid;
+    /**
+     * 所属模块
+     */
+    @Column(name = "moduleType")
+    private String moduleType;
     /**
      * id
      */
+    @Column(name = "forumId")
     private String id;
     /**
      * 头像
      */
+    @Column(name = "portrait")
     private String portrait;
     /**
      * 昵称
      */
+    @Column(name = "nickName")
     private String nickName;
     /**
      * 标题
      */
+    @Column(name = "title")
     private String title;
     /**
-     * 头像
+     * 图片
      */
+    @Column(name = "imgsrc")
     private String imgsrc;
     /**
      * 类型
      */
+    @Column(name = "type")
     private String type;
     /**
      * 简略内容
      */
+    @Column(name = "digest")
     private String digest;
     /**
      * 日期
      */
+    @Column(name = "ptime")
     private String ptime;
     /**
      * 回复数
      */
+    @Column(name = "replyCount")
     private String replyCount;
     /**
      * 多图
@@ -58,7 +80,31 @@ public class _PostDetailData implements Serializable{
      */
     private List<_ReplyData> reply;
 
+    public List<imgextra> getChildren(DbManager db) throws DbException {
+        return db.selector(imgextra.class).where("parentId", "=", this.id).findAll();
+    }
+
+    public List<_ReplyData> getChildren2(DbManager db) throws DbException {
+        return db.selector(_ReplyData.class).where("parentId", "=", this.id).findAll();
+    }
+
     public _PostDetailData() {
+    }
+
+    public int getCid() {
+        return cid;
+    }
+
+    public void setCid(int cid) {
+        this.cid = cid;
+    }
+
+    public String getModuleType() {
+        return moduleType;
+    }
+
+    public void setModuleType(String moduleType) {
+        this.moduleType = moduleType;
     }
 
     public static long getSerialVersionUID() {
@@ -152,4 +198,5 @@ public class _PostDetailData implements Serializable{
     public void setReply(List<_ReplyData> reply) {
         this.reply = reply;
     }
+
 }

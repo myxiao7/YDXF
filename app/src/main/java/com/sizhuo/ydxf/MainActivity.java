@@ -340,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent3);
                 break;
              case R.id.main_list_item01_04_re_more:
-                Intent intent4 = new Intent(MainActivity.this, Forum.class);
+                Intent intent4 = new Intent(MainActivity.this, Forum2.class);
                 startActivity(intent4);
                 break;
             case R.id.main_list_item01_01_lin:
