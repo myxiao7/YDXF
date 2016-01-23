@@ -24,7 +24,7 @@
 
             <ImageView
                 android:id="@+id/module01_list_item01_img"
-                android:layout_width="125dp"
+                android:layout_width="100dp"
                 android:layout_height="85dp"
                 android:clickable="false"
                 android:focusable="false"
@@ -49,26 +49,41 @@
                     android:ellipsize="end"
                     />
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+
                 <TextView
                     android:id="@+id/module01_list_item01_des_tv"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="新闻简略信息"
                     android:textColor="@color/lighter_gray"
                     android:textSize="16sp" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom|right"
+                    >
                     <TextView
                     android:id="@+id/module01_list_item01_date_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
                     android:text="2015-12-24"
                     android:textColor="@color/lighter_gray"
                     android:textSize="16sp"
-                    android:layout_gravity="bottom|right"
-                    android:background="@color/colorWhite"/>
-                </FrameLayout>
+                    android:background="@color/colorWhite"
+                        />
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:background="@mipmap/ic_colock"
+                        android:layout_toLeftOf="@+id/module01_list_item01_date_tv"
+                        android:layout_marginRight="5dp"
+                        android:layout_centerVertical="true"
+                        />
+                </RelativeLayout>
 
             </LinearLayout>
 

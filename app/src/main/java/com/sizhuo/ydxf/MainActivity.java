@@ -332,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
              case R.id.main_list_item01_02_re_more:
-                Intent intent2 = new Intent(MainActivity.this, Module01.class);
+                Intent intent2 = new Intent(MainActivity.this, Module02.class);
                 startActivity(intent2);
                 break;
              case R.id.main_list_item01_03_re_more:
@@ -367,15 +367,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
              case R.id.main_list_item02_menu01_lin:
-                Intent intent5 = new Intent(MainActivity.this, Module01.class);
+                Intent intent5 = new Intent(MainActivity.this, Module03.class);
                 startActivity(intent5);
                 break;
              case R.id.main_list_item02_menu02_lin:
-                Intent intent6 = new Intent(MainActivity.this, Module01.class);
+                Intent intent6 = new Intent(MainActivity.this, Module04.class);
                 startActivity(intent6);
                 break;
              case R.id.main_list_item02_menu03_lin:
-                Intent intent7 = new Intent(MainActivity.this, Module01.class);
+                Intent intent7 = new Intent(MainActivity.this, Module05.class);
                 startActivity(intent7);
                 break;
              case R.id.main_list_item02_menu04_lin:

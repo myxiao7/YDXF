@@ -51,7 +51,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class Module01 extends AppCompatActivity implements BaseSliderView.OnSliderClickListener {
+public class Module02 extends AppCompatActivity implements BaseSliderView.OnSliderClickListener {
     private Toolbar toolbar;//标题栏
     private SliderLayout sliderLayout;//轮播
     private ZrcListView listView;
@@ -86,8 +86,8 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
         listView.setOnItemClickListener(new ZrcListView.OnItemClickListener() {
             @Override
             public void onItemClick(ZrcListView parent, View view, int position, long id) {
-                Intent intent = new Intent(Module01.this, NewsDetails.class);
-                Toast.makeText(Module01.this, "" + position + "----" + list.get(position - 1).getDigest(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Module02.this, NewsDetails.class);
+                Toast.makeText(Module02.this, "" + position + "----" + list.get(position - 1).getDigest(), Toast.LENGTH_SHORT).show();
                 intent.putExtra("data", list.get(position - 1));
                 startActivity(intent);
             }
@@ -98,7 +98,7 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
      * 获取数据
      */
     private void loadData() {
-        jsonObjectRequest = new JsonObjectRequest(Const.M01 + 1, null, new Response.Listener<JSONObject>() {
+        jsonObjectRequest = new JsonObjectRequest(Const.M02 + 1, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
 //                Log.d("xinwen", jsonObject.toString()+"");
@@ -114,9 +114,9 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
                         List<_SliderData> sliderDatas = JSON.parseArray(data.getString("carousel").toString(), _SliderData.class);
                         Log.d("xinwen", "sliderDatas:------" + sliderDatas.size());
                         //先清除缓存数据
-                        dbManager.delete(_SliderData.class, WhereBuilder.b("moduleType", "=", "m01"));
+                        dbManager.delete(_SliderData.class, WhereBuilder.b("moduleType", "=", "m02"));
                         for (_SliderData cache: sliderDatas) {
-                            cache.setModuleType("m01");
+                            cache.setModuleType("m02");
                             dbManager.save(cache);
                         }
                         loadSlider(sliderDatas);
@@ -124,10 +124,10 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
                         list = JSON.parseArray(data.getString("news").toString(), _NewsData.class);
 
                         //先清除缓存数据
-                        dbManager.delete(_NewsData.class, WhereBuilder.b("moduleType", "=", "m01"));
+                        dbManager.delete(_NewsData.class, WhereBuilder.b("moduleType", "=", "m02"));
                         //缓存
                         for (_NewsData cache:list ) {
-                            cache.setModuleType("m01");
+                            cache.setModuleType("m02");
                             dbManager.save(cache);
                         }
                        /* Log.d("xinwen", list.size()+"-----111");
@@ -142,10 +142,10 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
                         }
                     }else if(code == 400){
                         listView.setRefreshFail("没有数据");
-                        Toast.makeText(Module01.this,"没有数据",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Module02.this,"没有数据",Toast.LENGTH_SHORT).show();
                     }else{
                         listView.setRefreshFail("加载错误");
-                        Toast.makeText(Module01.this,"加载错误",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Module02.this,"加载错误",Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -157,7 +157,7 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen",volleyError.toString()+volleyError);
-                Toast.makeText(Module01.this,"网络异常",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Module02.this,"网络异常",Toast.LENGTH_SHORT).show();
                 listView.setRefreshFail("网络异常");
             }
         });
@@ -179,13 +179,13 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
         for (int i = 0; i <sliderDatas.size() ; i++) {
             url_maps.put(sliderDatas.get(i).getTitle(),sliderDatas.get(i).getImgsrc());
             Log.d("xinwen", sliderDatas.get(i).getTitle());
-            TextSliderView textSliderView = new TextSliderView(Module01.this);
+            TextSliderView textSliderView = new TextSliderView(Module02.this);
             // initialize a SliderLayout
             textSliderView
                     .description(sliderDatas.get(i).getTitle())
                     .image(sliderDatas.get(i).getImgsrc())
                     .setScaleType(BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener(Module01.this);
+                    .setOnSliderClickListener(Module02.this);
 
             //add your extra information`
 
@@ -205,7 +205,7 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
      * 获取更多数据
      */
     private void loadMoreData(int index) {
-        jsonObjectRequest = new JsonObjectRequest(Const.M01 + index, null, new Response.Listener<JSONObject>() {
+        jsonObjectRequest = new JsonObjectRequest(Const.M02 + index, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 Log.d("xinwen", jsonObject.toString()+"");
@@ -222,16 +222,16 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
                         for (_NewsData newdata: list2) {
                             list.add(newdata);
                             //缓存
-                            newdata.setModuleType("m01");
+                            newdata.setModuleType("m02");
                             dbManager.save(newdata);
                         }
                         myModule01Adapter.notifyDataSetChanged(list);
                         listView.setLoadMoreSuccess();
                     }else if(code == 400){
-                        Toast.makeText(Module01.this,"没有更多了",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Module02.this,"没有更多了",Toast.LENGTH_SHORT).show();
                         listView.stopLoadMore();
                     }else{
-                        Toast.makeText(Module01.this,"加载错误",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Module02.this,"加载错误",Toast.LENGTH_SHORT).show();
                         listView.stopLoadMore();
                     }
                 } catch (JSONException e) {
@@ -244,7 +244,7 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen",volleyError.toString()+volleyError);
-                Toast.makeText(Module01.this,"网络异常",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Module02.this,"网络异常",Toast.LENGTH_SHORT).show();
                 listView.stopLoadMore();
             }
         });
@@ -265,7 +265,7 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Module01.this.finish();
+                Module02.this.finish();
             }
         });
         View view = LayoutInflater.from(this).inflate(R.layout.module01_list_header,null);
@@ -294,21 +294,21 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
         //加载本地缓存
         dbManager = new MyApplication().getDbManager();
         try {
-            if(dbManager.selector(_SliderData.class).where("moduleType","=","m01").findAll()!=null) {
-                if (dbManager.selector(_SliderData.class).where("moduleType", "=", "m01").findAll().size() > 0) {
-                    List<_SliderData> sliderDatas = dbManager.selector(_SliderData.class).where("moduleType", "=", "m01").findAll();
+            if(dbManager.selector(_SliderData.class).where("moduleType","=","m02").findAll()!=null) {
+                if (dbManager.selector(_SliderData.class).where("moduleType", "=", "m02").findAll().size() > 0) {
+                    List<_SliderData> sliderDatas = dbManager.selector(_SliderData.class).where("moduleType", "=", "m02").findAll();
                     loadSlider(sliderDatas);
-                    Toast.makeText(Module01.this, "加载了" + sliderDatas.size() + "条幻灯片缓存", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Module02.this, "加载了" + sliderDatas.size() + "条幻灯片缓存", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(Module01.this, "没有幻灯片缓存数据", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Module02.this, "没有幻灯片缓存数据", Toast.LENGTH_SHORT).show();
                 }
             }
-            if(dbManager.selector(_NewsData.class).where("moduleType","=","m01").findAll()!=null) {
-                if (dbManager.selector(_NewsData.class).where("moduleType", "=", "m01").findAll().size() > 0) {
-                    list = dbManager.selector(_NewsData.class).where("moduleType", "=", "m01").findAll();
-                    Toast.makeText(Module01.this, "加载了" + list.size() + "条缓存", Toast.LENGTH_SHORT).show();
+            if(dbManager.selector(_NewsData.class).where("moduleType","=","m02").findAll()!=null) {
+                if (dbManager.selector(_NewsData.class).where("moduleType", "=", "m02").findAll().size() > 0) {
+                    list = dbManager.selector(_NewsData.class).where("moduleType", "=", "m02").findAll();
+                    Toast.makeText(Module02.this, "加载了" + list.size() + "条缓存", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(Module01.this, "没有缓存数据", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Module02.this, "没有缓存数据", Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (DbException e) {
@@ -372,7 +372,7 @@ public class Module01 extends AppCompatActivity implements BaseSliderView.OnSlid
     @Override
     public void onSliderClick(BaseSliderView slider) {
         //传递轮播数据
-        Intent intent = new Intent(Module01.this, NewsDetails.class);
+        Intent intent = new Intent(Module02.this, NewsDetails.class);
         intent.putExtra("data", slider.getBundle().getSerializable("extra"));
         startActivity(intent);
     }

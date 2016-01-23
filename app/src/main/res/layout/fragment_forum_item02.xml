@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:padding="5dp"
+    android:padding="10dp"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
     >
@@ -35,7 +35,6 @@
                 android:id="@+id/frag_forum_item02_date_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:text=""
                 android:textSize="14sp"
                 android:textColor="@color/lighter_gray"
@@ -87,6 +86,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
             android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             >
         <TextView
             android:id="@+id/frag_forum_item02_title_tv"
@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text=""
-            android:textSize="18sp"
+            android:textSize="16sp"
             />
         </LinearLayout>
     <LinearLayout

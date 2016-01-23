@@ -54,6 +54,11 @@
         <activity android:name=".NewsComment" />
 
         <activity android:name=".Module01" />
+        <activity android:name=".Module02" />
+        <activity android:name=".Module03" />
+        <activity android:name=".Module04" />
+        <activity android:name=".Module05" />
+
         <!--红色地图-->
         <activity android:name=".RedMap"/>
         <!--组织机构-->

@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <!--标题字体大小-->
-    <dimen name="title_size">22sp</dimen>
+    <dimen name="title_size">18sp</dimen>
     <!--轮播图高度-->
     <dimen name="slid_height">200dp</dimen>
     <dimen name="slid_height2">-200dp</dimen>

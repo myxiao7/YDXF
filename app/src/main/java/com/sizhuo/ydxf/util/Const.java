@@ -31,6 +31,22 @@ public class Const {
      */
     public static final String M01 = URL2 + "selectNews/1/";
     /**
+     * Module02
+     */
+    public static final String M02 = URL2 + "selectNews/2/";
+    /**
+     * Module03
+     */
+    public static final String M03 = URL2 + "selectNews/3/";
+    /**
+     * Module04
+     */
+    public static final String M04 = URL2 + "selectNews/4/";
+    /**
+     * Module05
+     */
+    public static final String M05 = URL2 + "selectNews/5/";
+    /**
      * 帖子评价
      */
     public static final String POSTREPLY = URL2+"insertReply";

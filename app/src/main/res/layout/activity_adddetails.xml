@@ -170,6 +170,8 @@
                 android:background="@drawable/list_setlect_bg"
                 android:text="拨打电话"
                 android:textSize="18sp"
+                android:clickable="false"
+                android:focusable="false"
                 />
         </LinearLayout>
     </LinearLayout>

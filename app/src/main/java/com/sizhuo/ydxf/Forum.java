@@ -96,18 +96,17 @@ public class Forum extends AppCompatActivity {
         listView.setOnRefreshStartListener(new ZrcListView.OnStartListener() {
             @Override
             public void onStart() {
-                Message message = handler.obtainMessage();
-                message.what = REFRESH_COMPLETE;
-                handler.sendMessageDelayed(message, 500);//2.5秒后通知停止刷新
+                loadData();
             }
         });
+
         // 加载更多事件回调（可选）
         listView.setOnLoadMoreStartListener(new ZrcListView.OnStartListener() {
             @Override
             public void onStart() {
-                Message message = handler.obtainMessage();
-                message.what = LOADMORE_COMPLETE;
-                handler.sendMessageDelayed(message, 500);//2.5秒后通知停止刷新
+                index++;
+                loadMoreData(index);
+
             }
         });
 
@@ -139,17 +138,6 @@ public class Forum extends AppCompatActivity {
         listView = (ZrcListView)findViewById(R.id.forum_listview);
         initListView();
 
-        // 加载更多事件回调（可选）
-        listView.setOnLoadMoreStartListener(new ZrcListView.OnStartListener() {
-            @Override
-            public void onStart() {
-               /* Message message = handler.obtainMessage();
-                message.what = LOADMORE_COMPLETE;
-                handler.sendMessageDelayed(message, 2500);//2.5秒后通知停止刷新*/
-                index++;
-                loadMoreData(index);
-            }
-        });
     }
 
     /**
@@ -168,8 +156,11 @@ public class Forum extends AppCompatActivity {
                         list = JSON.parseArray(jsonObject.getString("data"), _PostDetailData.class);
                         myForumAdapter.notifyDataSetChanged(list);
                         listView.setRefreshSuccess("更新完成"); // 通知加载成功
+                        listView.startLoadMore();
+                    }else if(code == 400){
+                        Toast.makeText(Forum.this,"没有数据",Toast.LENGTH_SHORT).show();
                     }else{
-
+                        Toast.makeText(Forum.this,"加载错误",Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -180,14 +171,20 @@ public class Forum extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen", volleyError.getMessage());
+                Toast.makeText(Forum.this,"服务器异常",Toast.LENGTH_SHORT).show();
             }
         });
-        jsonObjectRequest.setTag(TAG01);
-        queue.add(jsonObjectRequest);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                queue.add(jsonObjectRequest);
+                jsonObjectRequest.setTag(TAG01);
+            }
+        }, 800);
     }
 
     /**
-     * 获取数据
+     * 获取更多数据
      */
     private void loadMoreData(int index) {
         jsonObjectRequest =  new JsonObjectRequest(Const.MFORUM + index, null, new Response.Listener<JSONObject>() {
@@ -202,7 +199,11 @@ public class Forum extends AppCompatActivity {
                         list = JSON.parseArray(jsonObject.getString("data"), _PostDetailData.class);
                         myForumAdapter.notifyDataSetChanged(list);
                         listView.setLoadMoreSuccess();
+                    }else if(code == 400){
+                        Toast.makeText(Forum.this,"没有更多了",Toast.LENGTH_SHORT).show();
+                        listView.stopLoadMore();
                     }else{
+                        Toast.makeText(Forum.this,"加载错误",Toast.LENGTH_SHORT).show();
                         listView.stopLoadMore();
                     }
                 } catch (JSONException e) {
@@ -215,6 +216,7 @@ public class Forum extends AppCompatActivity {
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen", volleyError.getMessage());
                 listView.stopLoadMore();
+                Toast.makeText(Forum.this,"网络异常",Toast.LENGTH_SHORT).show();
             }
         });
         new Handler().postDelayed(new Runnable() {
@@ -246,23 +248,6 @@ public class Forum extends AppCompatActivity {
         listView.setFootable(footer);
     }
 
-    Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what){
-                case LOADMORE_COMPLETE:
-                    myForumAdapter.notifyDataSetChanged();
-                    listView.setLoadMoreSuccess();
-                    break;
-
-                case REFRESH_COMPLETE:
-                    list.clear();
-                    loadData();
-                    break;
-            }
-        }
-    };
 
     //toolbar菜单
     @Override

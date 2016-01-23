@@ -42,12 +42,14 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:background="@mipmap/ic_colock" />
+                    android:background="@mipmap/ic_colock"
+                    android:layout_marginRight="5dp"
+                    />
                 <TextView
                     android:id="@+id/module01_list_item02_date_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="我是时间" />
+                    android:text="12:00" />
         </LinearLayout>
         </LinearLayout>
 

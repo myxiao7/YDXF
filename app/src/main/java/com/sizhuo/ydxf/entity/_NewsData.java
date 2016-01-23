@@ -1,5 +1,8 @@
 package com.sizhuo.ydxf.entity;
 
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,52 +14,86 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class _NewsData implements Serializable{
+@Table(name = "_NewsData")
+public class _NewsData implements Serializable {
     private static final long serialVersionUID = -228286441826334138L;
+    @Column(name = "id", isId = true)
+    private int id;
 
+    /**
+     * 所属模块
+     */
+    @Column(name = "moduleType")
+    private String moduleType;
 
     /**
      * 标题
      */
+    @Column(name = "title")
     private String title;
-     /**
+    /**
      * 缩略图
      */
+    @Column(name = "imgsrc")
     private String imgsrc;
-/**
+    /**
      * 类型
      */
+    @Column(name = "type")
     private String type;
-/**
+    /**
      * 简略信息
      */
+    @Column(name = "digest")
     private String digest;
-/**
+    /**
      * 新闻ID
      */
+    @Column(name = "docid")
     private String docid;
-/**
+    /**
      * 新闻链接
      */
+    @Column(name = "url")
     private String url;
-/**
+    /**
      * 新闻时间
      */
+    @Column(name = "ptime")
     private String ptime;
-/**
+    /**
      * 多图新闻
      */
+    @Column(name = "imgextra")
     private List<com.sizhuo.ydxf.entity.imgextra> imgextra;
     /**
      * 评价数
      */
+    @Column(name = "replyCount")
     private String replyCount;
     /**
      * 评价
      */
+    @Column(name = "reply")
     private List<_ReplyData> reply;
 
     public _NewsData() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getModuleType() {
+        return moduleType;
+    }
+
+    public void setModuleType(String moduleType) {
+        this.moduleType = moduleType;
     }
 
     public String getTitle() {

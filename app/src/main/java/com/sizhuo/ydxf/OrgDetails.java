@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,7 +29,7 @@ public class OrgDetails extends AppCompatActivity {
     private Toolbar toolbar;
     private CircleImageView icon;//图标
     private TextView nameTv;//名称
-    private TextView desTv;//简介
+    private WebView webView;//简介
     private _OrgData orgData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +42,12 @@ public class OrgDetails extends AppCompatActivity {
             ImageLoaderHelper.getIstance().loadImg(orgData.getPicture(),icon);
         }
         nameTv.setText(orgData.getName());
-        desTv.setText(orgData.getIntroduces());
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        webView.getSettings().setSupportMultipleWindows(true);
+        webView.setWebViewClient(new WebViewClient());
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.loadUrl(orgData.getIntroduces());
     }
 
     private void initViews() {
@@ -49,6 +57,6 @@ public class OrgDetails extends AppCompatActivity {
         setSupportActionBar(toolbar);
         icon = (CircleImageView) findViewById(R.id.orgdetails_img);
         nameTv = (TextView) findViewById(R.id.orgdetails_name_tv);
-        desTv = (TextView) findViewById(R.id.orgdetails_des_tv);
+        webView = (WebView) findViewById(R.id.orgdetailss_webview);
     }
 }
