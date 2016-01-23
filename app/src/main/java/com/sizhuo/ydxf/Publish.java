@@ -3,6 +3,7 @@ package com.sizhuo.ydxf;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -376,9 +377,18 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
                 return headers;
             }
         };
+
                 queue.add(jsonObjectRequest);
                 jsonObjectRequest.setTag(REQUEST_TAB);
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(dialog!=null){
+            dialog.dismiss();
+        }
     }
 
     //toolbar菜单
@@ -416,7 +426,7 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
                                         Map<String, File> files = new HashMap<>();
                                         Map<String, String> param = new HashMap<>();
                                         files.put("icon", new File(imgList.get(i).substring(7, imgList.get(i).length())));
-                                        Log.d("log.d", imgList.get(i).substring(7, imgList.get(0).length()) + "--------------imgsrc");
+//                                        Log.d("log.d", imgList.get(i).substring(7, imgList.get(0).length()) + "--------------imgsrc");
                                         //上传图片
                                         post("http://112.54.80.235:50406/IndustryPioneer.svc/uploadImage", param, files);
                                     }
