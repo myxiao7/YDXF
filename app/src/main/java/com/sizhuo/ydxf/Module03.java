@@ -87,7 +87,7 @@ public class Module03 extends AppCompatActivity implements BaseSliderView.OnSlid
             @Override
             public void onItemClick(ZrcListView parent, View view, int position, long id) {
                 Intent intent = new Intent(Module03.this, NewsDetails.class);
-                Toast.makeText(Module03.this, "" + position + "----" + list.get(position - 1).getDigest(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Module03.this, "" + position + "----" + list.get(position - 1).getDigest(), Toast.LENGTH_SHORT).show();
                 intent.putExtra("data", list.get(position - 1));
                 startActivity(intent);
             }
@@ -260,7 +260,7 @@ public class Module03 extends AppCompatActivity implements BaseSliderView.OnSlid
     private void initViews() {
         new StatusBar(this).initStatusBar();
         toolbar = (Toolbar) findViewById(R.id.module01_toolbar);
-        toolbar.setTitle("大事小情");
+        toolbar.setTitle("上级精神");
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -298,17 +298,17 @@ public class Module03 extends AppCompatActivity implements BaseSliderView.OnSlid
                 if (dbManager.selector(_SliderData.class).where("moduleType", "=", "m03").findAll().size() > 0) {
                     List<_SliderData> sliderDatas = dbManager.selector(_SliderData.class).where("moduleType", "=", "m03").findAll();
                     loadSlider(sliderDatas);
-                    Toast.makeText(Module03.this, "加载了" + sliderDatas.size() + "条幻灯片缓存", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Module03.this, "加载了" + sliderDatas.size() + "条幻灯片缓存", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(Module03.this, "没有幻灯片缓存数据", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Module03.this, "没有幻灯片缓存数据", Toast.LENGTH_SHORT).show();
                 }
             }
             if(dbManager.selector(_NewsData.class).where("moduleType","=","m03").findAll()!=null) {
                 if (dbManager.selector(_NewsData.class).where("moduleType", "=", "m03").findAll().size() > 0) {
                     list = dbManager.selector(_NewsData.class).where("moduleType", "=", "m03").findAll();
-                    Toast.makeText(Module03.this, "加载了" + list.size() + "条缓存", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Module03.this, "加载了" + list.size() + "条缓存", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(Module03.this, "没有缓存数据", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Module03.this, "没有缓存数据", Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (DbException e) {

@@ -362,12 +362,12 @@ public class PersonInfo extends AppCompatActivity implements View.OnClickListene
         }
     }
 
-    private void update(final String icon,final String sex) {
+    private void update(final String iconStr,final String sex) {
         Map<String, String> map = new HashMap<>();
         map.put("userName", user.getUserName());
         map.put("userPwd", user.getUserPwd());
-        if(!TextUtils.isEmpty(icon)){
-            map.put("portrait", icon);
+        if(!TextUtils.isEmpty(iconStr)){
+            map.put("portrait", iconStr);
         }
         if(!TextUtils.isEmpty(sex)){
             map.put("sex", sex);
@@ -383,9 +383,11 @@ public class PersonInfo extends AppCompatActivity implements View.OnClickListene
                     //修改成功，返回信息data
                     if (code.equals("200")) {
                         //修改用户信息
-                        if(!TextUtils.isEmpty(icon)){
-                            user.setPortrait(icon);
+                        if(!TextUtils.isEmpty(iconStr)){
+                            user.setPortrait(iconStr);
                             dbManager.update(user);
+                            //修改当前头像
+                            ImageLoaderHelper.getIstance().loadImg(user.getPortrait(), icon);
                         }
                         if(!TextUtils.isEmpty(sex)){
                             user.setSex(sex);

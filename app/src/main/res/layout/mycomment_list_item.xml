@@ -12,6 +12,7 @@
             android:layout_height="wrap_content"
             android:text="沙发"
             android:textSize="18sp"
+            android:textColor="@color/black"
             />
             <TextView
                 android:id="@+id/mycomment_list_item_date_tv"
@@ -19,6 +20,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="2015-12-30 16:20"
+                android:textColor="@color/black"
                 />
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +39,8 @@
                 android:layout_height="wrap_content"
                 android:text="我是新闻标题我是新闻标题"
                 android:textColor="@color/darker_gray"
-                android:background="@drawable/list_setlect_bg"
+                android:singleLine="true"
+                android:ellipsize="end"
             />
     </LinearLayout>
 </LinearLayout>

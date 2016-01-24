@@ -40,6 +40,7 @@
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:background="@mipmap/ic_reply_count"
+                android:visibility="gone"
                 />
             <TextView
                 android:id="@+id/mycollection_list_item_reply_tv"
@@ -47,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:text="26"
                 android:layout_marginRight="10dp"
+                android:visibility="gone"
                 />
         </LinearLayout>
     </LinearLayout>

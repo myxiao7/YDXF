@@ -89,10 +89,10 @@ public class PostDetails extends AppCompatActivity{
             user = dbManager.findFirst(User.class);
             if(user!=null){
                 loginFlag = true;
-                Toast.makeText(PostDetails.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
+//                Toast.makeText(PostDetails.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
             }else{
                 loginFlag = false;
-                Toast.makeText(PostDetails.this,"没有登录",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(PostDetails.this,"没有登录",Toast.LENGTH_SHORT).show();
             }
         } catch (DbException e) {
             e.printStackTrace();
@@ -167,7 +167,7 @@ public class PostDetails extends AppCompatActivity{
                                     Toast.makeText(PostDetails.this, "您已被禁言", Toast.LENGTH_SHORT).show();
                                     //禁言
                                 } else {
-                                    Toast.makeText(PostDetails.this, "失败，可能是人品问题", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(PostDetails.this, "回复失败", Toast.LENGTH_SHORT).show();
                                 }
                                 contentEdit.setText("");
                                 hideSoftInput(v);
@@ -180,6 +180,7 @@ public class PostDetails extends AppCompatActivity{
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen", volleyError.getMessage());
+                            Toast.makeText(PostDetails.this, "回复失败,网络异常", Toast.LENGTH_SHORT).show();
                             hideSoftInput(v);
                             dialog.dismiss();
                         }
@@ -239,7 +240,7 @@ public class PostDetails extends AppCompatActivity{
 
         //没有回复的处理
         if(TextUtils.isEmpty(replyCount)){
-            Toast.makeText(PostDetails.this,"还没有回复",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(PostDetails.this,"还没有回复",Toast.LENGTH_SHORT).show();
             replyIcon.setVisibility(View.GONE);
         }else{
             //回复数据

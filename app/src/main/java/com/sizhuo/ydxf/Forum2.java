@@ -42,10 +42,10 @@ import java.util.List;
 /**
  *
  *项目名称: Forum
- *类描述:  论坛
+ *类描述:  论坛2
  *Created by zhanghao
  *date: 2015-12-16 08:37:54
- *@version 1.0
+ *@version 1.0-
  *
  */
 
@@ -73,10 +73,10 @@ public class Forum2 extends AppCompatActivity {
             user = dbManager.findFirst(User.class);
             if(user!=null){
                 loginFlag = true;
-                Toast.makeText(Forum2.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Forum2.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
             }else{
                 loginFlag = false;
-                Toast.makeText(Forum2.this,"没有登录",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Forum2.this,"没有登录",Toast.LENGTH_SHORT).show();
             }
         } catch (DbException e) {
             e.printStackTrace();
@@ -103,9 +103,9 @@ public class Forum2 extends AppCompatActivity {
                         list.get(i).setImgextra(imgextras);
                         list.get(i).setReply(replyDatas);
                     }
-                    Toast.makeText(Forum2.this, "加载了" + list.size() + "条缓存", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Forum2.this, "加载了" + list.size() + "条缓存", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(Forum2.this, "没有缓存数据", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Forum2.this, "没有缓存数据", Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (DbException e) {
@@ -150,7 +150,7 @@ public class Forum2 extends AppCompatActivity {
     private void initViews() {
         new StatusBar(this).initStatusBar();
         toolbar = (Toolbar) findViewById(R.id.forum_toolbar);
-        toolbar.setTitle("论坛");
+        toolbar.setTitle("活动专区");
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

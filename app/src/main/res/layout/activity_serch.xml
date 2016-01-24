@@ -44,7 +44,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="阅读历史"
+            android:text="历史搜索"
+            android:textSize="14sp"
             />
         <View
             android:layout_width="match_parent"

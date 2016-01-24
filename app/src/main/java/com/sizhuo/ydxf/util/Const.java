@@ -103,5 +103,9 @@ public class Const {
      * 修改信息
      */
     public static final String UPDATEINFO = URL2 + "updateUser";
+    /**
+     * 搜索
+     */
+    public static final String SEARCH = URL2 + "searchNews/";
 
 }

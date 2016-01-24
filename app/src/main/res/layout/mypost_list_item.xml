@@ -14,14 +14,47 @@
         android:orientation="vertical"
         android:gravity="center_vertical"
         >
-        <TextView
-            android:id="@+id/mypost_list_item_title_tv"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="我发表的帖子"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+            <TextView
+                android:id="@+id/mypost_list_item_title_tv"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="我发表的帖子"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:singleLine="true"
+                android:ellipsize="end"
+                />
+            <LinearLayout
+                android:id="@+id/mypost_list_item_replycount_lin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                >
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@mipmap/ic_reply_count"
+                    android:layout_marginRight="5dp"
+                    />
+                <TextView
+                    android:id="@+id/mypost_list_item_reply_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_marginRight="10dp"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
         <TextView
             android:id="@+id/mypost_list_item_content_tv"
             android:layout_width="wrap_content"
@@ -45,18 +78,8 @@
                 android:layout_height="wrap_content"
                 android:text="2015-12-30 16:20"
                 />
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:background="@mipmap/ic_reply_count"
-                />
-            <TextView
-                android:id="@+id/mypost_list_item_reply_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="26"
-                android:layout_marginRight="10dp"
-                />
+
+
         </LinearLayout>
     </LinearLayout>
 

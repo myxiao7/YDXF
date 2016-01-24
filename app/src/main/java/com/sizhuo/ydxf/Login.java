@@ -356,11 +356,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             //保存用户信息
                             User user = JSON.parseObject(jsonObject.getString("data").toString(),User.class);
                             dbManager.save(user);
-                            Toast.makeText(Login.this, "suessful", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(Login.this, "suessful", Toast.LENGTH_SHORT).show();
                             progressHUD.dismissWithSuccess("登录成功");
                             Login.this.finish();
                         }else{
-                            Toast.makeText(Login.this, "failt", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, "验证失败", Toast.LENGTH_SHORT).show();
                             progressHUD.dismissWithFailure("登录失败");
                         }
                     } catch (DbException e) {
@@ -372,6 +372,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(Login.this, "网络异常", Toast.LENGTH_SHORT).show();
+                progressHUD.dismissWithFailure("网络异常");
                 Log.d("log.d",volleyError.toString());
             }
         }){

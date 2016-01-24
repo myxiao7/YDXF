@@ -77,10 +77,10 @@ public class Forum extends AppCompatActivity {
             user = dbManager.findFirst(User.class);
             if(user!=null){
                 loginFlag = true;
-                Toast.makeText(Forum.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Forum.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
             }else{
                 loginFlag = false;
-                Toast.makeText(Forum.this,"没有登录",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Forum.this,"没有登录",Toast.LENGTH_SHORT).show();
             }
         } catch (DbException e) {
             e.printStackTrace();
@@ -107,9 +107,9 @@ public class Forum extends AppCompatActivity {
                         list.get(i).setImgextra(imgextras);
                         list.get(i).setReply(replyDatas);
                     }
-                    Toast.makeText(Forum.this, "加载了" + list.size() + "条缓存", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Forum.this, "加载了" + list.size() + "条缓存", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(Forum.this, "没有缓存数据", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Forum.this, "没有缓存数据", Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (DbException e) {
@@ -154,7 +154,7 @@ public class Forum extends AppCompatActivity {
     private void initViews() {
         new StatusBar(this).initStatusBar();
         toolbar = (Toolbar) findViewById(R.id.forum_toolbar);
-        toolbar.setTitle("论坛");
+        toolbar.setTitle("我有好点子");
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,7 +349,7 @@ public class Forum extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.forum_menu_item01:
                 if(loginFlag==true){
-                    Toast.makeText(Forum.this,"发帖",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Forum.this,"发帖",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Forum.this, Publish.class);
                     this.startActivity(intent);
                 }else{

@@ -3,6 +3,7 @@ package com.sizhuo.ydxf.per;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,15 +29,21 @@ import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.google.gson.JsonObject;
 import com.sizhuo.ydxf.NewsDetails;
 import com.sizhuo.ydxf.R;
+import com.sizhuo.ydxf.application.MyApplication;
 import com.sizhuo.ydxf.entity.MyCollectionDate;
 import com.sizhuo.ydxf.entity._NewsData;
 import com.sizhuo.ydxf.entity._SliderData;
+import com.sizhuo.ydxf.entity.db.News;
+import com.sizhuo.ydxf.entity.db.User;
 import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.DbManager;
+import org.xutils.db.sqlite.WhereBuilder;
+import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +64,7 @@ public class MyCollection extends AppCompatActivity{
     private List<_NewsData> list = new ArrayList<>();
     private MyCollectionAdapter adapter;
     private Boolean isEdit = false;//是否处于编辑模式下
+    private int index = 1;
 
     private String userName = "";
     private String userPwd = "";
@@ -65,29 +73,44 @@ public class MyCollection extends AppCompatActivity{
     private RequestQueue queue;
     private JsonObjectRequest jsonObjectRequest;
     private final String TAG01 = "jsonObjectRequest";//请求数据TAG
+    //数据库操作
+    private DbManager dbManager;//数据库操作
+    private User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mycollection);
         initViews();
         queue = Volley.newRequestQueue(this);
+
         adapter = new MyCollectionAdapter(list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new ZrcListView.OnItemClickListener() {
             @Override
             public void onItemClick(ZrcListView parent, View view, int position, long id) {
                 Intent intent = new Intent(MyCollection.this, NewsDetails.class);
-                intent.putExtra("data",list.get(position));
+                intent.putExtra("data", list.get(position));
                 MyCollection.this.startActivity(intent);
             }
         });
+        // 加载更多事件回调（可选）
+        listView.setOnLoadMoreStartListener(new ZrcListView.OnStartListener() {
+            @Override
+            public void onStart() {
+                index++;
+                loadMoreData(index);
+            }
+        });
+
         //加载数据
         loadData();
     }
 
+    //记载数据
     private void loadData() {
         Map<String, String> map = new HashMap<>();
-        map.put("userName",userName);
+        map.put("userName", userName);
         map.put("userPwd",userPwd);
         JSONObject object = new JSONObject(map);
         Log.d("log.d", object.toString());
@@ -101,10 +124,42 @@ public class MyCollection extends AppCompatActivity{
                     if(code == 200){
                         list = JSON.parseArray(jsonObject.getString("data"), _NewsData.class);
                         adapter.notifyDataSetChanged(list);
-                    }else{
 
+                        for(_NewsData newsData: list){
+                            //查询当前用户本地存储的收藏
+                            News cacheNews = dbManager.selector(News.class).where("username","=",userName).and("docid","=",newsData.getDocid()).findFirst();
+                            //如果本地存储了收藏的信息 则不存储
+                            if(cacheNews!=null){
+                                Log.d("log.d","当前已经存储------------"+newsData.getDocid());
+                            }else{
+                                //将所有收藏的新闻存入数据库（不包括之前操作过的）
+                                News news = new News();
+                                news.setUsername(userName);
+                                news.setDocid(newsData.getDocid());
+                                news.setTitle(newsData.getTitle());
+                                news.setUrl(newsData.getUrl());
+                                news.setPtime(newsData.getPtime());
+                                news.setReply(newsData.getReply());
+                                dbManager.save(news);
+                                Log.d("log.d", "当前没有存储------------" + newsData.getDocid());
+                            }
+                          /*  if(cacheNews.getDocid().equals(newsData.getDocid())&&cacheNews.getUsername().equals(userName)){
+                                Log.d("log.d","当前已经存储------------"+newsData.getDocid());
+                            }else{
+
+                            }*/
+                        }
+                        if(list.size()==20){
+                            listView.startLoadMore();
+                        }
+                    }else if(code == 400){
+                        Toast.makeText(MyCollection.this,"没有数据",Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(MyCollection.this,"加载错误",Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                }catch (DbException e) {
                     e.printStackTrace();
                 }
             }
@@ -112,11 +167,87 @@ public class MyCollection extends AppCompatActivity{
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 Log.d("xinwen",volleyError.toString()+volleyError);
+                Toast.makeText(MyCollection.this, "网络异常",Toast.LENGTH_SHORT).show();
             }
         });
         queue.add(jsonObjectRequest);
         jsonObjectRequest.setTag(TAG01);
     }
+
+    //加载更多数据
+    private void loadMoreData(int index) {
+        Map<String, String> map = new HashMap<>();
+        map.put("userName",userName);
+        map.put("userPwd", userPwd);
+        JSONObject object = new JSONObject(map);
+        Log.d("log.d", object.toString());
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.MYCOLLECTION+index, object, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Log.d("log.d", "收藏"+jsonObject.toString()+"");
+                try {
+                    //获取服务器code
+                    int code = jsonObject.getInt("code");
+                    if(code == 200){
+                        List<_NewsData> list2 = JSON.parseArray(jsonObject.getString("data"), _NewsData.class);
+                        for(_NewsData newsData: list2){
+                            list.add(newsData);
+
+                            //查询当前用户本地存储的收藏
+                            News cacheNews = dbManager.selector(News.class).where("username","=",userName).and("docid","=",newsData.getDocid()).findFirst();
+                            //如果本地存储了收藏的信息 则不存储
+                            if(cacheNews!=null){
+                                Log.d("log.d", "当前已经存储------------" + newsData.getDocid());
+                            }else{
+                                //将所有收藏的新闻存入数据库（不包括之前操作过的）
+                                News news = new News();
+                                news.setUsername(userName);
+                                news.setDocid(newsData.getDocid());
+                                news.setTitle(newsData.getTitle());
+                                news.setUrl(newsData.getUrl());
+                                news.setPtime(newsData.getPtime());
+                                news.setReply(newsData.getReply());
+                                dbManager.save(news);
+                                Log.d("log.d", "当前没有存储------------" + newsData.getDocid());
+                            }
+                          /*  if(cacheNews.getDocid().equals(newsData.getDocid())&&cacheNews.getUsername().equals(userName)){
+
+                            }else{
+
+                            }*/
+                        }
+                        adapter.notifyDataSetChanged(list);
+                        listView.setLoadMoreSuccess();
+                    }else if(code == 400){
+                        Toast.makeText(MyCollection.this,"没有更多了...",Toast.LENGTH_SHORT).show();
+                        listView.stopLoadMore();
+                    }else{
+                        Toast.makeText(MyCollection.this,"加载错误",Toast.LENGTH_SHORT).show();
+                        listView.stopLoadMore();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+//                Log.d("xinwen",volleyError.toString()+volleyError);
+                listView.stopLoadMore();
+                Toast.makeText(MyCollection.this, "网络异常",Toast.LENGTH_SHORT).show();
+            }
+        });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                queue.add(jsonObjectRequest);
+                jsonObjectRequest.setTag(TAG01);
+            }
+        }, 1200);
+    }
+
 
     private void initViews() {
         new StatusBar(this).initStatusBar();
@@ -134,6 +265,13 @@ public class MyCollection extends AppCompatActivity{
         userName = intent.getStringExtra("userName");
         userPwd = intent.getStringExtra("userPwd");
 
+        //加载本地缓存
+        dbManager = new MyApplication().getDbManager();
+        try {
+            user = dbManager.findFirst(User.class);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -163,6 +301,47 @@ public class MyCollection extends AppCompatActivity{
         return true;
     }
 
+    private void insertLove(final _NewsData news) {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("userName", user.getUserName());
+        map.put("userPwd", user.getUserPwd());
+        map.put("news", news.getDocid());
+        map.put("flag", "not");
+        JSONObject jsonObject = new JSONObject(map);
+        Log.d("xinwen", jsonObject.toString());
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.NEWSLOVE, jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Log.d("xinwen", jsonObject.toString());
+                try {
+                    //获取服务器code
+                    int code = jsonObject.getInt("code");
+                    if (code == 200) {
+                        list.remove(news);
+                        dbManager.delete(News.class, WhereBuilder.b("username", "=", user.getUserName()).and("docid", "=", news.getDocid()));
+                        adapter.notifyDataSetChanged(list);
+                        Log.d("log.d", "DB+删除收藏新闻在本地");
+                        Toast.makeText(MyCollection.this, "删除成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(MyCollection.this, "删除失败", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(MyCollection.this, "网络故障...", Toast.LENGTH_SHORT).show();
+//                Log.d("xinwen", volleyError.getMessage());
+            }
+        });
+        jsonObjectRequest.setTag(TAG01);
+        queue.add(jsonObjectRequest);
+    }
     class MyCollectionAdapter extends BaseAdapter{
         private List<_NewsData> list;
         private HashMap<Integer,Integer> isVisiableMap = new HashMap<>();//用于存储删除按钮是否现实
@@ -233,10 +412,7 @@ public class MyCollection extends AppCompatActivity{
             holder.delBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    list.remove(date);
-                    adapter = new MyCollectionAdapter(list);
-                    listView.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
+                    insertLove(date);
                 }
             });
             return convertView;

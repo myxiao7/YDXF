@@ -224,7 +224,7 @@
         android:layout_height="1dp"
         android:background="@color/darker_gray"
         />
-    <RelativeLayout
+    <!--<RelativeLayout
         android:id="@+id/personcenter_menu04_re"
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -267,5 +267,5 @@
         android:layout_height="1dp"
         android:background="@color/darker_gray"
         />
-
+-->
 </LinearLayout>

@@ -411,13 +411,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.main_menu_serch:
-                Toast.makeText(MainActivity.this,"搜索",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this,"搜索",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, Search.class);
                 startActivity(intent);
                 break;
 
             case R.id.main_menu_person:
-                Toast.makeText(MainActivity.this,"我的",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this,"我的",Toast.LENGTH_SHORT).show();
                 Intent intent2 = new Intent(MainActivity.this, PersonCenter.class);
                 startActivity(intent2);
                 break;

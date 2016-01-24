@@ -163,11 +163,11 @@ public class BindUser extends AppCompatActivity implements View.OnClickListener 
                         User user = JSON.parseObject(jsonObject.getString("data").toString(), User.class);
                         Log.d("log.d","11111111111111111"+jsonObject.getString("data").toString());
                         dbManager.save(user);
-                        Toast.makeText(BindUser.this, "suessful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BindUser.this, "绑定成功", Toast.LENGTH_SHORT).show();
                         progressHUD.dismissWithSuccess("绑定成功");
                         BindUser.this.finish();
                     }else if(code.equals("400")){
-                        Toast.makeText(BindUser.this, "failt", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BindUser.this, "绑定失败", Toast.LENGTH_SHORT).show();
                         progressHUD.dismissWithFailure("绑定失败,用户名密码不匹配");
                     }else{
                         progressHUD.dismissWithFailure("绑定失败,网络异常");

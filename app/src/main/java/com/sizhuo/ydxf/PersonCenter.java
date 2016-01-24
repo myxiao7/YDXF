@@ -75,7 +75,7 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
         menuBtn01 = (RelativeLayout) findViewById(R.id.personcenter_menu01_re);
         menuBtn02 = (RelativeLayout) findViewById(R.id.personcenter_menu02_re);
         menuBtn03 = (RelativeLayout) findViewById(R.id.personcenter_menu03_re);
-        menuBtn04 = (RelativeLayout) findViewById(R.id.personcenter_menu04_re);
+//        menuBtn04 = (RelativeLayout) findViewById(R.id.personcenter_menu04_re);
         icon = (CircleImageView) findViewById(R.id.personcenter_icon_img);
         nameTv = (TextView) findViewById(R.id.personcenter_name_txt);
     }
@@ -87,7 +87,7 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
         menuBtn01.setOnClickListener(this);
         menuBtn02.setOnClickListener(this);
         menuBtn03.setOnClickListener(this);
-        menuBtn04.setOnClickListener(this);
+//        menuBtn04.setOnClickListener(this);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,9 +165,9 @@ public class PersonCenter extends AppCompatActivity implements View.OnClickListe
             case R.id.personcenter_menu03_re:
                 startAct(2);
                 break;
-            case R.id.personcenter_menu04_re:
+          /*  case R.id.personcenter_menu04_re:
                 startAct(3);
-                break;
+                break;*/
 
         }
     }

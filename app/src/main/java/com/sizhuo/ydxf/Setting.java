@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kyleduo.switchbutton.SwitchButton;
 import com.sizhuo.ydxf.application.MyApplication;
@@ -118,6 +119,7 @@ public class Setting extends AppCompatActivity implements View.OnClickListener {
                 startActivity(intent4);*/
                 break;
             case R.id.setting_verson_re:
+                Toast.makeText(Setting.this,"已经是最新了",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.setting_about_re:
                 /*Intent intent5 = new Intent(Setting.this, About.class);

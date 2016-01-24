@@ -3,13 +3,16 @@ package com.sizhuo.ydxf.per;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +58,7 @@ public class MyPost extends AppCompatActivity {
     private MyPostAdapter adapter;
     private TextView delSwitchBtn;
     private Boolean isEdit = false;//是否处于编辑模式下
+    private int index = 1;
 
     private String userName = "";
     private String userPwd = "";
@@ -63,6 +67,8 @@ public class MyPost extends AppCompatActivity {
     private RequestQueue queue;
     private JsonObjectRequest jsonObjectRequest;
     private final String TAG01 = "jsonObjectRequest";//请求数据TAG
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +104,14 @@ public class MyPost extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             }
         });
+        // 加载更多事件回调（可选）
+        listView.setOnLoadMoreStartListener(new ZrcListView.OnStartListener() {
+            @Override
+            public void onStart() {
+                index++;
+                loadMoreData(index);
+            }
+        });
         //加载数据
         loadData();
     }
@@ -118,8 +132,13 @@ public class MyPost extends AppCompatActivity {
                     if(code == 200){
                         list = JSON.parseArray(jsonObject.getString("data"), _PostDetailData.class);
                         adapter.notifyDataSetChanged(list);
+                        if(list.size()==20){
+                            listView.startLoadMore();
+                        }
+                    }else if(code == 400){
+                        Toast.makeText(MyPost.this,"没有数据",Toast.LENGTH_SHORT).show();
                     }else{
-
+                        Toast.makeText(MyPost.this,"加载错误",Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -129,10 +148,58 @@ public class MyPost extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 Log.d("xinwen",volleyError.toString()+volleyError);
+                Toast.makeText(MyPost.this,"网络异常",Toast.LENGTH_SHORT).show();
             }
         });
         queue.add(jsonObjectRequest);
         jsonObjectRequest.setTag(TAG01);
+    }
+
+    private void loadMoreData(int index) {
+        Map<String, String> map = new HashMap<>();
+        map.put("userName", userName);
+        map.put("userPwd", userPwd);
+        JSONObject object = new JSONObject(map);
+        Log.d("log.d", object.toString());
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Const.MYPOST+index, object, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Log.d("log.d", "收藏"+jsonObject.toString()+"");
+                try {
+                    //获取服务器code
+                    int code = jsonObject.getInt("code");
+                    if(code == 200){
+                        List<_PostDetailData> list2 = JSON.parseArray(jsonObject.getString("data"), _PostDetailData.class);
+                        for (_PostDetailData data:list2) {
+                            list.add(data);
+                        }
+                        adapter.notifyDataSetChanged(list);
+                        listView.setLoadMoreSuccess();
+                    }else if(code == 400){
+                        Toast.makeText(MyPost.this,"没有更多了",Toast.LENGTH_SHORT).show();
+                        listView.stopLoadMore();
+                    }else{
+                        Toast.makeText(MyPost.this,"加载错误",Toast.LENGTH_SHORT).show();
+                        listView.stopLoadMore();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Log.d("xinwen",volleyError.toString()+volleyError);
+                Toast.makeText(MyPost.this,"网络异常",Toast.LENGTH_SHORT).show();
+            }
+        });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                queue.add(jsonObjectRequest);
+                jsonObjectRequest.setTag(TAG01);
+            }
+        }, 1200);
     }
 
     private void initViews() {
@@ -156,7 +223,7 @@ public class MyPost extends AppCompatActivity {
     class MyPostAdapter extends BaseAdapter {
         private List<_PostDetailData> list;
         private HashMap<Integer,Integer> isVisiableMap = new HashMap<>();//用于存储删除按钮是否显示
-
+        private Map<Integer,Integer> replyMap = new HashMap<>();//记录留言技计数位置
         public MyPostAdapter(List<_PostDetailData> list) {
             this.list = list;
             if(isEdit){
@@ -175,6 +242,16 @@ public class MyPost extends AppCompatActivity {
         private void configVisiable(Integer visi){
             for (int i = 0; i < list.size(); i++) {
                 isVisiableMap.put(i, visi);
+            }
+        }
+
+        /**
+         *  保存留言计数的位置
+         * @param visi
+         */
+        public void configReplyMap(Integer visi){
+            for (int i = 0; i < list.size(); i++) {
+                replyMap.put(i,visi);
             }
         }
 
@@ -203,6 +280,7 @@ public class MyPost extends AppCompatActivity {
                 holder.titleTv = (TextView) convertView.findViewById(R.id.mypost_list_item_title_tv);
                 holder.contentTv = (TextView) convertView.findViewById(R.id.mypost_list_item_content_tv);
                 holder.dateTv = (TextView) convertView.findViewById(R.id.mypost_list_item_date_tv);
+                holder.replyLin = (LinearLayout) convertView.findViewById(R.id.mypost_list_item_replycount_lin);
                 holder.replyCountTv = (TextView) convertView.findViewById(R.id.mypost_list_item_reply_tv);
                 holder.delBtn = (TextView) convertView.findViewById(R.id.mypost_list_item_del_btn);
                 convertView.setTag(holder);
@@ -213,11 +291,19 @@ public class MyPost extends AppCompatActivity {
             holder.titleTv.setText(date.getTitle());
             holder.contentTv.setText(date.getDigest());
             holder.dateTv.setText(date.getPtime());
-            holder.replyCountTv.setText(date.getReplyCount());
-            if(isVisiableMap.get(position)==View.VISIBLE){
-                holder.delBtn.setVisibility(View.VISIBLE);
+            if(TextUtils.isEmpty(date.getReplyCount())){
+                replyMap.put(position, View.GONE);
             }else{
-                holder.delBtn.setVisibility(View.GONE);
+                replyMap.put(position, View.VISIBLE);
+            }
+            holder.replyLin.setVisibility(replyMap.get(position));
+            holder.replyCountTv.setText(date.getReplyCount());
+            if(isVisiableMap.get(position)!=null){
+                if(isVisiableMap.get(position)==View.VISIBLE){
+                    holder.delBtn.setVisibility(View.VISIBLE);
+                }else{
+                    holder.delBtn.setVisibility(View.GONE);
+                }
             }
             holder.delBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -235,6 +321,7 @@ public class MyPost extends AppCompatActivity {
             public TextView titleTv;
             public TextView contentTv;
             public TextView dateTv;
+            public LinearLayout replyLin;
             public TextView replyCountTv;
             public TextView delBtn;
         }

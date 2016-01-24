@@ -98,10 +98,10 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
             user = dbManager.findFirst(User.class);
             if(user!=null){
                 loginFlag = true;
-                Toast.makeText(Publish.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Publish.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
             }else{
                 loginFlag = false;
-                Toast.makeText(Publish.this,"没有登录",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Publish.this,"没有登录",Toast.LENGTH_SHORT).show();
             }
         } catch (DbException e) {
             e.printStackTrace();
@@ -436,7 +436,7 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
                             }
                         }).start();
                     }else{
-                        Toast.makeText(Publish.this, "没有选择图片", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(Publish.this, "没有选择图片", Toast.LENGTH_SHORT).show();
                         update(null);
                     }
 

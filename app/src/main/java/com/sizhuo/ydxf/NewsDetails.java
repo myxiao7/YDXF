@@ -122,10 +122,10 @@ public class NewsDetails extends AppCompatActivity{
                     Log.d("log.d","未收藏");
                 }
                 loginFlag = true;
-                Toast.makeText(NewsDetails.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
+//                Toast.makeText(NewsDetails.this,"登录"+user.getNickName(),Toast.LENGTH_SHORT).show();
             }else{
                 loginFlag = false;
-                Toast.makeText(NewsDetails.this,"没有登录",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(NewsDetails.this,"没有登录",Toast.LENGTH_SHORT).show();
             }
         } catch (DbException e) {
             e.printStackTrace();
@@ -169,7 +169,7 @@ public class NewsDetails extends AppCompatActivity{
                     intent.putExtra("id",newsData.getDocid());
                     startActivity(intent);
                 }else{
-                    Toast.makeText(NewsDetails.this, "还没有回复", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(NewsDetails.this, "还没有回复", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -213,7 +213,7 @@ public class NewsDetails extends AppCompatActivity{
                                     Toast.makeText(NewsDetails.this, "您已被禁言", Toast.LENGTH_SHORT).show();
                                     //禁言
                                 } else {
-                                    Toast.makeText(NewsDetails.this, "失败，可能是人品问题", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(NewsDetails.this, "失败，可能是网络问题", Toast.LENGTH_SHORT).show();
                                 }
                                 replyEdit.setText("");
                                 replyEdit.clearFocus();
@@ -227,6 +227,7 @@ public class NewsDetails extends AppCompatActivity{
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen", volleyError.getMessage());
+                            Toast.makeText(NewsDetails.this, "失败，可能是网络问题", Toast.LENGTH_SHORT).show();
                             hideSoftInput(v);
                             dialog.dismiss();
                         }
@@ -266,7 +267,7 @@ public class NewsDetails extends AppCompatActivity{
                     }  else if(code == 400){
                         countTv.setText("0");
                         replyData = new LinkedList<>();
-                        Toast.makeText(NewsDetails.this, "没有评论数据", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(NewsDetails.this, "没有评论数据", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -356,11 +357,11 @@ public class NewsDetails extends AppCompatActivity{
         if(loveFlag==true){
             menu.getItem(1).setTitle("已收藏");
             menu.getItem(1).setIcon(R.mipmap.ic_love_yet);
-            Toast.makeText(NewsDetails.this, "已收藏", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(NewsDetails.this, "已收藏", Toast.LENGTH_SHORT).show();
         }else{
             menu.getItem(1).setTitle("未收藏");
             menu.getItem(1).setIcon(R.mipmap.ic_love_not);
-            Toast.makeText(NewsDetails.this, "未收藏", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(NewsDetails.this, "未收藏", Toast.LENGTH_SHORT).show();
         }
         Log.d("log.d","menu..........");
         return true;
@@ -427,9 +428,9 @@ public class NewsDetails extends AppCompatActivity{
                             loveFlag = false;
                             Log.d("log.d", "DB+删除收藏新闻在本地");
                         }
-                        Toast.makeText(NewsDetails.this, flag+"同步结果："+str, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NewsDetails.this, str+"成功", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(NewsDetails.this, "失败，可能是人品问题", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NewsDetails.this, "请到我的收藏同步", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
@@ -442,6 +443,7 @@ public class NewsDetails extends AppCompatActivity{
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen", volleyError.getMessage());
+                Toast.makeText(NewsDetails.this, "可能是网络问题...", Toast.LENGTH_SHORT).show();
             }
         });
         jsonObjectRequest3.setTag(TAG03);

@@ -79,6 +79,10 @@ public class PhotoWatch extends Activity {
                         //单图
                         return 1;
                     }
+                    if(postDetailData.getImgextra().size()==2){
+                        //单图
+                        return 2;
+                    }
                     if(postDetailData.getImgextra().size()==3){
                         //多图
                         return 3;
@@ -124,10 +128,10 @@ public class PhotoWatch extends Activity {
         countTxt = (TextView) findViewById(R.id.photowatch_count_txt);
         cutTxt = (TextView) findViewById(R.id.photowatch_cut_txt);
 //        photoView = (PhotoView) findViewById(R.id.image_watch_photoview);
-        if(postDetailData.getType().equals("1")){
+       /* if(postDetailData.getType().equals("1")){
             countTxt.setText("1");
         }else if(postDetailData.getType().equals("2")){
             countTxt.setText("3");
-        }
+        }*/
     }
 }

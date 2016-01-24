@@ -51,9 +51,10 @@
             >
             <ImageView
                 android:id="@+id/postdetails_list_header_replycount_img"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:background="@mipmap/ic_reply_count"
+                android:layout_marginRight="5dp"
                 />
             <TextView
                 android:id="@+id/postdetails_list_header_replycount_tv"

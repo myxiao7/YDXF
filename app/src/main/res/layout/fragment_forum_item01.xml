@@ -69,8 +69,8 @@
             >
             <ImageView
                 android:id="@+id/frag_forum_item01_replycount_img"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_marginRight="5dp"
                 android:background="@mipmap/ic_reply_count"
                 />

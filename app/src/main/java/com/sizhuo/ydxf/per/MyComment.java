@@ -101,9 +101,13 @@ public class MyComment extends AppCompatActivity {
                     if(code == 200){
                         list = JSON.parseArray(jsonObject.getString("data"), _MyComment.class);
                         adapter.notifyDataSetChanged(list);
-
+                        if(list.size()==20){
+                            listView.startLoadMore();
+                        }
+                    }else if(code == 400){
+                        Toast.makeText(MyComment.this,"没有数据",Toast.LENGTH_SHORT).show();
                     }else{
-
+                        Toast.makeText(MyComment.this,"加载错误",Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -113,6 +117,7 @@ public class MyComment extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 Log.d("xinwen",volleyError.toString()+volleyError);
+                Toast.makeText(MyComment.this,"网络错误...",Toast.LENGTH_SHORT).show();
             }
         });
         queue.add(jsonObjectRequest);
@@ -137,13 +142,14 @@ public class MyComment extends AppCompatActivity {
                         for (_MyComment data: list2) {
                             list.add(data);
                         }
-
                         adapter.notifyDataSetChanged(list);
                         listView.setLoadMoreSuccess();
-//                        listView.stopLoadMore();
-                    }else{
+                    }else if(code == 400){
+                        Toast.makeText(MyComment.this,"没有更多了",Toast.LENGTH_SHORT).show();
                         listView.stopLoadMore();
-//                        Toast.makeText(MyComment.this,"没有更多了..",Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(MyComment.this,"加载错误",Toast.LENGTH_SHORT).show();
+                        listView.stopLoadMore();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -154,7 +160,7 @@ public class MyComment extends AppCompatActivity {
             public void onErrorResponse(VolleyError volleyError) {
                 Log.d("xinwen",volleyError.toString()+volleyError);
                 listView.stopLoadMore();
-                Toast.makeText(MyComment.this,"网络失败..",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MyComment.this,"网络异常..",Toast.LENGTH_SHORT).show();
             }
         });
         new Handler().postDelayed(new Runnable() {
@@ -184,7 +190,6 @@ public class MyComment extends AppCompatActivity {
         SimpleFooter footer = new SimpleFooter(this);
         footer.setCircleColor(0xff33bbee);
         listView.setFootable(footer);
-        listView.startLoadMore();
 
         // 加载更多事件回调（可选）
         listView.setOnLoadMoreStartListener(new ZrcListView.OnStartListener() {

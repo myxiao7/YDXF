@@ -77,10 +77,10 @@ public class NewsComment extends AppCompatActivity {
             user = dbManager.findFirst(User.class);
             if(user!=null){
                 loginFlag = true;
-                Toast.makeText(NewsComment.this, "登录" + user.getNickName(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(NewsComment.this, "登录" + user.getNickName(), ToastToast.LENGTH_SHORT).show();
             }else{
                 loginFlag = false;
-                Toast.makeText(NewsComment.this,"没有登录",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(NewsComment.this,"没有登录",Toast.LENGTH_SHORT).show();
             }
         } catch (DbException e) {
             e.printStackTrace();
@@ -137,7 +137,7 @@ public class NewsComment extends AppCompatActivity {
                                     Toast.makeText(NewsComment.this, "您已被禁言", Toast.LENGTH_SHORT).show();
                                     //禁言
                                 } else {
-                                    Toast.makeText(NewsComment.this, "失败，可能是人品问题", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(NewsComment.this, "评论失败", Toast.LENGTH_SHORT).show();
                                 }
                                 comEdit.setText("");
                                 hideSoftInput(v);
@@ -152,6 +152,7 @@ public class NewsComment extends AppCompatActivity {
 //                Log.d("xinwen", volleyError.getMessage());
                             hideSoftInput(v);
                             dialog.dismiss();
+                            Toast.makeText(NewsComment.this, "网络异常", Toast.LENGTH_SHORT).show();
                         }
                     });
                     jsonObjectRequest.setTag(TAG01);
