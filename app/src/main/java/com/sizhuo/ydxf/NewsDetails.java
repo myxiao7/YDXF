@@ -150,9 +150,16 @@ public class NewsDetails extends AppCompatActivity implements View.OnClickListen
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.getSettings().setSupportMultipleWindows(true);
         webView.setWebViewClient(new WebViewClient());
-        webView.setWebChromeClient(new WebChromeClient());
         webView.loadUrl(newsData.getUrl());
-
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onReceivedError(WebView view, int errorCode,
+                                        String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+                //这里进行无网络或错误处理，具体可以根据errorCode的值进行判断，做跟详细的处理。
+                view.loadUrl("file:///android_asset/404.html");
+            }
+        });
 
         replyEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
