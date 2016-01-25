@@ -1,5 +1,6 @@
 package com.sizhuo.ydxf;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,12 +14,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,7 +66,7 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class NewsDetails extends AppCompatActivity{
+public class NewsDetails extends AppCompatActivity implements View.OnClickListener {
     private Toolbar toolbar;
     private WebView webView;
     private EditText replyEdit;//评论编辑
@@ -87,6 +90,9 @@ public class NewsDetails extends AppCompatActivity{
     private final String TAG03 = "jsonObjectRequest3";//收藏TAG
 
     private ProgressDialog dialog;
+
+    private AlertDialog alertDialog;//分享对话框
+    private LinearLayout shareItem01, shareItem02, shareItem03, shareItem04,shareItem05, shareItem06, shareItem07, shareItem08;
 
     @Override
     public void onBackPressed() {
@@ -283,33 +289,6 @@ public class NewsDetails extends AppCompatActivity{
         queue.add(jsonObjectRequest);
     }
 
-    private UMShareListener umShareListener = new UMShareListener() {
-        @Override
-        public void onResult(SHARE_MEDIA platform) {
-            Toast.makeText(NewsDetails.this, platform + " 分享成功", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onError(SHARE_MEDIA platform, Throwable t) {
-            Toast.makeText(NewsDetails.this,platform + " 分享失败", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(NewsDetails.this, platform +" 分享取消", Toast.LENGTH_SHORT).show();
-        }
-    };
-
-    private ShareBoardlistener shareBoardlistener = new ShareBoardlistener() {
-        @Override
-        public void onclick(SnsPlatform snsPlatform,SHARE_MEDIA share_media) {
-            new ShareAction(NewsDetails.this).setPlatform(share_media).setCallback(umShareListener)
-                    .withText(newsData.getDigest()+" "+"https://www.baidu.com")
-                    .withTitle(newsData.getTitle())
-                    .withMedia(new UMImage(NewsDetails.this,"https://www.baidu.com/img/bd_logo1.png"))
-                            .share();
-        }
-    };
 
 
     @Override
@@ -384,15 +363,27 @@ public class NewsDetails extends AppCompatActivity{
                 break;
 
             case R.id.news_menu_share:
-                final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
-                        {
-                                SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.SINA,
-                                SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE
-                        };
-
-                new ShareAction(this).setDisplayList(displaylist)
-                        .setShareboardclickCallback(shareBoardlistener)
-                        .open();
+//                Toast.makeText(NewsDetails.this,"share",Toast.LENGTH_SHORT).show();
+                AlertDialog alertDialog = new AlertDialog.Builder(NewsDetails.this).create();
+                alertDialog.show();
+                Window window = alertDialog.getWindow();
+                window.setContentView(R.layout.share_dialog);
+                shareItem01 = (LinearLayout) window.findViewById(R.id.share_dialog_lin01);
+                shareItem02 = (LinearLayout) window.findViewById(R.id.share_dialog_lin02);
+                shareItem03 = (LinearLayout) window.findViewById(R.id.share_dialog_lin03);
+                shareItem04 = (LinearLayout) window.findViewById(R.id.share_dialog_lin04);
+                shareItem05 = (LinearLayout) window.findViewById(R.id.share_dialog_lin05);
+                shareItem06 = (LinearLayout) window.findViewById(R.id.share_dialog_lin06);
+                shareItem07 = (LinearLayout) window.findViewById(R.id.share_dialog_lin07);
+                shareItem08 = (LinearLayout) window.findViewById(R.id.share_dialog_lin08);
+                shareItem01.setOnClickListener(this);
+                shareItem02.setOnClickListener(this);
+                shareItem03.setOnClickListener(this);
+                shareItem04.setOnClickListener(this);
+                shareItem05.setOnClickListener(this);
+                shareItem06.setOnClickListener(this);
+                shareItem07.setOnClickListener(this);
+                shareItem08.setOnClickListener(this);
                 break;
         }
         return true;
@@ -457,4 +448,102 @@ public class NewsDetails extends AppCompatActivity{
         queue.cancelAll(TAG02);
         queue.cancelAll(TAG03);
     }
+    UMImage image;
+    @Override
+    public void onClick(View v) {
+        if(!TextUtils.isEmpty(newsData.getImgsrc())){
+            image = new UMImage(NewsDetails.this, newsData.getImgsrc());
+        }else{
+            image = new UMImage(NewsDetails.this, R.mipmap.ic_icon);
+        }
+
+        switch (v.getId()){
+            case R.id.share_dialog_lin01:
+                new ShareAction(this).setPlatform(SHARE_MEDIA.QQ).setCallback(umShareListener)
+                        .withText(newsData.getTitle())
+                        .withTargetUrl(newsData.getUrl())
+                        .withMedia(image)
+                        .share();
+
+                break;
+            case R.id.share_dialog_lin02:
+                new ShareAction(this).setPlatform(SHARE_MEDIA.QZONE).setCallback(umShareListener)
+                        .withText(newsData.getTitle())
+                        .withTargetUrl(newsData.getUrl())
+                        .withMedia(image)
+                        .share();
+                break;
+            case R.id.share_dialog_lin03:
+                new ShareAction(this).setPlatform(SHARE_MEDIA.WEIXIN).setCallback(umShareListener)
+                        .withText(newsData.getTitle())
+                        .withTargetUrl(newsData.getUrl())
+                        .withMedia(image)
+                        .share();
+                break;
+            case R.id.share_dialog_lin04:
+                new ShareAction(this).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).setCallback(umShareListener)
+                        .withText(newsData.getTitle())
+                        .withTargetUrl(newsData.getTitle())
+                        .withMedia(image)
+                        .share();
+                break;
+            case R.id.share_dialog_lin05:
+                new ShareAction(this).setPlatform(SHARE_MEDIA.SINA).setCallback(umShareListener)
+                        .withText(newsData.getTitle()+newsData.getUrl())
+                        .withMedia(image)
+                        .share();
+                break;
+            case R.id.share_dialog_lin06:
+                new ShareAction(this).setPlatform(SHARE_MEDIA.YIXIN).setCallback(umShareListener)
+                        .withText(newsData.getTitle())
+                        .withTargetUrl(newsData.getUrl())
+                        .withMedia(image)
+                        .share();
+                break;
+            case R.id.share_dialog_lin07:
+                new ShareAction(this).setPlatform(SHARE_MEDIA.YNOTE).setCallback(umShareListener)
+                        .withText(newsData.getTitle())
+                        .withTargetUrl(newsData.getUrl())
+                        .withMedia(image)
+                        .share();
+                break;
+            case R.id.share_dialog_lin08:
+                new ShareAction(this).setPlatform(SHARE_MEDIA.ALIPAY).setCallback(umShareListener)
+                        .withText(newsData.getTitle())
+                        .withTargetUrl(newsData.getUrl())
+                        .withMedia(image)
+                        .share();
+                break;
+
+        }
+    }
+
+    private UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            Toast.makeText(NewsDetails.this, "分享成功", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            Toast.makeText(NewsDetails.this,"分享失败", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            Toast.makeText(NewsDetails.this,"分享取消", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private ShareBoardlistener shareBoardlistener = new ShareBoardlistener() {
+
+        @Override
+        public void onclick(SnsPlatform snsPlatform,SHARE_MEDIA share_media) {
+            new ShareAction(NewsDetails.this).setPlatform(share_media).setCallback(umShareListener)
+                    .withText("业达先锋")
+                    .share();
+        }
+    };
+
+
 }

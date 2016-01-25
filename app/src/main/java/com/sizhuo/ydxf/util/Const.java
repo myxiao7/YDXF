@@ -47,6 +47,10 @@ public class Const {
      */
     public static final String M05 = URL2 + "selectNews/5/";
     /**
+     * 红色地图
+     */
+    public static final String REDMAP = URL2 + "selectRedMap";
+    /**
      * 帖子评价
      */
     public static final String POSTREPLY = URL2+"insertReply";

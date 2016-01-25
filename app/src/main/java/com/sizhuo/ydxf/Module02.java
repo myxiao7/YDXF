@@ -45,7 +45,7 @@ import java.util.List;
 
 /**
  * 项目名称: YDXF
- * 类描述:  第一个功能模块
+ * 类描述:  党务公开
  * Created by My灬xiao7
  * date: 2015/12/18
  *
@@ -55,6 +55,7 @@ public class Module02 extends AppCompatActivity implements BaseSliderView.OnSlid
     private Toolbar toolbar;//标题栏
     private SliderLayout sliderLayout;//轮播
     private ZrcListView listView;
+    private View headView;
     private List<_NewsData> list = new LinkedList<_NewsData>();//数据列表
     private HashMap<String,String> url_maps = new LinkedHashMap<String, String>();//幻灯片数据
     private MyModule01Adapter myModule01Adapter;
@@ -81,14 +82,14 @@ public class Module02 extends AppCompatActivity implements BaseSliderView.OnSlid
         //初始化
         initViews();
         queue = Volley.newRequestQueue(this);
-        loadData();
-
+//        loadData();
+        listView.refresh();
         listView.setOnItemClickListener(new ZrcListView.OnItemClickListener() {
             @Override
             public void onItemClick(ZrcListView parent, View view, int position, long id) {
                 Intent intent = new Intent(Module02.this, NewsDetails.class);
-//                Toast.makeText(Module02.this, "" + position + "----" + list.get(position - 1).getDigest(), Toast.LENGTH_SHORT).show();
-                intent.putExtra("data", list.get(position - 1));
+//                Toast.makeText(Module01.this, "" + position + "----" + list.get(position - 1).getDigest(), Toast.LENGTH_SHORT).show();
+                intent.putExtra("data", (_NewsData) parent.getAdapter().getItem(position));
                 startActivity(intent);
             }
         });
@@ -115,11 +116,19 @@ public class Module02 extends AppCompatActivity implements BaseSliderView.OnSlid
                         Log.d("xinwen", "sliderDatas:------" + sliderDatas.size());
                         //先清除缓存数据
                         dbManager.delete(_SliderData.class, WhereBuilder.b("moduleType", "=", "m02"));
-                        for (_SliderData cache: sliderDatas) {
-                            cache.setModuleType("m02");
-                            dbManager.save(cache);
+                        if(sliderDatas==null){
+                            listView.removeHeaderView(headView);
+                        }else{
+                            if(sliderDatas.size()==0){
+                                listView.removeHeaderView(headView);
+                            }else{
+                                for (_SliderData cache: sliderDatas) {
+                                    cache.setModuleType("m02");
+                                    dbManager.save(cache);
+                                }
+                                loadSlider(sliderDatas);
+                            }
                         }
-                        loadSlider(sliderDatas);
                         //获取新闻
                         list = JSON.parseArray(data.getString("news").toString(), _NewsData.class);
 
@@ -157,8 +166,8 @@ public class Module02 extends AppCompatActivity implements BaseSliderView.OnSlid
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen",volleyError.toString()+volleyError);
-                Toast.makeText(Module02.this,"网络异常",Toast.LENGTH_SHORT).show();
                 listView.setRefreshFail("网络异常");
+                Toast.makeText(Module02.this, "网络异常",Toast.LENGTH_SHORT).show();
             }
         });
         new Handler().postDelayed(new Runnable() {
@@ -244,7 +253,7 @@ public class Module02 extends AppCompatActivity implements BaseSliderView.OnSlid
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen",volleyError.toString()+volleyError);
-                Toast.makeText(Module02.this,"网络异常",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Module02.this,"网络异常...",Toast.LENGTH_SHORT).show();
                 listView.stopLoadMore();
             }
         });
@@ -268,9 +277,9 @@ public class Module02 extends AppCompatActivity implements BaseSliderView.OnSlid
                 Module02.this.finish();
             }
         });
-        View view = LayoutInflater.from(this).inflate(R.layout.module01_list_header,null);
+        headView = LayoutInflater.from(this).inflate(R.layout.module01_list_header,null);
 
-        sliderLayout = (SliderLayout) view.findViewById(R.id.module01_list_item01_slider);
+        sliderLayout = (SliderLayout) headView.findViewById(R.id.module01_list_item01_slider);
         sliderLayout.setPresetTransformer(SliderLayout.Transformer.Default);
         sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
         sliderLayout.setCustomAnimation(new DescriptionAnimation());
@@ -291,6 +300,11 @@ public class Module02 extends AppCompatActivity implements BaseSliderView.OnSlid
         listView.setItemAnimForTopIn(R.anim.topitem_in);
         listView.setItemAnimForBottomIn(R.anim.bottomitem_in);
         listView.setFootable(footer);
+
+        myModule01Adapter = new MyModule01Adapter(list, this);
+        listView.addHeaderView(headView);
+        listView.setAdapter(myModule01Adapter);
+
         //加载本地缓存
         dbManager = new MyApplication().getDbManager();
         try {
@@ -298,26 +312,27 @@ public class Module02 extends AppCompatActivity implements BaseSliderView.OnSlid
                 if (dbManager.selector(_SliderData.class).where("moduleType", "=", "m02").findAll().size() > 0) {
                     List<_SliderData> sliderDatas = dbManager.selector(_SliderData.class).where("moduleType", "=", "m02").findAll();
                     loadSlider(sliderDatas);
-//                    Toast.makeText(Module02.this, "加载了" + sliderDatas.size() + "条幻灯片缓存", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Module01.this, "加载了" + sliderDatas.size() + "条幻灯片缓存", Toast.LENGTH_SHORT).show();
                 } else {
-//                    Toast.makeText(Module02.this, "没有幻灯片缓存数据", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Module01.this, "没有幻灯片缓存数据", Toast.LENGTH_SHORT).show();
+                    listView.removeHeaderView(headView);
                 }
+            }else{
+                listView.removeHeaderView(headView);
             }
             if(dbManager.selector(_NewsData.class).where("moduleType","=","m02").findAll()!=null) {
                 if (dbManager.selector(_NewsData.class).where("moduleType", "=", "m02").findAll().size() > 0) {
                     list = dbManager.selector(_NewsData.class).where("moduleType", "=", "m02").findAll();
-//                    Toast.makeText(Module02.this, "加载了" + list.size() + "条缓存", Toast.LENGTH_SHORT).show();
+                    myModule01Adapter.notifyDataSetChanged(list);
+//                    Toast.makeText(Module01.this, "加载了" + list.size() + "条缓存", Toast.LENGTH_SHORT).show();
                 } else {
-//                    Toast.makeText(Module02.this, "没有缓存数据", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Module01.this, "没有缓存数据", Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (DbException e) {
             e.printStackTrace();
         }
-        myModule01Adapter = new MyModule01Adapter(list, this);
-        listView.addHeaderView(view);
-//        listView.setAdapter(myModule01Adapter);
-        listView.setAdapter(myModule01Adapter);
+
         listView.setOnRefreshStartListener(new ZrcListView.OnStartListener() {
             @Override
             public void onStart() {

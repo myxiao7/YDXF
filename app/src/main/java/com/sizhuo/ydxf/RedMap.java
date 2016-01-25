@@ -1,9 +1,12 @@
 package com.sizhuo.ydxf;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,7 +15,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -24,8 +34,20 @@ import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.sizhuo.ydxf.application.MyApplication;
 import com.sizhuo.ydxf.entity.MapInfo;
+import com.sizhuo.ydxf.entity._NewsData;
+import com.sizhuo.ydxf.entity._SliderData;
+import com.sizhuo.ydxf.entity.db._MapInfo;
+import com.sizhuo.ydxf.util.Const;
+import com.sizhuo.ydxf.util.ImageLoaderHelper;
 import com.sizhuo.ydxf.util.StatusBar;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.DbManager;
+import org.xutils.db.sqlite.WhereBuilder;
+import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,12 +65,17 @@ public class RedMap extends AppCompatActivity {
     MapView mMapView = null;
     BaiduMap mBaiduMap;
 
-    private List<MapInfo> mapInfos = new ArrayList<>();
+    private List<_MapInfo> mapInfos = new ArrayList<>();
 
     //覆盖物相关
     private BitmapDescriptor mMarket;
     private CardView cardView;
 
+    private RequestQueue queue;
+    private JsonObjectRequest jsonObjectRequest;
+    private final String TAG01 = "jsonObjectRequest";//请求数据TAG
+
+    private DbManager dbManager;//数据库操作
     @Override
     public void onBackPressed() {
         if(cardView.isShown()){
@@ -67,6 +94,8 @@ public class RedMap extends AppCompatActivity {
         toolbar = (Toolbar) (Toolbar) findViewById(R.id.map_toolbar);
         toolbar.setTitle("红色地图");
         setSupportActionBar(toolbar);
+        queue = Volley.newRequestQueue(this);
+        dbManager = new MyApplication().getDbManager();
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.map_mapview);
         mBaiduMap = mMapView.getMap();
@@ -75,27 +104,35 @@ public class RedMap extends AppCompatActivity {
         mBaiduMap.setMapStatus(msu);
         //初始化覆盖物
         initMarkers();
-        MapInfo info = new MapInfo(37.569572,121.260288,R.mipmap.ic_icon,"开发区团总支1","");
+        try {
+            mapInfos = dbManager.selector(_MapInfo.class).findAll();
+            if(mapInfos != null){
+                addOverlays(mapInfos);
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        loadData();
+        /*MapInfo info = new MapInfo(37.569572,121.260288,R.mipmap.ic_icon,"开发区团总支1","");
         MapInfo info2 = new MapInfo(37.561806,121.243978,R.mipmap.ic_main_top,"开发区团总支22","");
         MapInfo info3 = new MapInfo(37.551586,121.381275,R.mipmap.ic_main_top2,"开发区团总支333","");
-        MapInfo info4 = new MapInfo(37.557765,121.259798,R.mipmap.ic_icon,"开发区团总支4444","");
-        mapInfos.add(info);
-        mapInfos.add(info2);
-        mapInfos.add(info3);
-        mapInfos.add(info4);
-        addOverlays(mapInfos);
+        MapInfo info4 = new MapInfo(37.557765,121.259798,R.mipmap.ic_icon,"开发区团总支4444","");*/
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 Bundle bundle = marker.getExtraInfo();
-                MapInfo mapInfo = (MapInfo) bundle.getSerializable("info");
+                _MapInfo mapInfo = (_MapInfo) bundle.getSerializable("info");
                 ImageView imageView = (ImageView) cardView.findViewById(R.id.mapmarker_info_img);
                 TextView nameTv = (TextView) cardView.findViewById(R.id.mapmarker_info_name_txt);
                 TextView desTv = (TextView) cardView.findViewById(R.id.mapmarker_info_des_txt);
                 TextView addTv = (TextView) cardView.findViewById(R.id.mapmarker_info_des_txt);
                 TextView phoneTv = (TextView) cardView.findViewById(R.id.mapmarker_info_phone_txt);
-                imageView.setBackgroundResource(mapInfo.getImg());
+                if(TextUtils.isEmpty(mapInfo.getPicture())){
+                    ImageLoaderHelper.getIstance().loadImg(mapInfo.getPicture(),imageView);
+                }
                 nameTv.setText(mapInfo.getName());
+                desTv.setText(mapInfo.getSynopsis());
+                addTv.setText(mapInfo.getPosition());
                 Animation animation = AnimationUtils.loadAnimation(RedMap.this, R.anim.map_info_anim);
                 cardView.startAnimation(animation);
                 cardView.setVisibility(View.VISIBLE);
@@ -121,6 +158,51 @@ public class RedMap extends AppCompatActivity {
         });
     }
 
+    /**
+     * 获取数据
+     */
+    private void loadData() {
+        jsonObjectRequest = new JsonObjectRequest(Const.REDMAP, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+//                Log.d("xinwen", jsonObject.toString()+"");
+                try {
+                    //获取服务器code
+                    int code = jsonObject.getInt("code");
+                    if(code == 200){
+                        mapInfos = JSON.parseArray(jsonObject.getString("data").toString(), _MapInfo.class);
+                        if(mapInfos != null){
+                            addOverlays(mapInfos);
+                        }
+                        dbManager.delete(_MapInfo.class);
+                        dbManager.save(mapInfos);
+                    }else if(code == 400){
+                        Toast.makeText(RedMap.this, "没有数据", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(RedMap.this,"加载错误",Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+//                Log.d("xinwen",volleyError.toString()+volleyError);
+                Toast.makeText(RedMap.this, "网络异常",Toast.LENGTH_SHORT).show();
+            }
+        });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                queue.add(jsonObjectRequest);
+                jsonObjectRequest.setTag(TAG01);
+            }
+        }, 800);
+    }
+
     private void initMarkers() {
         mMarket =BitmapDescriptorFactory.fromResource(R.mipmap.ic_m08);
     }
@@ -129,7 +211,7 @@ public class RedMap extends AppCompatActivity {
      * 添加覆盖物
      * @param mapInfos
      */
-    private void addOverlays(List<MapInfo> mapInfos){
+    private void addOverlays(List<_MapInfo> mapInfos){
         //清除图层
         mBaiduMap.clear();
         //覆盖物的坐标
@@ -137,8 +219,10 @@ public class RedMap extends AppCompatActivity {
         Marker marker = null;
         //构建MarkerOption，用于在地图上添加Marker
         OverlayOptions option = null;
-        for (MapInfo info :mapInfos) {
-            point = new LatLng(info.getLatitude(),info.getLangtitude());
+        for (_MapInfo info :mapInfos) {
+            point = new LatLng(info.getLongitude(),info.getLatitude());
+            Log.d("log.d",info.getLongitude()+"-----------getLangtitude");
+            Log.d("log.d",info.getLatitude()+"------------getLatitude");
             option = new MarkerOptions().position(point).icon(mMarket);
             marker = (Marker) mBaiduMap.addOverlay(option);
             //设置覆盖物额外信息
@@ -148,6 +232,7 @@ public class RedMap extends AppCompatActivity {
         }
 
     }
+
     //toolbar菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

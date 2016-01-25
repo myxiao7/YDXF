@@ -2,6 +2,7 @@ package com.sizhuo.ydxf;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.*;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -15,6 +16,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,11 +46,13 @@ import com.sizhuo.ydxf.entity._OrgData;
 import com.sizhuo.ydxf.entity._PostDetailData;
 import com.sizhuo.ydxf.entity._ServiceData;
 import com.sizhuo.ydxf.entity._SliderData;
+import com.sizhuo.ydxf.util.ACache;
 import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
 import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.NoScollerGridView;
 import com.umeng.update.UmengUpdateAgent;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,6 +76,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, BaseSliderView.OnSliderClickListener {
     private Toolbar toolbar;//Toolbar
     private SliderLayout mSlider;//轮播图
+    private LinearLayout loading;
     private HashMap<String,String> url_maps = new LinkedHashMap<String, String>();
 
     private List<_NewsData> newsList = new LinkedList<_NewsData>();//新闻
@@ -81,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView imageView01, imageView02, imageView03, imageView04;
     private TextView titleTv01, conTv01, dataTv01,titleTv02, conTv02, dataTv02,titleTv03, conTv03, dataTv03, titleTv04, conTv04, dataTv04;
     private ImageView mapBtn;
-
+    private ScrollView mScrollView;
     private RelativeLayout moreRe;//便民更多
     private GridView gridView;//便民服务
     private List<_OrgData> gridList = new ArrayList<_OrgData>();
@@ -100,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     long waitTime = 2000;
     long touchTime = 0;
+    private ACache aCache;
     @Override
     public void onBackPressed() {
         long currentTime = System.currentTimeMillis();
@@ -118,6 +125,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initViews();
         initEvents();
         queue = Volley.newRequestQueue(this);
+        aCache = ACache.get(this);
+        //
+        if(aCache.getAsJSONObject("mainData")!=null){
+            _MainData mainCache = JSON.parseObject(aCache.getAsJSONObject("mainData").toString(), _MainData.class);
+            Log.d("log.d","main----"+aCache.getAsJSONObject("mainData").toString());
+            if(mainCache!=null){
+                List<_SliderData> sliderDatas = mainCache.getCarousel();
+                newsList = mainCache.getNews();
+                forumList = mainCache.getCard();
+                gridList = mainCache.getConvenience();
+                gridList2 = mainCache.getDirectory();
+                initData(sliderDatas);
+                mScrollView.smoothScrollTo(0, 0);
+            }
+        }
 
 
        myBottomGridAdapter = new MyBottomGridAdapter(gridList,this);
@@ -126,22 +148,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, OrgDetails.class);
-                intent.putExtra("data",gridList.get(position));
+                intent.putExtra("data", gridList.get(position));
                 MainActivity.this.startActivity(intent);
             }
         });
 
         myBottomGridAdapter2 = new MyBottomGridAdapter2(gridList2,this);
         gridView2.setAdapter(myBottomGridAdapter2);
+        mScrollView.smoothScrollTo(0, 0);
         gridView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, AddressListDetails.class);
-                intent.putExtra("data",gridList2.get(position));
+                intent.putExtra("data", gridList2.get(position));
                 MainActivity.this.startActivity(intent);
             }
         });
-
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Const.MAIN_URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -150,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     String code = jsonObject.getString("code");
                     //获取成功，返回信息data
                     if(code.equals("200")){
+                        aCache.put("mainData",jsonObject.getString("data"));
                         _MainData mainData = JSON.parseObject(jsonObject.getString("data"),_MainData.class);
                         List<_SliderData> sliderDatas = mainData.getCarousel();
 
@@ -160,70 +183,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         gridList = mainData.getConvenience();
                         gridList2 = mainData.getDirectory();
 
-                        for (int i = 0; i <sliderDatas.size() ; i++) {
-                            url_maps.put(sliderDatas.get(i).getTitle(),sliderDatas.get(i).getImgsrc());
-                            Log.d("xinwen",sliderDatas.get(i).getTitle());
-                            TextSliderView textSliderView = new TextSliderView(MainActivity.this);
-                            // initialize a SliderLayout
-                            textSliderView
-                                    .description(sliderDatas.get(i).getTitle())
-                                    .image(sliderDatas.get(i).getImgsrc())
-                                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                                    .setOnSliderClickListener(MainActivity.this);
-
-                            //add your extra information`
-                            _NewsData slidNews = new _NewsData();
-                            slidNews.setDocid(sliderDatas.get(i).getDocid());
-                            slidNews.setDigest(sliderDatas.get(i).getDigest());
-                            slidNews.setUrl(sliderDatas.get(i).getUrl());
-                            textSliderView.bundle(new Bundle());
-                            textSliderView.getBundle()
-                                    .putSerializable("extra", slidNews);
-
-                            mSlider.addSlider(textSliderView);
-                        }
-
-                        if(newsList.get(0)!=null){
-                            if(!TextUtils.isEmpty(newsList.get(0).getImgsrc())){
-                                ImageLoaderHelper.getIstance().loadImg(newsList.get(0).getImgsrc(),imageView01);
-                            }
-                            titleTv01.setText(newsList.get(0).getTitle());
-                            conTv01.setText(newsList.get(0).getDigest());
-                            dataTv01.setText(newsList.get(0).getPtime());
-                            itemLin01.setOnClickListener(MainActivity.this);
-                        }
-                        if(newsList.get(1)!=null){
-                            if(!TextUtils.isEmpty(newsList.get(1).getImgsrc())){
-                                ImageLoaderHelper.getIstance().loadImg(newsList.get(1).getImgsrc(),imageView02);
-                            }
-                            titleTv02.setText(newsList.get(1).getTitle());
-                            conTv02.setText(newsList.get(1).getDigest());
-                            dataTv02.setText(newsList.get(1).getPtime());
-                            itemLin02.setOnClickListener(MainActivity.this);
-                        }
-                        if(forumList.get(0)!=null){
-                            if(!TextUtils.isEmpty(forumList.get(0).getImgsrc())){
-                                ImageLoaderHelper.getIstance().loadImg(forumList.get(0).getImgsrc(),imageView03);
-                            }
-                            titleTv03.setText(forumList.get(0).getTitle());
-                            conTv03.setText(forumList.get(0).getDigest());
-                            dataTv03.setText(forumList.get(0).getPtime());
-                            itemLin03.setOnClickListener(MainActivity.this);
-                        }
-                        if(forumList.get(1)!=null){
-                            if(!TextUtils.isEmpty(forumList.get(1).getImgsrc())){
-                                ImageLoaderHelper.getIstance().loadImg(forumList.get(1).getImgsrc(),imageView04);
-                            }
-                            titleTv04.setText(forumList.get(1).getTitle());
-                            conTv04.setText(forumList.get(1).getDigest());
-                            dataTv04.setText(forumList.get(1).getPtime());
-                            itemLin04.setOnClickListener(MainActivity.this);
-                        }
+                        initData(sliderDatas);
 
                         myBottomGridAdapter.notifyDataSetChanged(gridList);
                         myBottomGridAdapter2.notifyDataSetChanged(gridList2);
-
-
+                        mScrollView.smoothScrollTo(0, 0);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                loading.setVisibility(View.GONE);
+                            }
+                        },1500);
+                    }else{
+                        loading.setVisibility(View.GONE);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -233,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 Log.d("log.d","main"+volleyError.toString());
+                loading.setVisibility(View.GONE);
             }
         }){
             @Override
@@ -242,8 +215,81 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return headers;
             }
         };
-        queue.add(jsonObjectRequest);
-        jsonObjectRequest.setTag(TAG);
+
+                queue.add(jsonObjectRequest);
+                jsonObjectRequest.setTag(TAG);
+
+
+    }
+
+    private void initData(List<_SliderData> sliderDatas) {
+        if(sliderDatas != null){
+            if(sliderDatas.size()==0){
+                mSlider.setVisibility(View.GONE);
+            }else{
+                mSlider.setVisibility(View.VISIBLE);
+                for (int i = 0; i <sliderDatas.size() ; i++) {
+                    url_maps.put(sliderDatas.get(i).getTitle(),sliderDatas.get(i).getImgsrc());
+                    Log.d("xinwen", sliderDatas.get(i).getTitle());
+                    TextSliderView textSliderView = new TextSliderView(MainActivity.this);
+                    // initialize a SliderLayout
+                    textSliderView
+                            .description(sliderDatas.get(i).getTitle())
+                            .image(sliderDatas.get(i).getImgsrc())
+                            .setScaleType(BaseSliderView.ScaleType.Fit)
+                            .setOnSliderClickListener(MainActivity.this);
+
+                    //add your extra information`
+                    _NewsData slidNews = new _NewsData();
+                    slidNews.setDocid(sliderDatas.get(i).getDocid());
+                    slidNews.setDigest(sliderDatas.get(i).getDigest());
+                    slidNews.setUrl(sliderDatas.get(i).getUrl());
+                    textSliderView.bundle(new Bundle());
+                    textSliderView.getBundle()
+                            .putSerializable("extra", slidNews);
+
+                    mSlider.addSlider(textSliderView);
+                }
+            }
+        }
+
+        if(newsList.get(0)!=null){
+            if(!TextUtils.isEmpty(newsList.get(0).getImgsrc())){
+                ImageLoaderHelper.getIstance().loadImg(newsList.get(0).getImgsrc(),imageView01);
+            }
+            titleTv01.setText(newsList.get(0).getTitle());
+            conTv01.setText(newsList.get(0).getDigest());
+            dataTv01.setText(newsList.get(0).getPtime());
+            itemLin01.setOnClickListener(MainActivity.this);
+        }
+        if(newsList.get(1)!=null){
+            if(!TextUtils.isEmpty(newsList.get(1).getImgsrc())){
+                ImageLoaderHelper.getIstance().loadImg(newsList.get(1).getImgsrc(),imageView02);
+            }
+            titleTv02.setText(newsList.get(1).getTitle());
+            conTv02.setText(newsList.get(1).getDigest());
+            dataTv02.setText(newsList.get(1).getPtime());
+            itemLin02.setOnClickListener(MainActivity.this);
+        }
+        if(forumList.get(0)!=null){
+            if(!TextUtils.isEmpty(forumList.get(0).getImgsrc())){
+                ImageLoaderHelper.getIstance().loadImg(forumList.get(0).getImgsrc(),imageView03);
+            }
+            titleTv03.setText(forumList.get(0).getTitle());
+            conTv03.setText(forumList.get(0).getDigest());
+            dataTv03.setText(forumList.get(0).getPtime());
+            itemLin03.setOnClickListener(MainActivity.this);
+        }
+        if(forumList.get(1)!=null){
+            if(!TextUtils.isEmpty(forumList.get(1).getImgsrc())){
+                ImageLoaderHelper.getIstance().loadImg(forumList.get(1).getImgsrc(),imageView04);
+            }
+            titleTv04.setText(forumList.get(1).getTitle());
+            conTv04.setText(forumList.get(1).getDigest());
+            dataTv04.setText(forumList.get(1).getPtime());
+            itemLin04.setOnClickListener(MainActivity.this);
+        }
+
     }
 
 
@@ -253,6 +299,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        loading = (LinearLayout) findViewById(R.id.main_loading);
+        mScrollView = (ScrollView) findViewById(R.id.main_scrollview);
+        mScrollView.smoothScrollTo(0,0);
         //自动更新
         UmengUpdateAgent.update(this);
         mSlider = (SliderLayout) findViewById(R.id.main_slider);

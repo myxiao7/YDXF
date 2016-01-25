@@ -64,6 +64,8 @@ public class MyApplication extends Application{
                 .setCropSquare(true)
                 .setEnablePreview(true)
                 .setMutiSelectMaxSize(3)
+                .setCropHeight(1024)
+                .setCropWidth(768)
         .build();
         //配置imageloader
         UILImageLoader imageloader = new UILImageLoader();

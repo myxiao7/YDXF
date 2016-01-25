@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -158,7 +160,7 @@ public class Search extends AppCompatActivity{
      */
     private void loadData(final String str) {
         Log.d("xinwen", Const.SEARCH +str+"-----------" );
-        jsonObjectRequest =  new JsonObjectRequest(Const.SEARCH +str, null, new Response.Listener<JSONObject>() {
+        jsonObjectRequest =  new JsonObjectRequest(Request.Method.GET, Const.SEARCH + str.toString(), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 try {
@@ -182,9 +184,20 @@ public class Search extends AppCompatActivity{
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen", volleyError.getMessage());
+                Log.e("log.d", volleyError.getMessage(), volleyError);
+                byte[] htmlBodyBytes = volleyError.networkResponse.data;
+                Log.e("log.d", new String(htmlBodyBytes), volleyError);
                 Toast.makeText(Search.this,"网络异常",Toast.LENGTH_SHORT).show();
             }
-        });
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Charset", "UTF-8");
+                headers.put("Accept", "application/json");
+                return headers;
+            }
+        };
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

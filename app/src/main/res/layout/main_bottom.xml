@@ -79,6 +79,7 @@
             android:layout_marginBottom="15dp"
             android:numColumns="4"
             android:gravity="center"
+            android:focusable="false"
             ></GridView>
         <View
             android:layout_width="match_parent"
@@ -136,6 +137,7 @@
             android:gravity="center"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:focusable="false"
             ></com.sizhuo.ydxf.view.NoScollerGridView>
 </LinearLayout>
 

@@ -115,7 +115,8 @@ public class Forum extends AppCompatActivity {
         } catch (DbException e) {
             e.printStackTrace();
         }
-        loadData();
+        //        loadData();
+        listView.refresh();
 //        loadData();
 
         myForumAdapter = new MyForumAdapter(list, this);
