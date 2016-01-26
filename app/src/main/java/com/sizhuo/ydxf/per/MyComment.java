@@ -104,6 +104,7 @@ public class MyComment extends AppCompatActivity {
                         if(list.size()==20){
                             listView.startLoadMore();
                         }
+
                     }else if(code == 400){
                         Toast.makeText(MyComment.this,"没有数据",Toast.LENGTH_SHORT).show();
                     }else{

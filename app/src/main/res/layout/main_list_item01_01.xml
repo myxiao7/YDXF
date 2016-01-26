@@ -35,7 +35,7 @@
                 android:id="@+id/main_list_item01_01_icon"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:background="@mipmap/ic_m01"
+                android:background="@mipmap/ic_test"
                 android:clickable="false"
                 android:focusable="false"
                 />

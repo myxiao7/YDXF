@@ -209,6 +209,7 @@ public class Forum2 extends AppCompatActivity {
                         if(list.size()==20){
                             listView.startLoadMore();
                         }
+                        index = 1;
                     }else if(code == 400){
                         listView.setRefreshFail("没有数据");
                         Toast.makeText(Forum2.this,"没有数据",Toast.LENGTH_SHORT).show();

@@ -2,6 +2,7 @@ package com.sizhuo.ydxf;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import com.sizhuo.ydxf.entity.IconResult;
 import com.sizhuo.ydxf.entity.db.User;
 import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
+import com.sizhuo.ydxf.util.PictureUtil;
 import com.sizhuo.ydxf.view.HorizontalListView;
 
 import org.json.JSONArray;
@@ -43,6 +45,7 @@ import org.xutils.ex.DbException;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -190,17 +193,45 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
+    private void saveCroppedImage(Bitmap bmp) {
+        File file = new File(getApplicationContext().getFilesDir().getAbsolutePath());
+        Log.d("log.d",getApplicationContext().getFilesDir().getAbsolutePath());
+        if (!file.exists())
+            file.mkdir();
+        /*file = new File("/sdcard/temp.jpg".trim());
+        String fileName = file.getName();
+        String mName = fileName.substring(0, fileName.lastIndexOf("."));
+        String sName = fileName.substring(fileName.lastIndexOf("."));
+        getApplicationContext().getFilesDir().getAbsolutePath()*/
+        // /sdcard/myFolder/temp_cropped.jpg
+        String newFilePath = getApplicationContext().getFilesDir().getAbsolutePath()+System.currentTimeMillis();
+        file = new File(newFilePath);
+        try {
+            file.createNewFile();
+            FileOutputStream fos = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+            fos.flush();
+            fos.close();
+            imgList.add("file://" + newFilePath);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     GalleryFinal.OnHanlderResultCallback mOnHanlderResultCallback = new GalleryFinal.OnHanlderResultCallback() {
         @Override
         public void onHanlderSuccess(int reqeustCode, List<PhotoInfo> resultList) {
 //            Toast.makeText(Publish.this, "选择了" + resultList.size() + "张图", Toast.LENGTH_SHORT).show();
             imgList.clear();
             for (int i = 0; i < resultList.size(); i++) {
-                imgList.add("file://" + resultList.get(i).getPhotoPath());
-                Gallary gallary = new Gallary(imgList);
-                horizontalListView.setAdapter(gallary);
-                gallary.notifyDataSetChanged();
+//                imgList.add("file://" + resultList.get(i).getPhotoPath());
+                Bitmap bitmap = PictureUtil.getSmallBitmap(resultList.get(i).getPhotoPath());
+                saveCroppedImage(bitmap);
             }
+            Gallary gallary = new Gallary(imgList);
+            horizontalListView.setAdapter(gallary);
+            gallary.notifyDataSetChanged();
         }
 
         @Override
@@ -348,10 +379,18 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
                     //修改成功，返回信息data
                     if (code.equals("200")) {
                         Toast.makeText(Publish.this, "发帖成功", Toast.LENGTH_SHORT).show();
+                        Intent data = new Intent();
+                        Bundle bundle = new Bundle();
+                        data.putExtra("result", "succ");
+                        data.putExtras(bundle);
+                        setResult(RESULT_OK, data);
                         Publish.this.finish();
                     } else if (code.equals("400")) {
                         Toast.makeText(Publish.this, "发帖失败", Toast.LENGTH_SHORT).show();
-                    } else {
+                    } else if (code.equals("201")){
+                        Toast.makeText(Publish.this, "您已被禁言，无法发帖", Toast.LENGTH_SHORT).show();
+                        Publish.this.finish();
+                    }else{
                         Toast.makeText(Publish.this, "网络错误", Toast.LENGTH_SHORT).show();
                     }
                     dialog.dismiss();

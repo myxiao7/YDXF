@@ -349,15 +349,19 @@ public class PersonInfo extends AppCompatActivity implements View.OnClickListene
                 break;
 
             case R.id.per_info_dialog_sex_01:
-                Toast.makeText(this, "男", Toast.LENGTH_SHORT).show();
-                update(null, "男");
-                dialog.dismiss();
+//                Toast.makeText(this, "男", Toast.LENGTH_SHORT).show();
+                if(sexTv.getText().equals("女")){
+                    update(null, "男");
+                    dialog.dismiss();
+                }
                 break;
 
             case R.id.per_info_dialog_sex_02:
-                Toast.makeText(this, "女", Toast.LENGTH_SHORT).show();
-                update(null,"女");
-                dialog.dismiss();
+//                Toast.makeText(this, "女", Toast.LENGTH_SHORT).show();
+                if(sexTv.getText().equals("男")){
+                    update(null,"女");
+                    dialog.dismiss();
+                }
                 break;
         }
     }

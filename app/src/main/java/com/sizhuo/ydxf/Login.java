@@ -301,6 +301,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         bundle.putString("sex", sex);
                         intent.putExtras(bundle);
                         startActivity(intent);
+                    }else if(code.equals("201")){
+                        Toast.makeText(Login.this, "权限错误，请联系管理员", Toast.LENGTH_SHORT).show();
                     }
                     dialog.dismiss();
                     Login.this.finish();

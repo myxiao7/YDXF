@@ -110,6 +110,6 @@ public class Const {
     /**
      * 搜索
      */
-    public static final String SEARCH = URL2 + "searchNews/";
+    public static final String SEARCH = URL2 + "searchNews";
 
 }

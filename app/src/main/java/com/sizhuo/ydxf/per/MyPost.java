@@ -33,6 +33,7 @@ import com.sizhuo.ydxf.entity._NewsData;
 import com.sizhuo.ydxf.entity._PostDetailData;
 import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.util.StatusBar;
+import com.sizhuo.ydxf.view.zrclistview.SimpleFooter;
 import com.sizhuo.ydxf.view.zrclistview.ZrcListView;
 
 import org.json.JSONException;
@@ -215,6 +216,10 @@ public class MyPost extends AppCompatActivity {
         });
         delSwitchBtn = (TextView) findViewById(R.id.mypost_toolbar_btn);
         listView = (ZrcListView) findViewById(R.id.mypost_list);
+        // 设置加载更多的样式（可选）
+        SimpleFooter footer = new SimpleFooter(this);
+        footer.setCircleColor(0xff33bbee);
+        listView.setFootable(footer);
         Intent intent = this.getIntent();
         userName = intent.getStringExtra("userName");
         userPwd = intent.getStringExtra("userPwd");

@@ -60,6 +60,7 @@ public class Forum extends AppCompatActivity {
     private MyForumAdapter myForumAdapter;
     private final int REFRESH_COMPLETE = 0X100;//下拉刷新
     private final int LOADMORE_COMPLETE = 0X101;//上拉加载更多
+    private final int INFO_RESULT = 0X206;
     private RequestQueue queue;
     private JsonObjectRequest jsonObjectRequest;
     private final String TAG01 = "jsonObjectRequest";//请求数据TAG
@@ -85,6 +86,7 @@ public class Forum extends AppCompatActivity {
         } catch (DbException e) {
             e.printStackTrace();
         }
+
 
     }
 
@@ -213,6 +215,8 @@ public class Forum extends AppCompatActivity {
                         if(list.size()==20){
                             listView.startLoadMore();
                         }
+                        index = 1;
+
                     }else if(code == 400){
                         listView.setRefreshFail("没有数据");
                         Toast.makeText(Forum.this,"没有数据",Toast.LENGTH_SHORT).show();
@@ -352,7 +356,7 @@ public class Forum extends AppCompatActivity {
                 if(loginFlag==true){
 //                    Toast.makeText(Forum.this,"发帖",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Forum.this, Publish.class);
-                    this.startActivity(intent);
+                    startActivityForResult(intent, INFO_RESULT);
                 }else{
                     Intent intent = new Intent(Forum.this, Login.class);
                     Forum.this.startActivity(intent);
@@ -363,4 +367,14 @@ public class Forum extends AppCompatActivity {
         return true;
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==INFO_RESULT&&resultCode==RESULT_OK){
+            Bundle bundle = data.getExtras();
+            String res = bundle.getString("result");
+            if(res.equals("succ")){
+                loadData();
+            }
+        }
+    }
 }

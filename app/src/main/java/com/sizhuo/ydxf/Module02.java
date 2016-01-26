@@ -149,6 +149,7 @@ public class Module02 extends AppCompatActivity implements BaseSliderView.OnSlid
                         if(list.size()==20){
                             listView.startLoadMore();
                         }
+                        index = 1;
                     }else if(code == 400){
                         listView.setRefreshFail("没有数据");
                         Toast.makeText(Module02.this,"没有数据",Toast.LENGTH_SHORT).show();
@@ -317,9 +318,9 @@ public class Module02 extends AppCompatActivity implements BaseSliderView.OnSlid
 //                    Toast.makeText(Module01.this, "没有幻灯片缓存数据", Toast.LENGTH_SHORT).show();
                     listView.removeHeaderView(headView);
                 }
-            }else{
+            }/*else{
                 listView.removeHeaderView(headView);
-            }
+            }*/
             if(dbManager.selector(_NewsData.class).where("moduleType","=","m02").findAll()!=null) {
                 if (dbManager.selector(_NewsData.class).where("moduleType", "=", "m02").findAll().size() > 0) {
                     list = dbManager.selector(_NewsData.class).where("moduleType", "=", "m02").findAll();

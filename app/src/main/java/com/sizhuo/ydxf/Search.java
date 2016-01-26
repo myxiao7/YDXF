@@ -1,12 +1,16 @@
 package com.sizhuo.ydxf;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -36,6 +40,7 @@ import com.sizhuo.ydxf.application.MyApplication;
 import com.sizhuo.ydxf.entity._NewsData;
 import com.sizhuo.ydxf.entity._PostDetailData;
 import com.sizhuo.ydxf.entity._ReplyData;
+import com.sizhuo.ydxf.entity._SearchData;
 import com.sizhuo.ydxf.entity.db.SearchKey;
 import com.sizhuo.ydxf.entity.imgextra;
 import com.sizhuo.ydxf.util.Const;
@@ -80,6 +85,9 @@ public class Search extends AppCompatActivity{
     private RequestQueue queue;
     private JsonObjectRequest jsonObjectRequest;
     private final String TAG01 = "jsonObjectRequest";//请求数据TAG
+
+    private ProgressDialog dialog;
+    private boolean isSave = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,8 +135,17 @@ public class Search extends AppCompatActivity{
             }
         });
 
-        adapter = new MySearchAdapter(list,"");
+        adapter = new MySearchAdapter(list,"新闻");
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new ZrcListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(ZrcListView parent, View view, int position, long id) {
+                Intent intent = new Intent(Search.this, NewsDetails.class);
+                intent.putExtra("data",list.get(position));
+                startActivity(intent);
+            }
+        });
 
         contentEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -138,11 +155,31 @@ public class Search extends AppCompatActivity{
 //                        Toast.makeText(Search.this,"搜索",Toast.LENGTH_SHORT).show();
                         hisLin.setVisibility(View.GONE);
                         listView.setVisibility(View.VISIBLE);
+                        dialog = ProgressDialog.show(Search.this,
+                                null, "正在搜索", true, true);
                         try {
-                            dbManager.save(new SearchKey(contentEdit.getText().toString().trim()));
+                            List<SearchKey> Keys = dbManager.selector(SearchKey.class).findAll();
+//                            Log.d("log.d", Keys.size()+"个数");
+                            if(Keys!=null){
+                                if(Keys.size()>0){
+                                    for (SearchKey searchKey:Keys) {
+                                        if(searchKey.getStr().equals(contentEdit.getText().toString().trim())){
+                                            isSave = true;
+                                        }
+                                    }
+                                }else{
+                                    isSave = false;
+                                }
+                            }else{
+                                isSave = false;
+                            }
+                            if(isSave==false){
+                                dbManager.save(new SearchKey(contentEdit.getText().toString().trim()));
+                            }
                         } catch (DbException e) {
                             e.printStackTrace();
                         }
+
                         loadData(contentEdit.getText().toString().trim());
                         return true;
                     }
@@ -159,8 +196,10 @@ public class Search extends AppCompatActivity{
      * 获取数据
      */
     private void loadData(final String str) {
-        Log.d("xinwen", Const.SEARCH +str+"-----------" );
-        jsonObjectRequest =  new JsonObjectRequest(Request.Method.GET, Const.SEARCH + str.toString(), null, new Response.Listener<JSONObject>() {
+        Map<String,String> map = new HashMap<>();
+        map.put("keywords",str);
+        JSONObject jsonObject = new JSONObject(map);
+        jsonObjectRequest =  new JsonObjectRequest(Request.Method.POST, Const.SEARCH, jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 try {
@@ -168,13 +207,19 @@ public class Search extends AppCompatActivity{
                     int code = jsonObject.getInt("code");
                     Log.d("xinwen", code+"-----------");
                     if(code == 200){
-                        list = JSON.parseArray(jsonObject.getString("data"), _NewsData.class);
+                        _SearchData data = JSON.parseObject(jsonObject.getString("data"), _SearchData.class);
+                        Log.d("xinwen", jsonObject.getString("data")+"-----------");
+                        list = data.getNews();
+                        Log.d("xinwen", list.size()+"-----------");
+                        Log.d("xinwen", "111111111111111111111111111111111-----------");
                         adapter.notifyDataSetChanged(list,str);
+
                     }else if(code == 400){
                         Toast.makeText(Search.this,"没有内容",Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(Search.this,"加载错误",Toast.LENGTH_SHORT).show();
                     }
+                    dialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -184,10 +229,11 @@ public class Search extends AppCompatActivity{
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen", volleyError.getMessage());
-                Log.e("log.d", volleyError.getMessage(), volleyError);
+               /* Log.e("log.d", volleyError.getMessage(), volleyError);
                 byte[] htmlBodyBytes = volleyError.networkResponse.data;
-                Log.e("log.d", new String(htmlBodyBytes), volleyError);
+                Log.e("log.d", new String(htmlBodyBytes), volleyError);*/
                 Toast.makeText(Search.this,"网络异常",Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
             }
         }){
             @Override
@@ -261,11 +307,26 @@ public class Search extends AppCompatActivity{
             _NewsData newsData = list.get(position);
             //关键字高亮
             String str = newsData.getTitle();
-            int fstart=str.indexOf(keywordStr);
-            int fend=fstart+keywordStr.length();
+           /* int fstart=str.indexOf("新闻");
+            int fend=fstart+"新闻".length();
             SpannableStringBuilder style=new SpannableStringBuilder(str);
             style.setSpan(new ForegroundColorSpan(Color.RED),fstart,fend, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-            holder.titleTv.setText(style);
+            holder.titleTv.setText(style);*/
+            if (str != null && str.contains(contentEdit.getText().toString().trim())) {
+
+                int index = str.indexOf(contentEdit.getText().toString().trim());
+
+                int len = contentEdit.getText().toString().trim().length();
+
+                Spanned temp = Html.fromHtml(str.substring(0, index)
+                        + "<u><font color=#FF0000>"
+                        + str.substring(index, index + len) + "</font></u>"
+                        + str.substring(index + len, str.length()));
+
+                holder.titleTv.setText(temp);
+            } else {
+                holder.titleTv.setText(newsData.getTitle());
+            }
             holder.dateTv.setText(newsData.getPtime());
             return convertView;
         }
