@@ -91,9 +91,15 @@ public class RedMap extends AppCompatActivity {
         setContentView(R.layout.activity_map);
         new StatusBar(this).initStatusBar();
         cardView = (CardView) findViewById(R.id.mapmarker_info_card);
-        toolbar = (Toolbar) (Toolbar) findViewById(R.id.map_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.map_toolbar);
         toolbar.setTitle("红色地图");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RedMap.this.finish();
+            }
+        });
         queue = Volley.newRequestQueue(this);
         dbManager = new MyApplication().getDbManager();
         //获取地图控件引用

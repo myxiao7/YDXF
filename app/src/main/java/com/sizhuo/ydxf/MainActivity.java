@@ -187,16 +187,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         myBottomGridAdapter.notifyDataSetChanged(gridList);
                         myBottomGridAdapter2.notifyDataSetChanged(gridList2);
-                        mScrollView.smoothScrollTo(0, 0);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 loading.setVisibility(View.GONE);
                             }
-                        },1500);
+                        },800);
                     }else{
                         loading.setVisibility(View.GONE);
                     }
+                    mScrollView.smoothScrollTo(0, 0);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

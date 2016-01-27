@@ -55,24 +55,31 @@
         />
     <include
         layout="@layout/main_list_item01_01"
+        android:focusable="false"
         />
     <include
         layout="@layout/main_list_item01_02"
+        android:focusable="false"
         />
     <include
         layout="@layout/main_list_item02"
+        android:focusable="false"
         />
     <include
         layout="@layout/main_list_item01_03"
+        android:focusable="false"
         />
     <include
         layout="@layout/main_list_item01_04"
+        android:focusable="false"
         />
     <include
         layout="@layout/main_list_item03"
+        android:focusable="false"
         />
     <include
         layout="@layout/main_bottom"
+        android:focusable="false"
         />
         </LinearLayout>
     </ScrollView>
@@ -89,8 +96,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:visibility="visible"
-                app:indicator="TriangleSkewSpin"
+                app:indicator="BallBeat"
                 app:indicator_color="@color/holo_red_light"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="正在加载，请稍后..."
                 />
         </LinearLayout>
 

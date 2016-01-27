@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -55,6 +56,12 @@ public class OrgDetails extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.orgdetails_toolbar);
         toolbar.setTitle("详情");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OrgDetails.this.finish();
+            }
+        });
         icon = (CircleImageView) findViewById(R.id.orgdetails_img);
         nameTv = (TextView) findViewById(R.id.orgdetails_name_tv);
         webView = (WebView) findViewById(R.id.orgdetailss_webview);

@@ -257,6 +257,12 @@ public class Search extends AppCompatActivity{
         toolbar = (Toolbar) findViewById(R.id.search_toolbar);
         toolbar.setTitle("搜索");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Search.this.finish();
+            }
+        });
         listView = (ZrcListView) findViewById(R.id.search_listview);
         contentEdit = (EditText) findViewById(R.id.search_content_edit);
         hisLin = (LinearLayout) findViewById(R.id.search_his_lin);

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ import java.util.Map;
  */
 public class MyComment extends AppCompatActivity {
     private Toolbar toolbar;
+    private LinearLayout loading;
     private ZrcListView listView;
     private List<_MyComment> list = new ArrayList<>();
     private MyCommentAdapter adapter;
@@ -110,6 +112,12 @@ public class MyComment extends AppCompatActivity {
                     }else{
                         Toast.makeText(MyComment.this,"加载错误",Toast.LENGTH_SHORT).show();
                     }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            loading.setVisibility(View.GONE);
+                        }
+                    }, 800);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -117,8 +125,9 @@ public class MyComment extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Log.d("xinwen",volleyError.toString()+volleyError);
-                Toast.makeText(MyComment.this,"网络错误...",Toast.LENGTH_SHORT).show();
+//                Log.d("xinwen",volleyError.toString()+volleyError);
+                loading.setVisibility(View.GONE);
+                Toast.makeText(MyComment.this,"网络不给力",Toast.LENGTH_SHORT).show();
             }
         });
         queue.add(jsonObjectRequest);
@@ -161,7 +170,7 @@ public class MyComment extends AppCompatActivity {
             public void onErrorResponse(VolleyError volleyError) {
                 Log.d("xinwen",volleyError.toString()+volleyError);
                 listView.stopLoadMore();
-                Toast.makeText(MyComment.this,"网络异常..",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MyComment.this,"网络不给力",Toast.LENGTH_SHORT).show();
             }
         });
         new Handler().postDelayed(new Runnable() {
@@ -170,7 +179,7 @@ public class MyComment extends AppCompatActivity {
                 queue.add(jsonObjectRequest);
                 jsonObjectRequest.setTag(TAG01);
             }
-        },1200);
+        },1000);
 
     }
 
@@ -186,6 +195,7 @@ public class MyComment extends AppCompatActivity {
             }
         });
 
+        loading = (LinearLayout) findViewById(R.id.mycomment_loading);
         listView = (ZrcListView) findViewById(R.id.mycomment_list);
         // 设置加载更多的样式（可选）
         SimpleFooter footer = new SimpleFooter(this);

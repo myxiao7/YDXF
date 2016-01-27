@@ -158,7 +158,6 @@ public class NewsDetails extends AppCompatActivity implements View.OnClickListen
                 super.onReceivedError(view, errorCode, description, failingUrl);
                 //这里进行无网络或错误处理，具体可以根据errorCode的值进行判断，做跟详细的处理。
                 view.loadUrl("file:///android_asset/404.html");
-                webView.setVisibility(View.GONE);
             }
         });
 

@@ -14,6 +14,9 @@
         android:fitsSystemWindows="true"
         app:titleTextAppearance="@style/CustomTextAppearance"
         app:title="@string/space" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <GridView
         android:id="@+id/org_grid"
         android:layout_width="match_parent"
@@ -23,4 +26,27 @@
         android:numColumns="3"
         android:gravity="center"
         ></GridView>
+    <LinearLayout
+        android:id="@+id/org_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorWhite"
+        android:gravity="center"
+        >
+        <com.wang.avi.AVLoadingIndicatorView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            app:indicator="BallBeat"
+            app:indicator_color="@color/holo_red_light"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正在加载，请稍后..."
+            />
+    </LinearLayout>
+</FrameLayout>
 </LinearLayout>

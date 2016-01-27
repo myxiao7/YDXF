@@ -3,6 +3,7 @@ package com.sizhuo.ydxf;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ListView;
 
 import com.sizhuo.ydxf.util.StatusBar;
@@ -27,6 +28,12 @@ public class VideoModule extends AppCompatActivity{
         toolbar = (Toolbar) findViewById(R.id.videomodule_toolbar);
         toolbar.setTitle("党建电视节目");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VideoModule.this.finish();
+            }
+        });
         listView = (ListView) findViewById(R.id.videomodule_list);
 
     }

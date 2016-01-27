@@ -61,6 +61,12 @@ public class AddressListDetails extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.adddetails_toolbar);
         toolbar.setTitle("详情");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddressListDetails.this.finish();
+            }
+        });
         icon = (CircleImageView) findViewById(R.id.adddetails_img);
         nameTv = (TextView) findViewById(R.id.adddetails_name_tv);
         phoneTv = (TextView) findViewById(R.id.adddetails_menu01_phone_tv);

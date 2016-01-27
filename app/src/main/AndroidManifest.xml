@@ -137,7 +137,8 @@
         <!--地图-->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="pqbhfGaPVNjO6GOjIrL3abb4" />
+            android:value="gnIhnEDnovH9bj79snutvZuy"
+            />
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
         </service>
         <!--umeng update-->

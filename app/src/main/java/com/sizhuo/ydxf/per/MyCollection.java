@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +61,7 @@ import java.util.Map;
  */
 public class MyCollection extends AppCompatActivity{
     private Toolbar toolbar;
+    private LinearLayout loading;
     private ZrcListView listView;
     private List<_NewsData> list = new ArrayList<>();
     private MyCollectionAdapter adapter;
@@ -157,6 +159,12 @@ public class MyCollection extends AppCompatActivity{
                     }else{
                         Toast.makeText(MyCollection.this,"加载错误",Toast.LENGTH_SHORT).show();
                     }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            loading.setVisibility(View.GONE);
+                        }
+                    }, 800);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }catch (DbException e) {
@@ -166,8 +174,9 @@ public class MyCollection extends AppCompatActivity{
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Log.d("xinwen",volleyError.toString()+volleyError);
-                Toast.makeText(MyCollection.this, "网络异常",Toast.LENGTH_SHORT).show();
+//                Log.d("xinwen",volleyError.toString()+volleyError);
+                loading.setVisibility(View.GONE);
+                Toast.makeText(MyCollection.this, "网络不给力",Toast.LENGTH_SHORT).show();
             }
         });
         queue.add(jsonObjectRequest);
@@ -236,7 +245,7 @@ public class MyCollection extends AppCompatActivity{
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen",volleyError.toString()+volleyError);
                 listView.stopLoadMore();
-                Toast.makeText(MyCollection.this, "网络异常",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MyCollection.this, "网络不给力",Toast.LENGTH_SHORT).show();
             }
         });
         new Handler().postDelayed(new Runnable() {
@@ -245,7 +254,7 @@ public class MyCollection extends AppCompatActivity{
                 queue.add(jsonObjectRequest);
                 jsonObjectRequest.setTag(TAG01);
             }
-        }, 1200);
+        }, 1000);
     }
 
 
@@ -260,6 +269,7 @@ public class MyCollection extends AppCompatActivity{
                 MyCollection.this.finish();
             }
         });
+        loading = (LinearLayout) findViewById(R.id.mycollection_loading);
         listView = (ZrcListView) findViewById(R.id.mycollection_list);
         Intent intent = this.getIntent();
         userName = intent.getStringExtra("userName");

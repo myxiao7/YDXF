@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -54,6 +55,7 @@ import java.util.List;
 public class Module05 extends AppCompatActivity implements BaseSliderView.OnSliderClickListener {
     private Toolbar toolbar;//标题栏
     private SliderLayout sliderLayout;//轮播
+    private LinearLayout loading;
     private ZrcListView listView;
     private View headView;
     private List<_NewsData> list = new LinkedList<_NewsData>();//数据列表
@@ -82,8 +84,8 @@ public class Module05 extends AppCompatActivity implements BaseSliderView.OnSlid
         //初始化
         initViews();
         queue = Volley.newRequestQueue(this);
-        //        loadData();
-        listView.refresh();
+        loadData();
+//        listView.refresh();
         listView.setOnItemClickListener(new ZrcListView.OnItemClickListener() {
             @Override
             public void onItemClick(ZrcListView parent, View view, int position, long id) {
@@ -131,14 +133,23 @@ public class Module05 extends AppCompatActivity implements BaseSliderView.OnSlid
                         }
                         //获取新闻
                         list = JSON.parseArray(data.getString("news").toString(), _NewsData.class);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //先清除缓存数据
+                                try {
+                                    dbManager.delete(_NewsData.class, WhereBuilder.b("moduleType", "=", "m05"));
+                                    //缓存
+                                    for (_NewsData cache:list ) {
+                                        cache.setModuleType("m05");
+                                        dbManager.save(cache);
+                                    }
+                                } catch (DbException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
 
-                        //先清除缓存数据
-                        dbManager.delete(_NewsData.class, WhereBuilder.b("moduleType", "=", "m05"));
-                        //缓存
-                        for (_NewsData cache:list ) {
-                            cache.setModuleType("m05");
-                            dbManager.save(cache);
-                        }
                        /* Log.d("xinwen", list.size()+"-----111");
                         Log.d("xinwen", list.get(3).getImgextra().toString()+"-----22222");
                         Log.d("xinwen", list.get(0).getTitle()+"------3333");*/
@@ -157,6 +168,12 @@ public class Module05 extends AppCompatActivity implements BaseSliderView.OnSlid
                         listView.setRefreshFail("加载错误");
                         Toast.makeText(Module05.this,"加载错误",Toast.LENGTH_SHORT).show();
                     }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            loading.setVisibility(View.GONE);
+                        }
+                    },800);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (DbException e) {
@@ -167,8 +184,9 @@ public class Module05 extends AppCompatActivity implements BaseSliderView.OnSlid
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen",volleyError.toString()+volleyError);
-                listView.setRefreshFail("网络异常");
-                Toast.makeText(Module05.this, "网络异常",Toast.LENGTH_SHORT).show();
+                listView.setRefreshFail("网络不给力");
+                loading.setVisibility(View.GONE);
+                Toast.makeText(Module05.this, "网络不给力",Toast.LENGTH_SHORT).show();
             }
         });
         new Handler().postDelayed(new Runnable() {
@@ -177,7 +195,7 @@ public class Module05 extends AppCompatActivity implements BaseSliderView.OnSlid
                 queue.add(jsonObjectRequest);
                 jsonObjectRequest.setTag(TAG01);
             }
-        }, 800);
+        }, 500);
     }
 
     /**
@@ -254,7 +272,7 @@ public class Module05 extends AppCompatActivity implements BaseSliderView.OnSlid
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen",volleyError.toString()+volleyError);
-                Toast.makeText(Module05.this,"网络异常...",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Module05.this,"网络不给力...",Toast.LENGTH_SHORT).show();
                 listView.stopLoadMore();
             }
         });
@@ -264,7 +282,7 @@ public class Module05 extends AppCompatActivity implements BaseSliderView.OnSlid
                 queue.add(jsonObjectRequest);
                 jsonObjectRequest.setTag(TAG01);
             }
-        }, 1200);
+        }, 1000);
     }
 
     private void initViews() {
@@ -286,6 +304,7 @@ public class Module05 extends AppCompatActivity implements BaseSliderView.OnSlid
         sliderLayout.setCustomAnimation(new DescriptionAnimation());
         sliderLayout.startAutoCycle(2500, 4000, true);
         listView = (ZrcListView) findViewById(R.id.module01_list);
+        loading = (LinearLayout) findViewById(R.id.module01_loading);
         // 设置下拉刷新的样式（可选，但如果没有Header则无法下拉刷新）
         SimpleHeader header = new SimpleHeader(this);
         header.setTextColor(0xff0066aa);

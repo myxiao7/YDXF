@@ -69,8 +69,8 @@
 
                 <ImageView
                     android:id="@+id/adddetails_menu01_img"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_centerVertical="true"
                     android:background="@mipmap/ic_m06" />
 
@@ -99,8 +99,8 @@
 
                 <ImageView
                     android:id="@+id/adddetails_menu02_img"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_centerVertical="true"
                     android:background="@mipmap/ic_m12" />
 
@@ -129,8 +129,8 @@
 
                 <ImageView
                     android:id="@+id/adddetails_menu03_img"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_centerVertical="true"
                     android:background="@mipmap/ic_m11" />
 

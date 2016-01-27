@@ -194,6 +194,12 @@ public class Register extends AppCompatActivity {
         toolBar = (Toolbar) findViewById(R.id.register_toolbar);
         toolBar.setTitle("注册");
         setSupportActionBar(toolBar);
+        toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Register.this.finish();
+            }
+        });
         nameLayout = (TextInputLayout) findViewById(R.id.register_textinput_name);
         pwdLayout = (TextInputLayout) findViewById(R.id.register_textinput_pwd);
         pwdLayout2 = (TextInputLayout) findViewById(R.id.register_textinput_pwd2);

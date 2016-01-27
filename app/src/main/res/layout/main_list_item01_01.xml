@@ -33,11 +33,12 @@
 
             <ImageView
                 android:id="@+id/main_list_item01_01_icon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:background="@mipmap/ic_test"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@mipmap/ic_m01"
                 android:clickable="false"
                 android:focusable="false"
+                android:layout_centerVertical="true"
                 />
 
             <TextView
@@ -45,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/main_list_item01_01_icon"
                 android:text="大事小情"
                 android:textColor="@color/holo_red_light"

@@ -118,6 +118,12 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
         toolbar = (Toolbar) findViewById(R.id.publish_toolbar);
         toolbar.setTitle("发表帖子");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Publish.this.finish();
+            }
+        });
         titleEdit = (EditText) findViewById(R.id.public_title_edit);
         conEdit = (EditText) findViewById(R.id.public_content_edit);
         selectPhoto = (ImageView) findViewById(R.id.publish_photo_img);

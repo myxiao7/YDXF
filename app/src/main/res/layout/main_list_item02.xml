@@ -49,8 +49,8 @@
                     >
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:background="@mipmap/ic_m07"
                         android:focusable="false"
                         android:clickable="false"
@@ -59,10 +59,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="10dp"
                         android:gravity="center_vertical"
                         android:text="上级精神"
-                        android:textSize="22sp" />
+                        android:textSize="20sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -78,20 +78,21 @@
                     android:paddingTop="10dp">
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:background="@mipmap/ic_m08"
                         android:focusable="false"
                         android:clickable="false"
+                        android:layout_gravity="center_vertical"
                         />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="10dp"
                         android:gravity="center_vertical"
                         android:text="党建研究"
-                        android:textSize="22sp" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -113,20 +114,21 @@
                     android:paddingTop="10dp">
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:background="@mipmap/ic_m09"
                         android:focusable="false"
                         android:clickable="false"
+                        android:layout_gravity="center_vertical"
                         />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="10dp"
                         android:gravity="center_vertical"
                         android:text="党史博览"
-                        android:textSize="22sp" />
+                        android:textSize="20sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -142,20 +144,21 @@
                     android:paddingTop="10dp">
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:background="@mipmap/ic_m10"
                         android:focusable="false"
                         android:clickable="false"
+                        android:layout_gravity="center_vertical"
                         />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="10dp"
                         android:gravity="center_vertical"
                         android:text="电视栏目"
-                        android:textSize="22sp" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

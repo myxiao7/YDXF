@@ -215,6 +215,12 @@ public class PostDetails extends AppCompatActivity{
         toolbar = (Toolbar) findViewById(R.id.postdetails_toolbar);
         toolbar.setTitle("查看帖子");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PostDetails.this.finish();
+            }
+        });
         listView = (ZrcListView) findViewById(R.id.postdetails_list);
         replyBtn = (Button) findViewById(R.id.postdetails_reply_btn);
         contentEdit = (EditText) findViewById(R.id.postdetails_content_edit);

@@ -54,6 +54,7 @@ import java.util.Map;
  */
 public class MyPost extends AppCompatActivity {
     private Toolbar toolbar;
+    private LinearLayout loading;
     private ZrcListView listView;
     private List<_PostDetailData> list = new ArrayList<>();
     private MyPostAdapter adapter;
@@ -141,6 +142,12 @@ public class MyPost extends AppCompatActivity {
                     }else{
                         Toast.makeText(MyPost.this,"加载错误",Toast.LENGTH_SHORT).show();
                     }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            loading.setVisibility(View.GONE);
+                        }
+                    }, 800);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -148,8 +155,9 @@ public class MyPost extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Log.d("xinwen",volleyError.toString()+volleyError);
-                Toast.makeText(MyPost.this,"网络异常",Toast.LENGTH_SHORT).show();
+//                Log.d("xinwen",volleyError.toString()+volleyError);
+                loading.setVisibility(View.GONE);
+                Toast.makeText(MyPost.this,"网络不给力",Toast.LENGTH_SHORT).show();
             }
         });
         queue.add(jsonObjectRequest);
@@ -191,7 +199,7 @@ public class MyPost extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 Log.d("xinwen",volleyError.toString()+volleyError);
-                Toast.makeText(MyPost.this,"网络异常",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MyPost.this,"网络不给力",Toast.LENGTH_SHORT).show();
             }
         });
         new Handler().postDelayed(new Runnable() {
@@ -200,7 +208,7 @@ public class MyPost extends AppCompatActivity {
                 queue.add(jsonObjectRequest);
                 jsonObjectRequest.setTag(TAG01);
             }
-        }, 1200);
+        }, 1000);
     }
 
     private void initViews() {
@@ -215,6 +223,7 @@ public class MyPost extends AppCompatActivity {
             }
         });
         delSwitchBtn = (TextView) findViewById(R.id.mypost_toolbar_btn);
+        loading = (LinearLayout) findViewById(R.id.mypost_loading);
         listView = (ZrcListView) findViewById(R.id.mypost_list);
         // 设置加载更多的样式（可选）
         SimpleFooter footer = new SimpleFooter(this);

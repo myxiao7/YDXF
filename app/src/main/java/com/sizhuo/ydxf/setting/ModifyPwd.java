@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -78,6 +79,12 @@ public class ModifyPwd extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.set_modifypwd_toolbar);
         toolbar.setTitle("修改密码");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ModifyPwd.this.finish();
+            }
+        });;
         pwdEdit01 = (EditText) findViewById(R.id.set_modifypwd_oldpwd_edit);
         pwdEdit02 = (EditText) findViewById(R.id.set_modifypwd_newpwd_edit);
         pwdLayout02 = (TextInputLayout) findViewById(R.id.set_modifypwd_textinput_newpwd);

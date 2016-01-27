@@ -104,8 +104,8 @@
         >
         <ImageView
             android:id="@+id/personcenter_item01_img"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_centerVertical="true"
             android:background="@mipmap/per_item01"
             android:layout_marginLeft="20dp"
@@ -147,8 +147,8 @@
         >
         <ImageView
             android:id="@+id/personcenter_item02_img"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:background="@mipmap/per_item04"
             android:layout_marginLeft="20dp"
@@ -190,8 +190,8 @@
         >
         <ImageView
             android:id="@+id/personcenter_item03_img"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:background="@mipmap/per_item03"
             android:layout_marginLeft="20dp"

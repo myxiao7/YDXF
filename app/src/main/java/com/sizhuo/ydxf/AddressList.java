@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -18,8 +19,11 @@ import com.android.volley.toolbox.Volley;
 import com.sizhuo.ydxf.adapter.MyAddressListAdapter;
 import com.sizhuo.ydxf.entity.AddressListData;
 import com.sizhuo.ydxf.entity._AddListData;
+import com.sizhuo.ydxf.entity._MainData;
 import com.sizhuo.ydxf.entity._NewsData;
 import com.sizhuo.ydxf.entity._OrgData;
+import com.sizhuo.ydxf.entity._SliderData;
+import com.sizhuo.ydxf.util.ACache;
 import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.zrclistview.SimpleFooter;
@@ -41,6 +45,7 @@ import java.util.List;
  */
 public class AddressList extends AppCompatActivity{
     private Toolbar toolbar;
+    private LinearLayout loading;
     private ZrcListView listView;
     private List<_AddListData> list = new ArrayList<_AddListData>();
     private MyAddressListAdapter myAddressListAdapter;
@@ -51,12 +56,18 @@ public class AddressList extends AppCompatActivity{
     private final String TAG01 = "jsonObjectRequest";//请求数据TAG
     private int index = 1;
 
+    private ACache aCache;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addresslist);
         initViews();
         queue = Volley.newRequestQueue(this);
+        aCache = ACache.get(this);
+        if(aCache.getAsJSONArray("addressList")!=null){
+            list = JSON.parseArray(aCache.getAsJSONArray("addressList").toString(), _AddListData.class);
+        }
         myAddressListAdapter = new MyAddressListAdapter(list,this);
         listView.setAdapter(myAddressListAdapter);
         listView.setOnItemClickListener(new ZrcListView.OnItemClickListener() {
@@ -81,12 +92,19 @@ public class AddressList extends AppCompatActivity{
                     int code = jsonObject.getInt("code");
                     if(code == 200){
                         list = JSON.parseArray(jsonObject.getString("data"), _AddListData.class);
+                        aCache.put("addressList",jsonObject.getString("data"));
                         myAddressListAdapter.notifyDataSetChanged(list);
                     }else if(code == 400){
                         Toast.makeText(AddressList.this,"没有数据",Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(AddressList.this,"加载错误",Toast.LENGTH_SHORT).show();
                     }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            loading.setVisibility(View.GONE);
+                        }
+                    }, 800);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -95,7 +113,8 @@ public class AddressList extends AppCompatActivity{
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen", volleyError.toString() + volleyError);
-                Toast.makeText(AddressList.this,"网络异常",Toast.LENGTH_SHORT).show();
+                loading.setVisibility(View.GONE);
+                Toast.makeText(AddressList.this,"网络不给力",Toast.LENGTH_SHORT).show();
             }
         });
         queue.add(jsonObjectRequest);
@@ -150,6 +169,13 @@ public class AddressList extends AppCompatActivity{
         toolbar = (Toolbar) findViewById(R.id.addresslist_toolbar);
         toolbar.setTitle("便民114");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddressList.this.finish();
+            }
+        });
+        loading = (LinearLayout) findViewById(R.id.addresslist_loading);
         listView = (ZrcListView) findViewById(R.id.addresslist_listview);
 
         // 设置加载更多的样式（可选）

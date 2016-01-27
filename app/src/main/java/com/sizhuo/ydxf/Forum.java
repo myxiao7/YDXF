@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -55,6 +56,7 @@ import java.util.List;
 
 public class Forum extends AppCompatActivity {
     private Toolbar toolbar;//标题栏
+    private LinearLayout loading;
     private ZrcListView listView;
     private List<_PostDetailData> list = new ArrayList<>();
     private MyForumAdapter myForumAdapter;
@@ -118,8 +120,8 @@ public class Forum extends AppCompatActivity {
             e.printStackTrace();
         }
         //        loadData();
-        listView.refresh();
-//        loadData();
+//        listView.refresh();
+        loadData();
 
         myForumAdapter = new MyForumAdapter(list, this);
         listView.setAdapter(myForumAdapter);
@@ -165,6 +167,7 @@ public class Forum extends AppCompatActivity {
                 Forum.this.finish();
             }
         });
+        loading = (LinearLayout) findViewById(R.id.forum_loading);
         listView = (ZrcListView)findViewById(R.id.forum_listview);
         initListView();
 
@@ -184,39 +187,48 @@ public class Forum extends AppCompatActivity {
                     if(code == 200){
                         jsonObject.getString("data");
                         list = JSON.parseArray(jsonObject.getString("data"), _PostDetailData.class);
-                        //先清除缓存数据
-                            dbManager.delete(_PostDetailData.class, WhereBuilder.b("moduleType", "=", "f01"));
-                            dbManager.delete(imgextra.class, WhereBuilder.b("moduleType", "=", "f01"));
-                            dbManager.delete(_ReplyData.class, WhereBuilder.b("moduleType", "=", "f01"));
-                        //缓存
-                            for (_PostDetailData postDetailData:list) {
-                                postDetailData.setModuleType("f01");
-                                //图片URL
-                                List<imgextra> imgextras = postDetailData.getImgextra();
-                                //回复
-                                List<_ReplyData> replyDatas = postDetailData.getReply();
-                                dbManager.save(postDetailData);
-                                //关联存储URL
-                                for (imgextra img:imgextras) {
-                                    img.setParentId(postDetailData.getId());
-                                    img.setModuleType("f01");
-                                    dbManager.saveBindingId(img);
-                                }
-                                //关联存储恢复数据
-                                for (_ReplyData replyData:replyDatas) {
-                                    replyData.setParentId(postDetailData.getId());
-                                    replyData.setModuleType("f01");
-                                    dbManager.saveBindingId(replyData);
-                                }
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //先清除缓存数据
+                                try {
+                                    dbManager.delete(_PostDetailData.class, WhereBuilder.b("moduleType", "=", "f01"));
+                                dbManager.delete(imgextra.class, WhereBuilder.b("moduleType", "=", "f01"));
+                                dbManager.delete(_ReplyData.class, WhereBuilder.b("moduleType", "=", "f01"));
+                                //缓存
+                                for (_PostDetailData postDetailData:list) {
+                                    postDetailData.setModuleType("f01");
+                                    //图片URL
+                                    List<imgextra> imgextras = postDetailData.getImgextra();
+                                    //回复
+                                    List<_ReplyData> replyDatas = postDetailData.getReply();
+                                    dbManager.save(postDetailData);
+                                    //关联存储URL
+                                    for (imgextra img:imgextras) {
+                                        img.setParentId(postDetailData.getId());
+                                        img.setModuleType("f01");
+                                        dbManager.saveBindingId(img);
+                                    }
+                                    //关联存储恢复数据
+                                    for (_ReplyData replyData:replyDatas) {
+                                        replyData.setParentId(postDetailData.getId());
+                                        replyData.setModuleType("f01");
+                                        dbManager.saveBindingId(replyData);
+                                    }
 
+                                }
+                                } catch (DbException e) {
+                                    e.printStackTrace();
+                                }
                             }
+                        }).start();
+
                         myForumAdapter.notifyDataSetChanged(list);
                         listView.setRefreshSuccess("更新完成"); // 通知加载成功
                         if(list.size()==20){
                             listView.startLoadMore();
                         }
                         index = 1;
-
                     }else if(code == 400){
                         listView.setRefreshFail("没有数据");
                         Toast.makeText(Forum.this,"没有数据",Toast.LENGTH_SHORT).show();
@@ -224,9 +236,13 @@ public class Forum extends AppCompatActivity {
                         listView.setRefreshFail("加载错误");
                         Toast.makeText(Forum.this,"加载错误",Toast.LENGTH_SHORT).show();
                     }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            loading.setVisibility(View.GONE);
+                        }
+                    }, 800);
                 } catch (JSONException e) {
-                    e.printStackTrace();
-                }catch (DbException e) {
                     e.printStackTrace();
                 }
             }
@@ -235,8 +251,10 @@ public class Forum extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen", volleyError.getMessage());
-                listView.setRefreshFail("网络异常");
-                Toast.makeText(Forum.this,"网络异常",Toast.LENGTH_SHORT).show();
+                listView.setRefreshFail("网络不给力");
+                loading.setVisibility(View.GONE);
+                Toast.makeText(Forum.this,"网络不给力",Toast.LENGTH_SHORT).show();
+
             }
         });
         new Handler().postDelayed(new Runnable() {
@@ -245,7 +263,7 @@ public class Forum extends AppCompatActivity {
                 queue.add(jsonObjectRequest);
                 jsonObjectRequest.setTag(TAG01);
             }
-        }, 800);
+        }, 500);
     }
 
     /**
@@ -307,7 +325,7 @@ public class Forum extends AppCompatActivity {
             public void onErrorResponse(VolleyError volleyError) {
 //                Log.d("xinwen", volleyError.getMessage());
                 listView.stopLoadMore();
-                Toast.makeText(Forum.this,"网络异常",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Forum.this,"网络不给力",Toast.LENGTH_SHORT).show();
             }
         });
         new Handler().postDelayed(new Runnable() {
@@ -316,7 +334,7 @@ public class Forum extends AppCompatActivity {
                 queue.add(jsonObjectRequest);
                 jsonObjectRequest.setTag(TAG01);
             }
-        }, 1200);
+        }, 1000);
     }
     /**
      * 初始化listview的刷新样式
