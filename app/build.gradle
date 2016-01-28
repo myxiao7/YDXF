@@ -72,4 +72,6 @@ dependencies {
     compile 'org.xutils:xutils:3.2.4'
 
     compile 'com.wang.avi:library:1.0.0'
+    compile 'com.google.android.exoplayer:exoplayer:r1.4.1'
+    compile ':playersdk@aar'
 }

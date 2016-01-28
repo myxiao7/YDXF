@@ -14,17 +14,20 @@
         app:navigationIcon="@mipmap/ic_back"
         >
     </android.support.v7.widget.Toolbar>
-    <com.sizhuo.ydxf.view.VRefresh
-        android:id="@+id/videomodule_vrefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
         <ListView
             android:id="@+id/videomodule_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@color/lighter_gray"
             android:dividerHeight="1dp"
+            android:visibility="gone"
             >
         </ListView>
-    </com.sizhuo.ydxf.view.VRefresh>
+
+    <com.tencent.qcload.playersdk.ui.VideoRootFrame
+        android:id="@+id/videomodule_player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.tencent.qcload.playersdk.ui.VideoRootFrame>
 </LinearLayout>
