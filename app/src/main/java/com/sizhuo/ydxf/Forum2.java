@@ -83,7 +83,7 @@ public class Forum2 extends AppCompatActivity {
         } catch (DbException e) {
             e.printStackTrace();
         }
-
+        loadData();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class Forum2 extends AppCompatActivity {
         } catch (DbException e) {
             e.printStackTrace();
         }
-        loadData();
+//        loadData();
 //        listView.refresh();
 //        loadData();
 
@@ -257,7 +257,7 @@ public class Forum2 extends AppCompatActivity {
                 queue.add(jsonObjectRequest);
                 jsonObjectRequest.setTag(TAG01);
             }
-        }, 500);
+        }, 10);
     }
 
     /**

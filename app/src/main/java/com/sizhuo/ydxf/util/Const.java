@@ -13,7 +13,7 @@ public class Const {
      * URL
      */
     public static final String URL = "http://192.168.1.114:8080/xinwen/";
-    public static final String URL2 = "http://112.54.80.235:50406/IndustryPioneer.svc/";
+    public static final String URL2 = "http://industry.sizsoft.cn/IndustryPioneer.svc/";
     /**
      * 主界面
      */
@@ -46,6 +46,10 @@ public class Const {
      * Module05
      */
     public static final String M05 = URL2 + "selectNews/5/";
+    /**
+     * 视频
+     */
+    public static final String VIDEO = URL2 + "selectColumn/";
     /**
      * 红色地图
      */
@@ -107,6 +111,10 @@ public class Const {
      * 修改信息
      */
     public static final String UPDATEINFO = URL2 + "updateUser";
+    /**
+     * 修改信息
+     */
+    public static final String UPLOADIMG = URL2 + "uploadimage";
     /**
      * 搜索
      */

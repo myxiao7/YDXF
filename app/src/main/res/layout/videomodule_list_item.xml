@@ -1,79 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/videomodule_list_item_cardview"
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    app:cardElevation="2dp"
-    app:cardCornerRadius="2dp"
-    app:cardBackgroundColor="@color/colorWhite"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/videomodule_list_item_cardview"
         android:orientation="vertical"
-        >
-        <FrameLayout
-            android:id="@+id/videomodule_list_item_play_frame"
-            android:layout_width="match_parent"
-            android:layout_height="280dp">
-            <ImageView
-                android:id="@+id/videomodule_list_item_img"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:background="@mipmap/default_img"
-                />
-            <ImageView
-                android:layout_width="85dp"
-                android:layout_height="85dp"
-                android:layout_gravity="center"
-                android:background="@mipmap/ic_play"
-                />
-        </FrameLayout>
-    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_margin="10dp"
+        app:cardElevation="2dp"
+        app:cardCornerRadius="2dp"
+        app:cardBackgroundColor="@color/colorWhite"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
         >
-                <TextView
-                    android:id="@+id/videomodule_list_item_title_tv"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="测试视频"
-                    android:textSize="@dimen/title_size"
-                    android:textColor="@color/black"
-                    />
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:background="@mipmap/ic_colock"
-            />
-        <TextView
-            android:id="@+id/videomodule_list_item_play_date_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="11:00"
-            android:textSize="16sp"
-            android:textColor="@color/lighter_gray"
-            />
-    </LinearLayout>
-        <TextView
-            android:id="@+id/videomodule_list_item_dex_tv"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="测试视频测试视频测试视频测试视频"
-            android:textSize="16sp"
-            android:textColor="@color/lighter_gray"
-            />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <FrameLayout
+                android:id="@+id/videomodule_list_item_play_frame"
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+                <ImageView
+                    android:id="@+id/videomodule_list_item_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@color/lighter_gray"
+                    android:scaleType="fitXY"
+                    />
+                <ImageView
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_gravity="center"
+                    android:background="@mipmap/ic_play"
+                    />
+            </FrameLayout>
+            <TextView
+                android:id="@+id/videomodule_list_item_title_tv"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="测试视频"
+                android:textSize="22sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="5dp"
+                />
 
-</android.support.v7.widget.CardView>
+            <TextView
+                android:id="@+id/videomodule_list_item_des_tv"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="测试视频测试视频测试视频测试视频"
+                android:textSize="18sp"
+                android:textColor="@color/lighter_gray"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="5dp"
+                >
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@mipmap/ic_colock"
+                    />
+                <TextView
+                    android:id="@+id/videomodule_list_item_date_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="11:00"
+                    android:textSize="16sp"
+                    android:textColor="@color/lighter_gray"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

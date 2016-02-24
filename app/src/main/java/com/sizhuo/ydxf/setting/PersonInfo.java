@@ -203,7 +203,7 @@ public class PersonInfo extends AppCompatActivity implements View.OnClickListene
                                     Map<String, String> param = new HashMap<>();
                                     files.put("icon", new File(resultList.get(0).getPhotoPath()));
                                     //上传图片
-                                    post("http://112.54.80.235:50406/IndustryPioneer.svc/uploadImage", param, files);
+                                    post(Const.UPLOADIMG, param, files);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

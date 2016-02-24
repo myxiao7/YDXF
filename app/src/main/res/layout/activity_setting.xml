@@ -180,6 +180,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:orientation="horizontal"
         android:padding="8dp"
         android:background="@drawable/list_setlect_bg"
@@ -206,6 +207,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/darker_gray"
+        android:visibility="gone"
         />
     <RelativeLayout
         android:id="@+id/setting_feedback_re"

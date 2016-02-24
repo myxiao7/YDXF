@@ -30,7 +30,6 @@ import com.sizhuo.ydxf.entity.db.User;
 import com.sizhuo.ydxf.util.Const;
 import com.sizhuo.ydxf.util.StatusBar;
 import com.sizhuo.ydxf.view.ZProgressHUD;
-import com.umeng.socialize.UMShareAPI;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,33 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/videomodule_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/holo_red_light"
         android:fitsSystemWindows="true"
-        app:titleTextAppearance="@style/CustomTextAppearance"
         app:navigationIcon="@mipmap/ic_back"
-        >
-    </android.support.v7.widget.Toolbar>
+        app:titleTextAppearance="@style/CustomTextAppearance"></android.support.v7.widget.Toolbar>
 
-        <ListView
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.sizhuo.ydxf.view.zrclistview.ZrcListView
             android:id="@+id/videomodule_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@color/lighter_gray"
-            android:dividerHeight="1dp"
-            android:visibility="gone"
-            >
-        </ListView>
+            android:dividerHeight="1dp"></com.sizhuo.ydxf.view.zrclistview.ZrcListView>
 
-    <com.tencent.qcload.playersdk.ui.VideoRootFrame
-        android:id="@+id/videomodule_player"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </com.tencent.qcload.playersdk.ui.VideoRootFrame>
+        <LinearLayout
+            android:id="@+id/videomodule_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                app:indicator="BallBeat"
+                app:indicator_color="@color/holo_red_light" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="正在加载，请稍后..." />
+        </LinearLayout>
+    </FrameLayout>
+
 </LinearLayout>

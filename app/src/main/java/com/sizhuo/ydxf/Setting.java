@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,11 +20,14 @@ import com.sizhuo.ydxf.setting.About;
 import com.sizhuo.ydxf.setting.Feedback;
 import com.sizhuo.ydxf.setting.ModifyPwd;
 import com.sizhuo.ydxf.setting.PersonInfo;
+import com.sizhuo.ydxf.util.ACache;
 import com.sizhuo.ydxf.util.ImageLoaderHelper;
 import com.sizhuo.ydxf.util.StatusBar;
 
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
+
+import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -44,6 +48,7 @@ public class Setting extends AppCompatActivity implements View.OnClickListener {
 
     private TextView cacheTv;//缓存大小
     private SwitchButton switchButton;//3G网络播放
+    private ACache aCache;
     private LinearLayout logoutLinBtn;//注销
     private Button logoutBtn;//注销
 
@@ -55,8 +60,20 @@ public class Setting extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.activity_setting);
         initViews();
         initEvents();
+        aCache = ACache.get(this);
 
-
+        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    aCache.put("3G", "3G_OPEN");
+//                Toast.makeText(Setting.this, "open",Toast.LENGTH_SHORT).show();
+                }else{
+                    aCache.put("3G", "3G_CLOSE");
+//                    Toast.makeText(Setting.this, "close",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 

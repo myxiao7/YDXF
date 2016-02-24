@@ -58,6 +58,10 @@
         <activity android:name=".Module03" />
         <activity android:name=".Module04" />
         <activity android:name=".Module05" />
+        <activity android:name=".VideoDetails"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen"
+            />
 
         <!--红色地图-->
         <activity android:name=".RedMap"/>

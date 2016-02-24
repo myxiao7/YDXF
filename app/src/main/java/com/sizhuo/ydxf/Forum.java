@@ -89,7 +89,7 @@ public class Forum extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
+        loadData();
     }
 
     @Override
@@ -121,7 +121,7 @@ public class Forum extends AppCompatActivity {
         }
         //        loadData();
 //        listView.refresh();
-        loadData();
+//        loadData();
 
         myForumAdapter = new MyForumAdapter(list, this);
         listView.setAdapter(myForumAdapter);
@@ -263,7 +263,7 @@ public class Forum extends AppCompatActivity {
                 queue.add(jsonObjectRequest);
                 jsonObjectRequest.setTag(TAG01);
             }
-        }, 500);
+        }, 10);
     }
 
     /**

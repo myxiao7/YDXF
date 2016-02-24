@@ -140,62 +140,6 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
             case R.id.publish_photo_img:
                 GalleryFinal.openGalleryMuti(REQUEST_CODE_GALLERY, mOnHanlderResultCallback);
                 break;
-           /* case R.id.publish_photo_img2:
-                Map<String,Object> map = new HashMap<>();
-                map.put("userName",user.getUserName());
-                map.put("userPwd",user.getUserPwd());
-                map.put("title", titleEdit.getText().toString());
-                map.put("content", conEdit.getText().toString());
-                map.put("imgextra", imgextras.toString());
-                JSONObject jsonObject = new JSONObject(map);
-                Log.d("xinwen",map.toString()+"++++++++");
-                MyJsonObjectRequest request = new MyJsonObjectRequest(Request.Method.POST, "http://112.54.80.235:50406/IndustryPioneer.svc/insertCard", "", new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        Log.d("xinwen",jsonObject.toString());
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Log.d("xinwen",volleyError.toString());
-                        Log.e("log.d", volleyError.getMessage(), volleyError);
-                        byte[] htmlBodyBytes = volleyError.networkResponse.data;
-                        Log.e("log.d", new String(htmlBodyBytes), volleyError);
-                    }
-                }) {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String,String> header = new HashMap<>();
-                        header.put("Accept", "application/json");
-                        header.put("charset", "utf-8");
-                        return header;
-                    }
-                };
-                JsonObjectRequest request2 = new JsonObjectRequest(Request.Method.POST, "http://112.54.80.235:50406/IndustryPioneer.svc/insertCard", jsonObject, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        Log.d("xinwen",jsonObject.toString());
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Log.d("xinwen",volleyError.toString());
-                        Log.e("log.d", volleyError.getMessage(), volleyError);
-                        byte[] htmlBodyBytes = volleyError.networkResponse.data;
-                        Log.e("log.d", new String(htmlBodyBytes), volleyError);
-                    }
-                }) {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String,String> header = new HashMap<>();
-                        header.put("Accept", "application/json");
-                        header.put("charset", "utf-8");
-                        return header;
-                    }
-                };
-                queue.add(request);
-//                request.setTag(REQUEST_TAG);
-                break;*/
         }
     }
 
@@ -473,7 +417,7 @@ public class Publish extends AppCompatActivity implements View.OnClickListener {
                                         files.put("icon", new File(imgList.get(i).substring(7, imgList.get(i).length())));
 //                                        Log.d("log.d", imgList.get(i).substring(7, imgList.get(0).length()) + "--------------imgsrc");
                                         //上传图片
-                                        post("http://112.54.80.235:50406/IndustryPioneer.svc/uploadImage", param, files);
+                                        post(Const.UPLOADIMG, param, files);
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();

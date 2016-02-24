@@ -178,8 +178,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         newsList = mainData.getNews();
                         forumList = mainData.getCard();
-                        Log.d("log.d",forumList.get(1).getImgextra().size()+"");
-                        Log.d("log.d",forumList.get(1).getImgextra().toString()+"");
+                        /*Log.d("log.d",forumList.get(1).getImgextra().size()+"");
+                        Log.d("log.d",forumList.get(1).getImgextra().toString()+"");*/
                         gridList = mainData.getConvenience();
                         gridList2 = mainData.getDirectory();
 
@@ -428,8 +428,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent7);
                 break;
              case R.id.main_list_item02_menu04_lin:
-                /*Intent intent8 = new Intent(MainActivity.this, VideoModule.class);
-                startActivity(intent8);*/
+                Intent intent8 = new Intent(MainActivity.this, VideoModule.class);
+                startActivity(intent8);
                 break;
              case R.id.main_list_item03_img:
                 Intent intent9 = new Intent(MainActivity.this, RedMap.class);

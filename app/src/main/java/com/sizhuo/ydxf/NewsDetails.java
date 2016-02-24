@@ -427,7 +427,7 @@ public class NewsDetails extends AppCompatActivity implements View.OnClickListen
                             loveFlag = false;
                             Log.d("log.d", "DB+删除收藏新闻在本地");
                         }
-                        Toast.makeText(NewsDetails.this, str+"成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NewsDetails.this, str+"", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(NewsDetails.this, "请到我的收藏同步", Toast.LENGTH_SHORT).show();
                     }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,22 +114,26 @@ public class Module02 extends AppCompatActivity implements BaseSliderView.OnSlid
                         Log.d("xinwen", "data:------" + jsonObject.getString("data"));
                         //获取data所有数据
                         com.alibaba.fastjson.JSONObject data = JSON.parseObject(jsonObject.getString("data"));
-                        //获取轮播图数据
-                        List<_SliderData> sliderDatas = JSON.parseArray(data.getString("carousel").toString(), _SliderData.class);
-                        Log.d("xinwen", "sliderDatas:------" + sliderDatas.size());
-                        //先清除缓存数据
-                        dbManager.delete(_SliderData.class, WhereBuilder.b("moduleType", "=", "m02"));
-                        if(sliderDatas==null){
+                        if(TextUtils.isEmpty(data.getString("carousel"))){
                             listView.removeHeaderView(headView);
-                        }else{
-                            if(sliderDatas.size()==0){
+                        }else {
+                            //获取轮播图数据
+                            List<_SliderData> sliderDatas = JSON.parseArray(data.getString("carousel").toString(), _SliderData.class);
+                            Log.d("xinwen", "sliderDatas:------" + sliderDatas.size());
+                            //先清除缓存数据
+                            dbManager.delete(_SliderData.class, WhereBuilder.b("moduleType", "=", "m02"));
+                            if (sliderDatas == null) {
                                 listView.removeHeaderView(headView);
-                            }else{
-                                for (_SliderData cache: sliderDatas) {
-                                    cache.setModuleType("m02");
-                                    dbManager.save(cache);
+                            } else {
+                                if (sliderDatas.size() == 0) {
+                                    listView.removeHeaderView(headView);
+                                } else {
+                                    for (_SliderData cache : sliderDatas) {
+                                        cache.setModuleType("m02");
+                                        dbManager.save(cache);
+                                    }
+                                    loadSlider(sliderDatas);
                                 }
-                                loadSlider(sliderDatas);
                             }
                         }
                         //获取新闻

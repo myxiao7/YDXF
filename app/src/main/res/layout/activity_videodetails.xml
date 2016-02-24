@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#99232323"
+    >
+    <!--<android.support.v7.widget.Toolbar
+        android:id="@+id/videodetail_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/holo_red_light"
+        android:fitsSystemWindows="true"
+        app:titleTextAppearance="@style/CustomTextAppearance"
+        app:navigationIcon="@mipmap/ic_back"
+        >
+    </android.support.v7.widget.Toolbar>-->
+
+<FrameLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    >
+    <com.tencent.qcload.playersdk.ui.VideoRootFrame
+        android:id="@+id/videodetail_player"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        >
+    </com.tencent.qcload.playersdk.ui.VideoRootFrame>
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/videodetail_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible"
+        app:indicator="BallSpinFadeLoader"
+        app:indicator_color="@color/colorWhite"
+        />
+    </FrameLayout>
+</LinearLayout>
