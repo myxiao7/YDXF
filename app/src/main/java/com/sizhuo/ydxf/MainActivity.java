@@ -227,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(sliderDatas.size()==0){
                 mSlider.setVisibility(View.GONE);
             }else{
+                mSlider.removeAllSliders();
                 mSlider.setVisibility(View.VISIBLE);
                 for (int i = 0; i <sliderDatas.size() ; i++) {
                     url_maps.put(sliderDatas.get(i).getTitle(),sliderDatas.get(i).getImgsrc());
@@ -244,6 +245,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     slidNews.setDocid(sliderDatas.get(i).getDocid());
                     slidNews.setDigest(sliderDatas.get(i).getDigest());
                     slidNews.setUrl(sliderDatas.get(i).getUrl());
+                    slidNews.setTitle(sliderDatas.get(i).getTitle());
+                    slidNews.setImgsrc(sliderDatas.get(i).getImgsrc());
                     textSliderView.bundle(new Bundle());
                     textSliderView.getBundle()
                             .putSerializable("extra", slidNews);

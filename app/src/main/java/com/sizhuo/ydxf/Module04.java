@@ -228,6 +228,8 @@ public class Module04 extends AppCompatActivity implements BaseSliderView.OnSlid
             slidNews.setDocid(sliderDatas.get(i).getDocid());
             slidNews.setDigest(sliderDatas.get(i).getDigest());
             slidNews.setUrl(sliderDatas.get(i).getUrl());
+            slidNews.setTitle(sliderDatas.get(i).getTitle());
+            slidNews.setImgsrc(sliderDatas.get(i).getImgsrc());
             textSliderView.bundle(new Bundle());
             textSliderView.getBundle()
                     .putSerializable("extra", slidNews);

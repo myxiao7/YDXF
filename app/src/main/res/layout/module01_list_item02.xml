@@ -40,8 +40,8 @@
                 android:gravity="center_vertical"
                 >
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:background="@mipmap/ic_colock"
                     android:layout_marginRight="5dp"
                     />
